@@ -307,7 +307,8 @@ void MainWindow::startPcb2gcode()
     {
         ui->startPushButton->setEnabled(false);
 
-        arguments = getCmdLineArguments();
+        arguments << "--noconfigfile";
+        arguments += getCmdLineArguments();
 
         pcb2gcodeOutputWindow = new outputWindow(this);
         pcb2gcodeOutputWindow->setWindowTitle(PCB2GCODE_COMMAND_NAME " output");
@@ -540,7 +541,7 @@ void MainWindow::saveConfFile(QString filename)
 
 void MainWindow::saveDefaultConfFile()
 {
-    QString appDataLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QString appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 
     if( appDataLocation.isEmpty() )
         QMessageBox::information(this, "Error", "Can't retrieve standard folder location");
@@ -559,7 +560,7 @@ void MainWindow::resetDefaultConfFile()
                           "Are you sure you want to reset the default configuration?",
                           QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes )
     {
-        appDataLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+        appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
         if( appDataLocation.isEmpty() )
             QMessageBox::information(this, "Error", "Can't retrieve standard folder location");
         else
@@ -573,7 +574,7 @@ void MainWindow::loadDefaultConfFile()
 {
     QString appDataLocation;
 
-    appDataLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     if( appDataLocation.isEmpty() )
         QMessageBox::information(this, "Error", "Can't retrieve standard folder location");
     else
