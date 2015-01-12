@@ -34,12 +34,12 @@ class argAction
 {
 protected:
 
-    static bool setDoubleSpinBox(void *doubleSpinBox, QString argValue);
-    static bool setSpinBox(void *spinBox, QString argValue);
-    static bool setCheckBox(void *checkBox, QString argValue);
-    static bool setLineEdit(void *lineEdit, QString argValue);
-    static bool setComboBox(void *comboBox, QString argValue);
-    static bool setButtonGroup(void *buttonGroup, QString argValue);
+    static bool setDoubleSpinBox(void *doubleSpinBox, const QString argValue);
+    static bool setSpinBox(void *spinBox, const QString argValue);
+    static bool setCheckBox(void *checkBox, const QString argValue);
+    static bool setLineEdit(void *lineEdit, const QString argValue);
+    static bool setComboBox(void *comboBox, const QString argValue);
+    static bool setButtonGroup(void *buttonGroup, const QString argValue);
     static QString getDoubleSpinBox(void *doubleSpinBox);
     static QString getSpinBox(void *spinBox);
     static QString getCheckBox(void *checkBox);
@@ -61,41 +61,41 @@ public:
     explicit argAction();
     ~argAction();
 
-    bool setValue(QString key, QString value);
+    bool setValue(const QString key, const QString value);
 
-    QStringList getAllArgs(bool getCommentedOptions = false, bool getDisabledObjects = false);
+    QStringList getAllArgs(const bool getCommentedOptions = false, const bool getDisabledObjects = false);
 
-    inline void insert( QString argName, QDoubleSpinBox *doubleSpinBox, bool commentedOption = false )
+    inline void insert( const QString argName, QDoubleSpinBox *doubleSpinBox, const bool commentedOption = false )
     {
         argList.insert( argName, (argElement){ .setFunction = &setDoubleSpinBox, .getFunction = &getDoubleSpinBox,
                                                .object = doubleSpinBox, .commentedOption = commentedOption } );
     }
 
-    inline void insert( QString argName, QSpinBox *spinBox, bool commentedOption = false )
+    inline void insert( const QString argName, QSpinBox *spinBox, const bool commentedOption = false )
     {
         argList.insert( argName, (argElement){ .setFunction = &setSpinBox, .getFunction = &getSpinBox,
                                                .object = spinBox, .commentedOption = commentedOption } );
     }
 
-    inline void insert( QString argName, QCheckBox *checkBox, bool commentedOption = false )
+    inline void insert( const QString argName, QCheckBox *checkBox, const bool commentedOption = false )
     {
         argList.insert( argName, (argElement){ .setFunction = &setCheckBox, .getFunction = &getCheckBox,
                                                .object = checkBox, .commentedOption = commentedOption } );
     }
 
-    inline void insert( QString argName, QLineEdit *lineEdit, bool commentedOption = false )
+    inline void insert( const QString argName, QLineEdit *lineEdit, const bool commentedOption = false )
     {
         argList.insert( argName, (argElement){ .setFunction = &setLineEdit, .getFunction = &getLineEdit,
                                                .object = lineEdit, .commentedOption = commentedOption } );
     }
 
-    inline void insert( QString argName, QComboBox *comboBox, bool commentedOption = false )
+    inline void insert( const QString argName, QComboBox *comboBox, const bool commentedOption = false )
     {
         argList.insert( argName, (argElement){ .setFunction = &setComboBox, .getFunction = &getComboBox,
                                                .object = comboBox, .commentedOption = commentedOption } );
     }
 
-    inline void insert( QString argName, QButtonGroup *buttonGroup, bool commentedOption = false )
+    inline void insert( const QString argName, QButtonGroup *buttonGroup, const bool commentedOption = false )
     {
         argList.insert( argName, (argElement){ .setFunction = &setButtonGroup, .getFunction = &getButtonGroup,
                                                .object = buttonGroup, .commentedOption = commentedOption } );

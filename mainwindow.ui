@@ -121,7 +121,7 @@
           <double>0.050000000000000</double>
          </property>
          <property name="value">
-          <double>5.000000000000000</double>
+          <double>10.000000000000000</double>
          </property>
         </widget>
        </item>
@@ -138,7 +138,7 @@
        <item row="3" column="1">
         <widget class="QDoubleSpinBox" name="g64DoubleDoubleSpinBox">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set a custom g64 value (maximum deviation from toolpath), overrides internal calculation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -153,6 +153,9 @@
           <double>10.000000000000000</double>
          </property>
          <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
           <double>0.050000000000000</double>
          </property>
         </widget>
@@ -224,12 +227,18 @@
          <property name="text">
           <string>custom g64</string>
          </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+         <property name="tristate">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item row="5" column="0">
         <widget class="QCheckBox" name="zerostartCheckBox">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;set the starting point of the project at (0,0). With this option, the projet will be between (0,0) and (max_x_value, max_y_value) (positive values)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;set the starting point of the project at (0,0). With this option the projet will be between (0,0) and (max_x_value, max_y_value) (positive values)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>zero-start</string>
@@ -380,7 +389,7 @@
           <number>10</number>
          </property>
          <property name="value">
-          <number>1000</number>
+          <number>600</number>
          </property>
         </widget>
        </item>
@@ -401,6 +410,9 @@
          </property>
          <property name="suffix">
           <string> mm</string>
+         </property>
+         <property name="decimals">
+          <number>3</number>
          </property>
          <property name="singleStep">
           <double>0.050000000000000</double>
@@ -579,7 +591,7 @@
           <double>0.050000000000000</double>
          </property>
          <property name="value">
-          <double>-2.000000000000000</double>
+          <double>-2.500000000000000</double>
          </property>
         </widget>
        </item>
@@ -713,7 +725,7 @@
           <double>0.050000000000000</double>
          </property>
          <property name="value">
-          <double>-0.800000000000000</double>
+          <double>-0.600000000000000</double>
          </property>
         </widget>
        </item>
@@ -874,7 +886,7 @@
           <double>0.050000000000000</double>
          </property>
          <property name="value">
-          <double>-2.000000000000000</double>
+          <double>-2.500000000000000</double>
          </property>
         </widget>
        </item>
@@ -916,7 +928,7 @@
           <number>10</number>
          </property>
          <property name="value">
-          <number>750</number>
+          <number>600</number>
          </property>
         </widget>
        </item>
@@ -992,28 +1004,6 @@
          </property>
          <property name="text">
           <string>al-probe-on</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QDoubleSpinBox" name="alprobefeedDoubleSpinBox">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Probe speed on the Z axis. Higher values decrease the probing time but also increase the wear of the probing tool&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="suffix">
-          <string> mm/s</string>
-         </property>
-         <property name="decimals">
-          <number>3</number>
-         </property>
-         <property name="maximum">
-          <double>5000.000000000000000</double>
-         </property>
-         <property name="singleStep">
-          <double>10.000000000000000</double>
-         </property>
-         <property name="value">
-          <double>100.000000000000000</double>
          </property>
         </widget>
        </item>
@@ -1150,6 +1140,25 @@
          </property>
          <property name="checked">
           <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QSpinBox" name="alprobefeedSpinBox">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Probe speed on the Z axis. Higher values decrease the probing time but also increase the wear of the probing tool&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="suffix">
+          <string> mm/min</string>
+         </property>
+         <property name="maximum">
+          <number>5000</number>
+         </property>
+         <property name="singleStep">
+          <number>10</number>
+         </property>
+         <property name="value">
+          <number>100</number>
          </property>
         </widget>
        </item>

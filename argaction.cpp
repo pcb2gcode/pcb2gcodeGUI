@@ -29,7 +29,7 @@ argAction::~argAction()
 
 }
 
-bool argAction::setDoubleSpinBox(void *doubleSpinBox, QString argValue)
+bool argAction::setDoubleSpinBox(void *doubleSpinBox, const QString argValue)
 {
     bool ok;
     double value = argValue.toDouble(&ok);
@@ -40,7 +40,7 @@ bool argAction::setDoubleSpinBox(void *doubleSpinBox, QString argValue)
     return ok;
 }
 
-bool argAction::setSpinBox(void *spinBox, QString argValue)
+bool argAction::setSpinBox(void *spinBox, const QString argValue)
 {
     bool ok;
     int value = argValue.toInt(&ok, 10);
@@ -51,7 +51,7 @@ bool argAction::setSpinBox(void *spinBox, QString argValue)
     return ok;
 }
 
-bool argAction::setCheckBox(void *checkBox, QString argValue)
+bool argAction::setCheckBox(void *checkBox, const QString argValue)
 {
     if(argValue == "1" || argValue.compare("true", Qt::CaseInsensitive) == 0)
     {
@@ -67,14 +67,14 @@ bool argAction::setCheckBox(void *checkBox, QString argValue)
         return false;
 }
 
-bool argAction::setLineEdit(void *lineEdit, QString argValue)
+bool argAction::setLineEdit(void *lineEdit, const QString argValue)
 {
     static_cast<QLineEdit *>(lineEdit)->setText(argValue);
 
     return true;
 }
 
-bool argAction::setComboBox(void *comboBox, QString argValue)
+bool argAction::setComboBox(void *comboBox, const QString argValue)
 {
     int index = static_cast<QComboBox *>(comboBox)->findText(argValue, Qt::MatchFixedString);
 
@@ -87,7 +87,7 @@ bool argAction::setComboBox(void *comboBox, QString argValue)
         return false;
 }
 
-bool argAction::setButtonGroup(void *buttonGroup, QString argValue)
+bool argAction::setButtonGroup(void *buttonGroup, const QString argValue)
 {
     if(argValue == "1" || argValue.compare("true", Qt::CaseInsensitive) == 0)
     {
@@ -139,7 +139,7 @@ QString argAction::getButtonGroup(void *buttonGroup)
         return "false";
 }
 
-bool argAction::setValue(QString key, QString value)
+bool argAction::setValue(const QString key, const QString value)
 {
     argElement element;
 
@@ -152,7 +152,7 @@ bool argAction::setValue(QString key, QString value)
     return false;
 }
 
-QStringList argAction::getAllArgs(bool getCommentedOptions, bool getDisabledObjects)
+QStringList argAction::getAllArgs(const bool getCommentedOptions, const bool getDisabledObjects)
 {
     QStringList output;
     QString value;

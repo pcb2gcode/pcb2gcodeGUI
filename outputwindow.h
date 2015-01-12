@@ -35,6 +35,7 @@ class outputWindow : public QDialog
 public:
     explicit outputWindow(QWidget *parent = 0);
     ~outputWindow();
+
     QPushButton *getPushButton();
     QPlainTextEdit *getPlainTextEdit();
 

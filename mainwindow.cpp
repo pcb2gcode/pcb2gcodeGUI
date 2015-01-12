@@ -94,7 +94,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ AUTOLEVELLERARGS ].insert("software", ui->softwareComboBox);
     args[ AUTOLEVELLERARGS ].insert("al-x", ui->alxDoubleSpinBox);
     args[ AUTOLEVELLERARGS ].insert("al-y", ui->alyDoubleSpinBox);
-    args[ AUTOLEVELLERARGS ].insert("al-probefeed", ui->alprobefeedDoubleSpinBox);
+    args[ AUTOLEVELLERARGS ].insert("al-probefeed", ui->alprobefeedSpinBox);
     args[ AUTOLEVELLERARGS ].insert("al-probeon", ui->alprobeonLineEdit);
     args[ AUTOLEVELLERARGS ].insert("al-probeoff", ui->alprobeoffLineEdit);
 
@@ -171,7 +171,7 @@ void MainWindow::getPostambleFile()
     getFilename(ui->postambleLineEdit, "postamble file");
 }
 
-void MainWindow::getFilename(QLineEdit *saveTo, QString name)
+void MainWindow::getFilename(QLineEdit *saveTo, const QString name)
 {
     QString filename;
 
@@ -191,49 +191,43 @@ void MainWindow::getOutputDirectory()
 
 void MainWindow::changeMetricInputUnits(bool metric)
 {
-    int index;
-    double cfactor;
-    const char *distance[2] = { " mm", " in" };
-    const char *speedMin[2] = { " mm/min", " in/min" };
-    const char *speedSec[2] = { " mm/s", " in/s" };
+    QDoubleSpinBox *doubleSpinBoxes[] = { ui->zworkDoubleSpinBox, ui->zsafeDoubleSpinBox, ui->offsetDoubleSpinBox,
+                                                  ui->zdrillDoubleSpinBox, ui->zchangeDoubleSpinBox, ui->cutterdiameterDoubleSpinBox,
+                                                  ui->zcutDoubleSpinBox, ui->cutinfeedDoubleSpinBox, ui->outlinewidthDoubleSpinBox,
+                                                  ui->bridgesDoubleSpinBox, ui->zbridgesDoubleSpinBox, ui->alxDoubleSpinBox,
+                                                  ui->alyDoubleSpinBox, ui->g64DoubleDoubleSpinBox };
 
-    QDoubleSpinBox *doubleSpinBoxes[] = { ui->zworkDoubleSpinBox, ui->zsafeDoubleSpinBox,ui->offsetDoubleSpinBox, ui->zdrillDoubleSpinBox,
-                                        ui->zchangeDoubleSpinBox, ui->cutterdiameterDoubleSpinBox, ui->zcutDoubleSpinBox,
-                                        ui->cutinfeedDoubleSpinBox, ui->outlinewidthDoubleSpinBox, ui->bridgesDoubleSpinBox,
-                                        ui->zbridgesDoubleSpinBox, ui->alxDoubleSpinBox, ui->alyDoubleSpinBox,
-                                        ui->g64DoubleDoubleSpinBox };
+    QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->alprobefeedSpinBox };
 
     const unsigned int doubleSpinBoxesLen =  sizeof(doubleSpinBoxes) / sizeof(doubleSpinBoxes[0]);
-
-    if (metric)
-    {
-        index = 0;
-        cfactor = 1/2.54;
-    }
-    else
-    {
-        index = 1;
-        cfactor = 2.54;
-    }
+    const unsigned int spinBoxesLen =  sizeof(spinBoxes) / sizeof(spinBoxes[0]);
+    const double cfactor = metric ? 1/2.54 : 2.54;
+    const char *distance = metric ? " mm" : " in" ;
+    const char *speed = metric ? " mm/min" : " in/min" ;
 
     for( unsigned int i = 0; i < doubleSpinBoxesLen; i++ )
-        adjustMetricImperial( doubleSpinBoxes[i], cfactor, distance[index] );
+        adjustMetricImperial( doubleSpinBoxes[i], cfactor, distance );
 
-    adjustMetricImperial( ui->millfeedSpinBox, cfactor, speedMin[index] );
-    adjustMetricImperial( ui->drillfeedSpinBox, cfactor, speedMin[index] );
-    adjustMetricImperial( ui->cutfeedSpinBox, cfactor, speedMin[index] );
-    adjustMetricImperial( ui->alprobefeedDoubleSpinBox, cfactor, speedSec[index] );
+    for( unsigned int i = 0; i < spinBoxesLen; i++ )
+        adjustMetricImperial( spinBoxes[i], cfactor, speed );
 }
 
 void MainWindow::adjustMetricImperial(QSpinBox *spinBox, const double cfactor, const QString suffix)
 {
-    int value = spinBox->value();
-    int maximum = spinBox->maximum();
-    int minimum = spinBox->minimum();
+    int value;
+    int maximum;
+    int minimum;
 
-    spinBox->setMaximum( round( maximum * cfactor ) );
-    spinBox->setMinimum( round( minimum * cfactor ) );
-    spinBox->setValue( round( value * cfactor ) );
+    if( changeMetricImperialValues )
+    {
+        value = spinBox->value();
+        maximum = spinBox->maximum();
+        minimum = spinBox->minimum();
+
+        spinBox->setMaximum( round( maximum * cfactor ) );
+        spinBox->setMinimum( round( minimum * cfactor ) );
+        spinBox->setValue( round( value * cfactor ) );
+    }
 
     spinBox->setSuffix(suffix);
 }
@@ -455,7 +449,7 @@ void MainWindow::askAndLoadConfFile()
             QMessageBox::information(this, "Error", "The selected file can't be opened");
 }
 
-bool MainWindow::loadConfFile(QString filename)
+bool MainWindow::loadConfFile(const QString filename)
 {
     QFile confFile (this);
     QString currentLine;
@@ -508,7 +502,7 @@ void MainWindow::askAndSaveConfFile()
         saveConfFile(filename);
 }
 
-void MainWindow::saveConfFile(QString filename)
+void MainWindow::saveConfFile(const QString filename)
 {
     QFile confFile (this);
     QStringList arguments;

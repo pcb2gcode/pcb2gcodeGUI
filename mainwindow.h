@@ -95,13 +95,12 @@ private:
     QPlainTextEdit *outputTextEdit;
     QPushButton *killClosePushButton;
 
-    void enableImperialMetricAdjustment(bool enable);
     QStringList getCmdLineArguments();
-    void getFilename(QLineEdit *saveTo, QString name);
+    void getFilename(QLineEdit *saveTo, const QString name);
     void adjustMetricImperial(QSpinBox *spinBox, const double cfactor, const QString suffix);
     void adjustMetricImperial(QDoubleSpinBox *doubleSpinBox, const double cfactor, const QString suffix);
-    void saveConfFile(QString filename);
-    bool loadConfFile(QString filename);
+    void saveConfFile(const QString filename);
+    bool loadConfFile(const QString filename);
     void loadDefaultConfFile();
 };
 
