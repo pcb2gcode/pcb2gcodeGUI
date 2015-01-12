@@ -138,44 +138,44 @@ MainWindow::~MainWindow()
 
 void MainWindow::getFrontFile()
 {
-    getFilename(ui->frontLineEdit, "front file");
+    getFilename(ui->frontLineEdit, tr("front file"));
 }
 
 void MainWindow::getBackFile()
 {
-    getFilename(ui->backLineEdit, "back file");
+    getFilename(ui->backLineEdit, tr("back file"));
 }
 
 void MainWindow::getOutlineFile()
 {
-    getFilename(ui->outlineLineEdit, "outline file");
+    getFilename(ui->outlineLineEdit, tr("outline file"));
 }
 
 void MainWindow::getDrillFile()
 {
-    getFilename(ui->drillLineEdit, "drill file");
+    getFilename(ui->drillLineEdit, tr("drill file"));
 }
 
 void MainWindow::getPreambleFile()
 {
-    getFilename(ui->preambleLineEdit, "preamble file");
+    getFilename(ui->preambleLineEdit, tr("preamble file"));
 }
 
 void MainWindow::getPreambletextFile()
 {
-    getFilename(ui->preambletextLineEdit, "preamble text file");
+    getFilename(ui->preambletextLineEdit, tr("preamble text file"));
 }
 
 void MainWindow::getPostambleFile()
 {
-    getFilename(ui->postambleLineEdit, "postamble file");
+    getFilename(ui->postambleLineEdit, tr("postamble file"));
 }
 
 void MainWindow::getFilename(QLineEdit *saveTo, const QString name)
 {
     QString filename;
 
-    filename = QFileDialog::getOpenFileName(this, "Select the" + name, lastDir );
+    filename = QFileDialog::getOpenFileName(this, tr("Select the") + name, lastDir );
     if( !filename.isEmpty() )
         saveTo->setText( filename );
 }
@@ -184,7 +184,7 @@ void MainWindow::getOutputDirectory()
 {
     QString dirname;
 
-    dirname = QFileDialog::getExistingDirectory(this, "Select the output directory", lastDir );
+    dirname = QFileDialog::getExistingDirectory(this, tr("Select the output directory"), lastDir );
     if( !dirname.isEmpty() )
         ui->outputDirLineEdit->setText( dirname );
 }
@@ -315,7 +315,7 @@ void MainWindow::startPcb2gcode()
         connect(killClosePushButton, SIGNAL(clicked()), this, SLOT(killCloseButtonClicked()));
 
         outputTextEdit = pcb2gcodeOutputWindow->getPlainTextEdit();
-        outputTextEdit->appendPlainText(QString("Starting ") + PCB2GCODE_EXECUTABLE + ' ' + arguments.join(' ')) ;
+        outputTextEdit->appendPlainText(QString(tr("Starting ")) + PCB2GCODE_EXECUTABLE + ' ' + arguments.join(' ')) ;
 
         pcb2gcodeProcess.setWorkingDirectory(ui->outputDirLineEdit->text());
         pcb2gcodeProcess.start(PCB2GCODE_EXECUTABLE, arguments, QProcess::ReadOnly);
@@ -333,39 +333,39 @@ void MainWindow::pcb2gcodeError(QProcess::ProcessError error)
     if(pcb2gcodeKilled)
     {
         pcb2gcodeKilled = false;
-        outputTextEdit->appendHtml("<font color=\"Red\">"
-                                    "pcb2gcode has been killed.</font>");
+        outputTextEdit->appendHtml(tr("<font color=\"Red\">"
+                                      "pcb2gcode has been killed.</font>"));
     }
     else
         switch(error)
         {
             case QProcess::FailedToStart:
-                outputTextEdit->appendHtml("<font color=\"Red\">"
-                                            "pcb2gcode failed to start. "
-                                            "Either the pcb2gcode is missing, "
-                                            "or you may have insufficient permissions "
-                                            "to invoke the program.</font>");
+                outputTextEdit->appendHtml(tr("<font color=\"Red\">"
+                                              "pcb2gcode failed to start. "
+                                              "Either the pcb2gcode is missing, "
+                                              "or you may have insufficient permissions "
+                                              "to invoke the program.</font>"));
                 break;
 
             case QProcess::Crashed:
-                outputTextEdit->appendHtml("<font color=\"Red\">"
-                                            "pcb2gcode unexpectedly crashed. "
-                                            "Please report this error to the project manager."
-                                            "</font>");
+                outputTextEdit->appendHtml(tr("<font color=\"Red\">"
+                                              "pcb2gcode unexpectedly crashed. "
+                                              "Please report this error to the project manager."
+                                              "</font>"));
                 break;
 
             case QProcess::ReadError:
-                outputTextEdit->appendHtml("<font color=\"Red\">"
-                                            "An error occured while reading from pcb2gcode."
-                                            "Please report this error to the project manager."
-                                            "</font>");
+                outputTextEdit->appendHtml(tr("<font color=\"Red\">"
+                                              "An error occured while reading from pcb2gcode."
+                                              "Please report this error to the project manager."
+                                              "</font>"));
                 break;
 
             default:
-               outputTextEdit->appendHtml("<font color=\"Red\">"
-                                            "Unspecified error while trying to run pcb2gcode."
-                                            "Please report this error to the project manager."
-                                            "</font>");
+               outputTextEdit->appendHtml(tr("<font color=\"Red\">"
+                                             "Unspecified error while trying to run pcb2gcode."
+                                             "Please report this error to the project manager."
+                                             "</font>"));
         }
 
     pcb2gcodeStopped();
@@ -373,15 +373,15 @@ void MainWindow::pcb2gcodeError(QProcess::ProcessError error)
 
 void MainWindow::pcb2gcodeStopped()
 {
-    killClosePushButton->setText("Close window");
+    killClosePushButton->setText(tr("Close window"));
 }
 
 void MainWindow::changeKillCloseButtonText(QProcess::ProcessState state)
 {
     if( state == QProcess::NotRunning )
-        killClosePushButton->setText("Close window");
+        killClosePushButton->setText(tr("Close window"));
     else
-        killClosePushButton->setText("Kill " PCB2GCODE_COMMAND_NAME);
+        killClosePushButton->setText(tr("Kill " PCB2GCODE_COMMAND_NAME));
 }
 
 void MainWindow::killCloseButtonClicked()
@@ -408,9 +408,9 @@ void MainWindow::menu_aboutpcb2gcode()
     QProcess pcb2gcodeVersionProcess(this);
     QByteArray version;
 
-    msgBox.setWindowTitle("About pcb2gcode");
+    msgBox.setWindowTitle(tr("About pcb2gcode"));
     msgBox.setTextFormat(Qt::RichText);
-    msgBox.setText( QString(about_pcb2gcode_str).arg("(retrieving version...)") );
+    msgBox.setText( QString(tr(about_pcb2gcode_str)).arg(tr("(retrieving version...)")) );
     msgBox.show();
 
     pcb2gcodeVersionProcess.start(PCB2GCODE_EXECUTABLE, QStringList("--version"), QProcess::ReadWrite);
@@ -418,9 +418,9 @@ void MainWindow::menu_aboutpcb2gcode()
     version = pcb2gcodeVersionProcess.readAllStandardOutput();
 
     if( version.isEmpty() )
-        msgBox.setText( QString(about_pcb2gcode_str).arg("(<font color=\"Red\">can't run" PCB2GCODE_EXECUTABLE "</font>)") );
+        msgBox.setText( QString(tr(about_pcb2gcode_str)).arg(tr("(<font color=\"Red\">can't run" PCB2GCODE_EXECUTABLE "</font>)")) );
     else
-        msgBox.setText( QString(about_pcb2gcode_str).arg(QString(version)) );
+        msgBox.setText( QString(tr(about_pcb2gcode_str)).arg(QString(version)) );
 
     msgBox.exec();
 }
@@ -428,7 +428,7 @@ void MainWindow::menu_aboutpcb2gcode()
 void MainWindow::menu_aboutpcb2gcodeGUI()
 {
     QMessageBox msgBox(this);
-    msgBox.setWindowTitle("About pcb2gcodeGUI");
+    msgBox.setWindowTitle(tr("About pcb2gcodeGUI"));
     msgBox.setTextFormat(Qt::RichText);
     msgBox.setText( QString(about_pcb2gcodegui_str).arg(PCB2GCODE_GUI_VERSION) );
     msgBox.exec();
@@ -443,10 +443,10 @@ void MainWindow::askAndLoadConfFile()
 {
     QString filename;
 
-    filename = QFileDialog::getOpenFileName(this, "Select a configuration file", lastDir );
+    filename = QFileDialog::getOpenFileName(this, tr("Select a configuration file"), lastDir );
     if( !filename.isEmpty() )
         if( !loadConfFile(filename) )
-            QMessageBox::information(this, "Error", "The selected file can't be opened");
+            QMessageBox::information(this, tr("Error"), tr("The selected file can't be opened"));
 }
 
 bool MainWindow::loadConfFile(const QString filename)
@@ -483,7 +483,7 @@ bool MainWindow::loadConfFile(const QString filename)
                     result = args[i].setValue(key, value);
 
                 if(result == false)
-                    QMessageBox::information(this, "Error", "Invalid parameter in configuration file: key=" + key + " value=" + value);
+                    QMessageBox::information(this, tr("Error"), tr("Invalid parameter in configuration file: key=") + key + tr(" value=") + value);
             }
         }
         changeMetricImperialValues = true;
@@ -497,7 +497,7 @@ void MainWindow::askAndSaveConfFile()
 {
     QString filename;
 
-    filename = QFileDialog::getSaveFileName(this, "Save configuration file", lastDir);
+    filename = QFileDialog::getSaveFileName(this, tr("Save configuration file"), lastDir);
     if( !filename.isEmpty() )
         saveConfFile(filename);
 }
@@ -529,7 +529,7 @@ void MainWindow::saveConfFile(const QString filename)
     }
     else
     {
-        QMessageBox::information(this, "Error", "Can't save the file " + filename);
+        QMessageBox::information(this, tr("Error"), tr("Can't save the file ") + filename);
     }
 }
 
@@ -538,28 +538,28 @@ void MainWindow::saveDefaultConfFile()
     QString appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 
     if( appDataLocation.isEmpty() )
-        QMessageBox::information(this, "Error", "Can't retrieve standard folder location");
+        QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
     else
         if( QDir().mkpath(appDataLocation) )
             saveConfFile(appDataLocation + default_config_filename);
         else
-            QMessageBox::information(this, "Error", "Can't create path " + appDataLocation);
+            QMessageBox::information(this, tr("Error"), tr("Can't create path ") + appDataLocation);
 }
 
 void MainWindow::resetDefaultConfFile()
 {
     QString appDataLocation;
 
-    if( QMessageBox::question(this, "Reset default configuration",
-                          "Are you sure you want to reset the default configuration?",
+    if( QMessageBox::question(this, tr("Reset default configuration"),
+                          tr("Are you sure you want to reset the default configuration?"),
                           QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes )
     {
         appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
         if( appDataLocation.isEmpty() )
-            QMessageBox::information(this, "Error", "Can't retrieve standard folder location");
+            QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
         else
             if( !QFile::remove(appDataLocation + default_config_filename) )
-                QMessageBox::information(this, "Error", "Can't delete default configuration file "
+                QMessageBox::information(this, tr("Error"), tr("Can't delete default configuration file ")
                                          + appDataLocation + default_config_filename);
     }
 }
@@ -570,7 +570,7 @@ void MainWindow::loadDefaultConfFile()
 
     appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     if( appDataLocation.isEmpty() )
-        QMessageBox::information(this, "Error", "Can't retrieve standard folder location");
+        QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
     else
         loadConfFile(appDataLocation + default_config_filename);
 }
