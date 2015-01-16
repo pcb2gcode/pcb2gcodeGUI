@@ -256,6 +256,7 @@ QStringList MainWindow::getCmdLineArguments()
 {
     QStringList arguments;
     int i;
+    int pos;
 
     arguments += args[ FILEARGS ].getAllArgs();
     arguments += args[ COMMONARGS ].getAllArgs();
@@ -277,14 +278,28 @@ QStringList MainWindow::getCmdLineArguments()
 
     while( i < arguments.size() )
     {
-        if( arguments[i].contains("=false") )   //Remove lines with a false boolean option ("--metric=false")
-            arguments.removeAt(i);
-        else
+        if( arguments[i].contains("al-probe-") )
+        {
+            pos = arguments[i].indexOf('=');
+
+            if( pos > 0 )
+            {
+                arguments[i].prepend("--");
+                arguments[i].insert( pos + 1, '\'');
+                arguments[i].append('\'');
+                i++;
+            }
+            else
+                arguments.removeAt(i);
+        }
+        else if( !arguments[i].contains("=false") )   //Remove lines with a false boolean option ("--metric=false")
         {
             arguments[i].remove("=true");   //Remove =true ("--metric=true" --> "--metric")
             arguments[i].prepend("--");     //Add the "--"
             i++;
         }
+        else
+            arguments.removeAt(i);
     }
 
     return arguments;
