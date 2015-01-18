@@ -19,32 +19,30 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "settings.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QDateTime>
+#include "settings.h"
 
 const QString MainWindow::names[] = { "File", "Common", "Mill", "Drill", "Outline", "Autoleveller" };
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    inputSystemOfMeasurement(this),
-    outputSystemOfMeasurement(this),
     pcb2gcodeProcess(this),
     pcb2gcodeKilled(false),
     changeMetricImperialValues(true)
 {
+    QString appDataLocation;
+
     ui->setupUi(this);
     this->setFixedSize(this->width(), this->height());
 
-    inputSystemOfMeasurement.addButton(ui->inputMetricRadioButton, METRIC);
-    inputSystemOfMeasurement.addButton(ui->inputImperialRadioButton, IMPERIAL);
-    outputSystemOfMeasurement.addButton(ui->outputMetricRadioButton, METRIC);
-    outputSystemOfMeasurement.addButton(ui->outputImperialRadioButton, IMPERIAL);
-    inputSystemOfMeasurement.button(METRIC)->setChecked(true);
-    outputSystemOfMeasurement.button(METRIC)->setChecked(true);
+    input = new QWidgetPair<QRadioButton, QRadioButton>
+            (ui->inputMetricRadioButton, ui->inputImperialRadioButton);
+    output = new QWidgetPair<QRadioButton, QRadioButton>
+            (ui->outputMetricRadioButton, ui->outputImperialRadioButton);
 
     args[ FILEARGS ].insert("front", ui->frontLineEdit);
     args[ FILEARGS ].insert("back", ui->backLineEdit);
@@ -54,13 +52,13 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ FILEARGS ].insert("preamble-text", ui->preambletextLineEdit);
     args[ FILEARGS ].insert("postamble", ui->postambleLineEdit);
 
-    args[ COMMONARGS ].insert("metric", &inputSystemOfMeasurement);
-    args[ COMMONARGS ].insert("metricoutput", &outputSystemOfMeasurement);
+    args[ COMMONARGS ].insert("metric", input);
+    args[ COMMONARGS ].insert("metricoutput", output);
     args[ COMMONARGS ].insert("zsafe", ui->zsafeDoubleSpinBox);
     args[ COMMONARGS ].insert("zchange", ui->zchangeDoubleSpinBox);
-    args[ COMMONARGS ].insert("g64", ui->g64DoubleDoubleSpinBox);
-    args[ COMMONARGS ].insert("g64enable", ui->g64CheckBox, true);
+    args[ COMMONARGS ].insert("g64", ui->g64DoubleSpinBox);
     args[ COMMONARGS ].insert("optimise", ui->optimiseCheckBox);
+    args[ COMMONARGS ].insert("zero-start", ui->zerostartCheckBox);
     args[ COMMONARGS ].insert("mirror-absolute", ui->mirrorabsoluteCheckBox);
     args[ COMMONARGS ].insert("svg", ui->svgCheckBox);
     args[ COMMONARGS ].insert("dpi", ui->dpiSpinBox);
@@ -104,9 +102,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionManual, SIGNAL(triggered()), this, SLOT(menu_manual()));
 
     connect(ui->actionSave_configuration_file, SIGNAL(triggered()), this, SLOT(askAndSaveConfFile()));
-    connect(ui->actionOpen_configuration_file, SIGNAL(triggered()), this, SLOT(askAndLoadConfFile()));
+    connect(ui->actionLoad_configuration_file, SIGNAL(triggered()), this, SLOT(askAndLoadConfFile()));
     connect(ui->actionSave_current_as_default_configuration, SIGNAL(triggered()), this, SLOT(saveDefaultConfFile()));
     connect(ui->actionReset_the_default_configuration, SIGNAL(triggered()), this, SLOT(resetDefaultConfFile()));
+    connect(ui->actionLoad_default_configuration, SIGNAL(triggered()), this, SLOT(loadDefaultConfFile()));
 
     connect(ui->frontPushButton, SIGNAL(clicked()), this, SLOT(getFrontFile()));
     connect(ui->backPushButton, SIGNAL(clicked()), this, SLOT(getBackFile()));
@@ -117,7 +116,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->postamblePushButton, SIGNAL(clicked()), this, SLOT(getPostambleFile()));
     connect(ui->outputDirPushButton, SIGNAL(clicked()), this, SLOT(getOutputDirectory()));
 
-    connect(ui->g64CheckBox, SIGNAL(toggled(bool)), ui->g64DoubleDoubleSpinBox, SLOT(setEnabled(bool)));
+    connect(ui->g64CheckBox, SIGNAL(toggled(bool)), ui->g64DoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->filloutlineCheckBox, SIGNAL(toggled(bool)), ui->outlinewidthDoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->startPushButton, SIGNAL(clicked()), this, SLOT(startPcb2gcode()));
     connect(ui->inputMetricRadioButton, SIGNAL(toggled(bool)), this, SLOT(changeMetricInputUnits(bool)));
@@ -128,7 +127,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&pcb2gcodeProcess, SIGNAL(readyReadStandardError()), this, SLOT(printOutput()));
     connect(&pcb2gcodeProcess, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(changeKillCloseButtonText(QProcess::ProcessState)));
 
-    loadDefaultConfFile();
+    appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    if( appDataLocation.isEmpty() )
+        QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
+    else
+        loadConfFile(appDataLocation + default_config_filename);
 }
 
 MainWindow::~MainWindow()
@@ -195,7 +198,7 @@ void MainWindow::changeMetricInputUnits(bool metric)
                                                   ui->zdrillDoubleSpinBox, ui->zchangeDoubleSpinBox, ui->cutterdiameterDoubleSpinBox,
                                                   ui->zcutDoubleSpinBox, ui->cutinfeedDoubleSpinBox, ui->outlinewidthDoubleSpinBox,
                                                   ui->bridgesDoubleSpinBox, ui->zbridgesDoubleSpinBox, ui->alxDoubleSpinBox,
-                                                  ui->alyDoubleSpinBox, ui->g64DoubleDoubleSpinBox };
+                                                  ui->alyDoubleSpinBox, ui->g64DoubleSpinBox };
 
     QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->alprobefeedSpinBox };
 
@@ -258,21 +261,21 @@ QStringList MainWindow::getCmdLineArguments()
     int i;
     int pos;
 
-    arguments += args[ FILEARGS ].getAllArgs();
-    arguments += args[ COMMONARGS ].getAllArgs();
+    arguments += args[ FILEARGS ].getAllArgs(false);
+    arguments += args[ COMMONARGS ].getAllArgs(false);
 
     if( !ui->frontLineEdit->text().isEmpty() || !ui->backLineEdit->text().isEmpty() )
-        arguments += args[ MILLARGS ].getAllArgs();
+        arguments += args[ MILLARGS ].getAllArgs(false);
 
     if( !ui->drillLineEdit->text().isEmpty() )
-        arguments += args[ DRILLARGS ].getAllArgs();
+        arguments += args[ DRILLARGS ].getAllArgs(false);
 
     if( !ui->outlineLineEdit->text().isEmpty() )
-        arguments += args[ OUTLINEARGS ].getAllArgs();
+        arguments += args[ OUTLINEARGS ].getAllArgs(false);
 
     if ( (ui->alfrontCheckBox->isChecked() || ui->albackCheckBox->isChecked()) &&
          (!ui->frontLineEdit->text().isEmpty() || !ui->backLineEdit->text().isEmpty()) )
-        arguments += args[ AUTOLEVELLERARGS ].getAllArgs();
+        arguments += args[ AUTOLEVELLERARGS ].getAllArgs(false);
 
     i = 0;
 
@@ -472,6 +475,7 @@ bool MainWindow::loadConfFile(const QString filename)
     QString key;
     QString value;
     bool result;
+    bool enabledOption;
 
     confFile.setFileName(filename);
     confFile.open(QFile::ReadOnly);
@@ -480,11 +484,15 @@ bool MainWindow::loadConfFile(const QString filename)
         changeMetricImperialValues = false;
         while( !confFile.atEnd() )
         {
+            enabledOption = true;
             currentLine = confFile.readLine();
             currentLine.remove(' ');
 
-            if( currentLine.startsWith("#@!") )
-                currentLine.remove(0, 3);       //A line starting with "#@!" is valid
+            if( currentLine.startsWith("#@#") )
+            {
+                currentLine.remove(0, 3);       //A line starting with extra_options_prefix is valid
+                enabledOption = false;
+            }
 
             if( !currentLine.startsWith('#') && currentLine.contains('=') )  //Ignore comments and lines without '='
             {
@@ -495,12 +503,19 @@ bool MainWindow::loadConfFile(const QString filename)
 
                 result = false;
                 for(int i = COMMONARGS; i <= AUTOLEVELLERARGS && !result; i++)
+                {
                     result = args[i].setValue(key, value);
+                    if(result)
+                        args[i].setEnabled(key, enabledOption);
+                }
 
                 if(result == false)
                     QMessageBox::information(this, tr("Error"), tr("Invalid parameter in configuration file: key=") + key + tr(" value=") + value);
             }
         }
+
+        ui->g64CheckBox->setChecked(ui->g64DoubleSpinBox->isEnabled());   //Sync checkBox checked state with doubleSpinBox enabled state
+
         changeMetricImperialValues = true;
         return true;
     }
@@ -531,7 +546,7 @@ void MainWindow::saveConfFile(const QString filename)
 
         for( int i = COMMONARGS; i <= AUTOLEVELLERARGS; i++ )
         {
-            arguments = args[i].getAllArgs(true, true);
+            arguments = args[i].getAllArgs(true);
             confFile.write( QString("# " + names[i] + " options\n").toLatin1() );
 
             for( QStringList::const_iterator j = arguments.begin(); j != arguments.constEnd(); j++ )
@@ -543,9 +558,7 @@ void MainWindow::saveConfFile(const QString filename)
         confFile.close();
     }
     else
-    {
         QMessageBox::information(this, tr("Error"), tr("Can't save the file ") + filename);
-    }
 }
 
 void MainWindow::saveDefaultConfFile()
@@ -561,6 +574,18 @@ void MainWindow::saveDefaultConfFile()
             QMessageBox::information(this, tr("Error"), tr("Can't create path ") + appDataLocation);
 }
 
+void MainWindow::loadDefaultConfFile()
+{
+    QString appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    if( appDataLocation.isEmpty() )
+        QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
+    else
+        if(QFile::exists(appDataLocation + default_config_filename))
+            loadConfFile(appDataLocation + default_config_filename);
+        else
+            ui->setupUi(this);
+}
+
 void MainWindow::resetDefaultConfFile()
 {
     QString appDataLocation;
@@ -573,19 +598,11 @@ void MainWindow::resetDefaultConfFile()
         if( appDataLocation.isEmpty() )
             QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
         else
-            if( !QFile::remove(appDataLocation + default_config_filename) )
+            if( QFile::exists(appDataLocation + default_config_filename) &&
+                !QFile::remove(appDataLocation + default_config_filename) )
                 QMessageBox::information(this, tr("Error"), tr("Can't delete default configuration file ")
                                          + appDataLocation + default_config_filename);
+            else
+                loadDefaultConfFile();
     }
-}
-
-void MainWindow::loadDefaultConfFile()
-{
-    QString appDataLocation;
-
-    appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-    if( appDataLocation.isEmpty() )
-        QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
-    else
-        loadConfFile(appDataLocation + default_config_filename);
 }

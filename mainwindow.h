@@ -74,6 +74,7 @@ private slots:
     void askAndLoadConfFile();
     void saveDefaultConfFile();
     void resetDefaultConfFile();
+    void loadDefaultConfFile();
 
 private:
     enum SystemOfMeasurement { METRIC, IMPERIAL };
@@ -82,9 +83,10 @@ private:
 
     Ui::MainWindow *ui;
 
+
     QString lastDir;
-    QButtonGroup inputSystemOfMeasurement;
-    QButtonGroup outputSystemOfMeasurement;
+    QWidgetPair<QRadioButton, QRadioButton> *input;
+    QWidgetPair<QRadioButton, QRadioButton> *output;
     QProcess pcb2gcodeProcess;
     bool pcb2gcodeKilled;
     bool changeMetricImperialValues;
@@ -95,13 +97,13 @@ private:
     QPlainTextEdit *outputTextEdit;
     QPushButton *killClosePushButton;
 
+    void initUi();
     QStringList getCmdLineArguments();
     void getFilename(QLineEdit *saveTo, const QString name);
     void adjustMetricImperial(QSpinBox *spinBox, const double cfactor, const QString suffix);
     void adjustMetricImperial(QDoubleSpinBox *doubleSpinBox, const double cfactor, const QString suffix);
     void saveConfFile(const QString filename);
     bool loadConfFile(const QString filename);
-    void loadDefaultConfFile();
 };
 
 #endif // MAINWINDOW_H

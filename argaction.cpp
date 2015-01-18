@@ -87,16 +87,16 @@ bool argAction::setComboBox(void *comboBox, const QString argValue)
         return false;
 }
 
-bool argAction::setButtonGroup(void *buttonGroup, const QString argValue)
+bool argAction::setRadioButtonPair(void *radioButtonPair, const QString argValue)
 {
     if(argValue == "1" || argValue.compare("true", Qt::CaseInsensitive) == 0)
     {
-        static_cast<QButtonGroup *>(buttonGroup)->button(0)->setChecked(true);
+        static_cast<QWidgetPair<QRadioButton, QRadioButton> *>(radioButtonPair)->object1->setChecked(true);
         return true;
     }
     else if(argValue == "0" || argValue.compare("false", Qt::CaseInsensitive) == 0)
     {
-        static_cast<QButtonGroup *>(buttonGroup)->button(1)->setChecked(true);
+        static_cast<QWidgetPair<QRadioButton, QRadioButton> *>(radioButtonPair)->object2->setChecked(true);
         return true;
     }
     else
@@ -131,9 +131,9 @@ QString argAction::getComboBox(void *comboBox)
     return static_cast<QComboBox *>(comboBox)->currentText();
 }
 
-QString argAction::getButtonGroup(void *buttonGroup)
+QString argAction::getRadioButtonPair(void *radioButtonPair)
 {
-    if(static_cast<QButtonGroup *>(buttonGroup)->button(0)->isChecked())
+    if(static_cast<QWidgetPair<QRadioButton, QRadioButton> *>(radioButtonPair)->object1->isChecked())
         return "true";
     else
         return "false";
@@ -152,28 +152,34 @@ bool argAction::setValue(const QString key, const QString value)
     return false;
 }
 
-QStringList argAction::getAllArgs(const bool getCommentedOptions, const bool getDisabledObjects)
+QStringList argAction::getAllArgs(bool getCommentedOptions)
 {
     QStringList output;
     QString value;
 
-    for(QHash<QString, argElement>::const_iterator i = argList.constBegin(); i != argList.constEnd(); i++)
+    for(QMap<QString, argElement>::const_iterator i = argList.constBegin(); i != argList.constEnd(); i++)
     {
-        if( getDisabledObjects || static_cast<QWidget *>(i.value().object)->isEnabled() )
+        value = i.value().getFunction( i.value().object );
+        if ( !value.isEmpty() )
         {
-            value = i.value().getFunction( i.value().object );
-            if ( !value.isEmpty() )
-            {
-                if(i.value().commentedOption)
-                {
-                    if(getCommentedOptions)
-                        output << "#@!" + i.key() + '=' + value;
-                }
-                else
-                    output << i.key() + '=' + value;
-            }
+            if( static_cast<QWidget *>(i.value().object)->isEnabled() )
+                output << i.key() + '=' + value;
+            else
+                if(getCommentedOptions)
+                    output << "#@#" + i.key() + '=' + value;
         }
     }
 
     return output;
+}
+
+bool argAction::setEnabled(const QString key, const bool enabled)
+{
+    if( argList.contains(key) )
+    {
+        static_cast<QWidget *>(argList.value(key).object)->setEnabled(enabled);
+        return true;
+    }
+    else
+        return false;
 }
