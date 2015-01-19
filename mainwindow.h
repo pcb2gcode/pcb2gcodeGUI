@@ -104,6 +104,7 @@ private:
     void adjustMetricImperial(QDoubleSpinBox *doubleSpinBox, const double cfactor, const QString suffix);
     void saveConfFile(const QString filename);
     bool loadConfFile(const QString filename);
+    QString getPcb2gcodeVersion();
 };
 
 #endif // MAINWINDOW_H

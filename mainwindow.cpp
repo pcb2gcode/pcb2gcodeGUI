@@ -423,17 +423,14 @@ void MainWindow::enableStartButton()
 void MainWindow::menu_aboutpcb2gcode()
 {
     QMessageBox msgBox(this);
-    QProcess pcb2gcodeVersionProcess(this);
-    QByteArray version;
+    QString version;
 
     msgBox.setWindowTitle(tr("About pcb2gcode"));
     msgBox.setTextFormat(Qt::RichText);
     msgBox.setText( QString(tr(about_pcb2gcode_str)).arg(tr("(retrieving version...)")) );
     msgBox.show();
 
-    pcb2gcodeVersionProcess.start(PCB2GCODE_EXECUTABLE, QStringList("--version"), QProcess::ReadWrite);
-    pcb2gcodeVersionProcess.waitForReadyRead(5000);
-    version = pcb2gcodeVersionProcess.readAllStandardOutput();
+    version = getPcb2gcodeVersion();
 
     if( version.isEmpty() )
         msgBox.setText( QString(tr(about_pcb2gcode_str)).arg(tr("(<font color=\"Red\">can't run" PCB2GCODE_EXECUTABLE "</font>)")) );
@@ -441,6 +438,18 @@ void MainWindow::menu_aboutpcb2gcode()
         msgBox.setText( QString(tr(about_pcb2gcode_str)).arg(QString(version)) );
 
     msgBox.exec();
+}
+
+QString MainWindow::getPcb2gcodeVersion()
+{
+    QProcess pcb2gcodeVersionProcess(this);
+    QByteArray version;
+
+    pcb2gcodeVersionProcess.start(PCB2GCODE_EXECUTABLE, QStringList("--version"), QProcess::ReadOnly);
+    pcb2gcodeVersionProcess.waitForReadyRead(2000);
+    version = pcb2gcodeVersionProcess.readAllStandardOutput();
+
+    return QString(version);
 }
 
 void MainWindow::menu_aboutpcb2gcodeGUI()
