@@ -77,16 +77,16 @@ private slots:
     void loadDefaultConfFile();
 
 private:
-    enum SystemOfMeasurement { METRIC, IMPERIAL };
     enum ArgsType { FILEARGS = 0, COMMONARGS = 1, MILLARGS = 2, DRILLARGS = 3, OUTLINEARGS = 4, AUTOLEVELLERARGS = 5 };
     static const QString names[];
 
     Ui::MainWindow *ui;
 
-
     QString lastDir;
     QWidgetPair<QRadioButton, QRadioButton> *input;
     QWidgetPair<QRadioButton, QRadioButton> *output;
+    QButtonGroup inputGroup;
+    QButtonGroup outputGroup;
     QProcess pcb2gcodeProcess;
     bool pcb2gcodeKilled;
     bool changeMetricImperialValues;

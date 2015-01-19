@@ -30,6 +30,8 @@ const QString MainWindow::names[] = { "File", "Common", "Mill", "Drill", "Outlin
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    inputGroup(this),
+    outputGroup(this),
     pcb2gcodeProcess(this),
     pcb2gcodeKilled(false),
     changeMetricImperialValues(true)
@@ -38,6 +40,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     this->setFixedSize(this->width(), this->height());
+
+    inputGroup.addButton(ui->inputMetricRadioButton, 0);
+    inputGroup.addButton(ui->inputImperialRadioButton, 1);
+    outputGroup.addButton(ui->outputMetricRadioButton, 0);
+    outputGroup.addButton(ui->outputImperialRadioButton, 1);
+    inputGroup.button(0)->setChecked(true);
+    outputGroup.button(0)->setChecked(true);
 
     input = new QWidgetPair<QRadioButton, QRadioButton>
             (ui->inputMetricRadioButton, ui->inputImperialRadioButton);
