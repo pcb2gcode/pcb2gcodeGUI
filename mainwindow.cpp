@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ COMMONARGS ].insert("optimise", ui->optimiseCheckBox);
     args[ COMMONARGS ].insert("zero-start", ui->zerostartCheckBox);
     args[ COMMONARGS ].insert("mirror-absolute", ui->mirrorabsoluteCheckBox);
-    args[ COMMONARGS ].insert("svg", ui->svgCheckBox);
+    args[ COMMONARGS ].insert("svg", ui->svgLineEdit);
     args[ COMMONARGS ].insert("dpi", ui->dpiSpinBox);
 
     args[ MILLARGS ].insert("zwork", ui->zworkDoubleSpinBox);
@@ -127,6 +127,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->g64CheckBox, SIGNAL(toggled(bool)), ui->g64DoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->filloutlineCheckBox, SIGNAL(toggled(bool)), ui->outlinewidthDoubleSpinBox, SLOT(setEnabled(bool)));
+    connect(ui->svgCheckBox, SIGNAL(toggled(bool)), ui->svgLineEdit, SLOT(setEnabled(bool)));
     connect(ui->startPushButton, SIGNAL(clicked()), this, SLOT(startPcb2gcode()));
     connect(ui->inputMetricRadioButton, SIGNAL(toggled(bool)), this, SLOT(changeMetricInputUnits(bool)));
 
@@ -524,6 +525,7 @@ bool MainWindow::loadConfFile(const QString filename)
         }
 
         ui->g64CheckBox->setChecked(ui->g64DoubleSpinBox->isEnabled());   //Sync checkBox checked state with doubleSpinBox enabled state
+        ui->svgCheckBox->setChecked(ui->svgLineEdit->isEnabled());      //Sync checkBox checked state with lineEdit enabled state
 
         changeMetricImperialValues = true;
         return true;
