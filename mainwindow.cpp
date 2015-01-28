@@ -137,6 +137,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&pcb2gcodeProcess, SIGNAL(readyReadStandardError()), this, SLOT(printOutput()));
     connect(&pcb2gcodeProcess, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(changeKillCloseButtonText(QProcess::ProcessState)));
 
+    lastDir = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    if( lastDir.isEmpty() )
+        QMessageBox::information(this, tr("Error"), tr("Can't retrieve home location"));
+
     appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     if( appDataLocation.isEmpty() )
         QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
@@ -188,9 +192,12 @@ void MainWindow::getFilename(QLineEdit *saveTo, const QString name)
 {
     QString filename;
 
-    filename = QFileDialog::getOpenFileName(this, tr("Select the") + name, lastDir );
+    filename = QFileDialog::getOpenFileName(this, tr("Select the ") + name, lastDir );
     if( !filename.isEmpty() )
-        saveTo->setText( filename );
+    {
+        lastDir = QFileInfo(filename).path();
+        saveTo->setText( filename );   
+    }
 }
 
 void MainWindow::getOutputDirectory()
@@ -199,7 +206,10 @@ void MainWindow::getOutputDirectory()
 
     dirname = QFileDialog::getExistingDirectory(this, tr("Select the output directory"), lastDir );
     if( !dirname.isEmpty() )
+    {
+        lastDir = dirname;
         ui->outputDirLineEdit->setText( dirname );
+    }
 }
 
 void MainWindow::changeMetricInputUnits(bool metric)
@@ -482,8 +492,11 @@ void MainWindow::askAndLoadConfFile()
 
     filename = QFileDialog::getOpenFileName(this, tr("Select a configuration file"), lastDir );
     if( !filename.isEmpty() )
+    {
+        lastDir = QFileInfo(filename).path();
         if( !loadConfFile(filename) )
             QMessageBox::information(this, tr("Error"), tr("The selected file can't be opened"));
+    }
 }
 
 bool MainWindow::loadConfFile(const QString filename)
@@ -549,7 +562,10 @@ void MainWindow::askAndSaveConfFile()
 
     filename = QFileDialog::getSaveFileName(this, tr("Save configuration file"), lastDir);
     if( !filename.isEmpty() )
+    {
+        lastDir = QFileInfo(filename).path();
         saveConfFile(filename);
+    }
 }
 
 void MainWindow::saveConfFile(const QString filename)

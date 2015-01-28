@@ -57,7 +57,7 @@
         <x>10</x>
         <y>10</y>
         <width>317</width>
-        <height>375</height>
+        <height>301</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="commonGridLayout">
@@ -277,6 +277,9 @@
        </item>
        <item row="0" column="1">
         <layout class="QHBoxLayout" name="inputSystemOfMeasurementHorizontalLayout">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMinimumSize</enum>
+         </property>
          <item>
           <widget class="QRadioButton" name="inputMetricRadioButton">
            <property name="toolTip">
@@ -313,6 +316,9 @@
        </item>
        <item row="1" column="1">
         <layout class="QHBoxLayout" name="outputSystemOfMeasurementHorizontalLayout">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMinimumSize</enum>
+         </property>
          <item>
           <widget class="QRadioButton" name="outputMetricRadioButton">
            <property name="toolTip">
@@ -1515,7 +1521,7 @@
      <x>0</x>
      <y>0</y>
      <width>795</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
