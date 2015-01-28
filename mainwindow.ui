@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>795</width>
-    <height>467</height>
+    <height>504</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,7 +29,7 @@
       <x>440</x>
       <y>10</y>
       <width>341</width>
-      <height>391</height>
+      <height>431</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -57,7 +57,7 @@
         <x>10</x>
         <y>10</y>
         <width>317</width>
-        <height>341</height>
+        <height>375</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="commonGridLayout">
@@ -119,7 +119,7 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="1">
+       <item row="11" column="1">
         <widget class="QSpinBox" name="dpiSpinBox">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Resolution used internally&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -148,7 +148,7 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="0">
+       <item row="11" column="0">
         <widget class="QLabel" name="dpiLabel">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Resolution used internally&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -216,6 +216,16 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="inputValuesLabel">
+         <property name="toolTip">
+          <string/>
+         </property>
+         <property name="text">
+          <string>Input values</string>
+         </property>
+        </widget>
+       </item>
        <item row="2" column="0">
         <widget class="QLabel" name="zsafeLabel">
          <property name="toolTip">
@@ -223,6 +233,23 @@
          </property>
          <property name="text">
           <string>zsafe</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QLabel" name="svgLabel">
+         <property name="text">
+          <string>svg output file</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="outputValuesLabel">
+         <property name="toolTip">
+          <string/>
+         </property>
+         <property name="text">
+          <string>Output values</string>
          </property>
         </widget>
        </item>
@@ -245,16 +272,6 @@
          </property>
          <property name="value">
           <double>10.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="inputValuesLabel">
-         <property name="toolTip">
-          <string/>
-         </property>
-         <property name="text">
-          <string>Input values</string>
          </property>
         </widget>
        </item>
@@ -294,16 +311,6 @@
          </item>
         </layout>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="outputValuesLabel">
-         <property name="toolTip">
-          <string/>
-         </property>
-         <property name="text">
-          <string>Output values</string>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="1">
         <layout class="QHBoxLayout" name="outputSystemOfMeasurementHorizontalLayout">
          <item>
@@ -336,6 +343,13 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item row="10" column="1">
+        <widget class="QLineEdit" name="svgLineEdit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -1129,6 +1143,11 @@
          </item>
          <item>
           <property name="text">
+           <string>Mach4</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>TurboCNC</string>
           </property>
          </item>
@@ -1477,7 +1496,7 @@
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>410</y>
+      <y>450</y>
       <width>131</width>
       <height>23</height>
      </rect>

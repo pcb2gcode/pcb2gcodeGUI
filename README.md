@@ -2,7 +2,8 @@
 A simple GUI for pcb2gcode. 
 The minimum required Qt's version is 5.0.2.
 After building it, download and install pcb2gcode
-from https://github.com/patkan/pcb2gcode
+from http://sourceforge.net/projects/pcb2gcode/ (use the
+git version)
 
 ## Build
 ### Build on Debian Jessie/Sid, Ubuntu Trusty/Utopic/Vivid
@@ -27,3 +28,10 @@ and do an apt-update
 	sudo apt-get update
 
 then follow the instructions for Debian Jessie
+
+### Build on Windows
+The easiest way to build pcb2gcodeGUI on windows is by downloading
+the Qt SDK from here http://www.qt.io/download-open-source/ and
+building it within Qt Creator. After that, download a pcb2gcode
+Windows build and put it in a pcb2gcode/ subfolder of the pcb2gcodeGUI
+binary
