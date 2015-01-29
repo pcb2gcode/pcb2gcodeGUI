@@ -60,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ FILEARGS ].insert("preamble", ui->preambleLineEdit);
     args[ FILEARGS ].insert("preamble-text", ui->preambletextLineEdit);
     args[ FILEARGS ].insert("postamble", ui->postambleLineEdit);
+    args[ FILEARGS ].insert("output-dir", ui->outputDirLineEdit);
 
     args[ COMMONARGS ].insert("metric", input);
     args[ COMMONARGS ].insert("metricoutput", output);
@@ -355,7 +356,6 @@ void MainWindow::startPcb2gcode()
         outputTextEdit = pcb2gcodeOutputWindow->getPlainTextEdit();
         outputTextEdit->appendPlainText(QString(tr("Starting ")) + PCB2GCODE_EXECUTABLE + ' ' + arguments.join(' ')) ;
 
-        pcb2gcodeProcess.setWorkingDirectory(ui->outputDirLineEdit->text());
         pcb2gcodeProcess.start(PCB2GCODE_EXECUTABLE, arguments, QProcess::ReadOnly);
     }
 }
