@@ -99,7 +99,7 @@ private:
 
     void initUi();
     QStringList getCmdLineArguments();
-    void getFilename(QLineEdit *saveTo, const QString name);
+    void getFilename(QLineEdit *saveTo, const QString name, const char *filter);
     void adjustMetricImperial(QSpinBox *spinBox, const double cfactor, const QString suffix);
     void adjustMetricImperial(QDoubleSpinBox *doubleSpinBox, const double cfactor, const QString suffix);
     void saveConfFile(const QString filename);

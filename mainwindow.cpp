@@ -157,44 +157,44 @@ MainWindow::~MainWindow()
 
 void MainWindow::getFrontFile()
 {
-    getFilename(ui->frontLineEdit, tr("front file"));
+    getFilename(ui->frontLineEdit, tr("front file"), gerber_file_filter);
 }
 
 void MainWindow::getBackFile()
 {
-    getFilename(ui->backLineEdit, tr("back file"));
+    getFilename(ui->backLineEdit, tr("back file"), gerber_file_filter);
 }
 
 void MainWindow::getOutlineFile()
 {
-    getFilename(ui->outlineLineEdit, tr("outline file"));
+    getFilename(ui->outlineLineEdit, tr("outline file"), gerber_file_filter);
 }
 
 void MainWindow::getDrillFile()
 {
-    getFilename(ui->drillLineEdit, tr("drill file"));
+    getFilename(ui->drillLineEdit, tr("drill file"), excellon_file_filter);
 }
 
 void MainWindow::getPreambleFile()
 {
-    getFilename(ui->preambleLineEdit, tr("preamble file"));
+    getFilename(ui->preambleLineEdit, tr("preamble file"), gcode_file_filter);
 }
 
 void MainWindow::getPreambletextFile()
 {
-    getFilename(ui->preambletextLineEdit, tr("preamble text file"));
+    getFilename(ui->preambletextLineEdit, tr("preamble text file"), text_file_filter);
 }
 
 void MainWindow::getPostambleFile()
 {
-    getFilename(ui->postambleLineEdit, tr("postamble file"));
+    getFilename(ui->postambleLineEdit, tr("postamble file"), gcode_file_filter);
 }
 
-void MainWindow::getFilename(QLineEdit *saveTo, const QString name)
+void MainWindow::getFilename(QLineEdit *saveTo, const QString name, const char *filter)
 {
     QString filename;
 
-    filename = QFileDialog::getOpenFileName(this, tr("Select the ") + name, lastDir );
+    filename = QFileDialog::getOpenFileName(this, tr("Select the ") + name, lastDir, filter );
     if( !filename.isEmpty() )
     {
         lastDir = QFileInfo(filename).path();
