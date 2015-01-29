@@ -33,5 +33,5 @@ then follow the instructions for Debian Jessie
 The easiest way to build pcb2gcodeGUI on windows is by downloading
 the Qt SDK from here http://www.qt.io/download-open-source/ and
 building it within Qt Creator. After that, download a pcb2gcode
-Windows build and put it in a pcb2gcode/ subfolder of the pcb2gcodeGUI
+Windows build and put it in the same folder of the pcb2gcodeGUI
 binary
