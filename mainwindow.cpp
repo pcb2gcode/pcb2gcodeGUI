@@ -282,6 +282,9 @@ QStringList MainWindow::getCmdLineArguments()
     int i;
     int pos;
 
+    for( i = FILEARGS; i <= AUTOLEVELLERARGS; i++ )
+        args[i].setStringMarks(true);
+
     arguments += args[ FILEARGS ].getAllArgs(false);
     arguments += args[ COMMONARGS ].getAllArgs(false);
 
@@ -582,6 +585,7 @@ void MainWindow::saveConfFile(const QString filename)
 
         for( int i = COMMONARGS; i <= AUTOLEVELLERARGS; i++ )
         {
+            args[i].setStringMarks(false);
             arguments = args[i].getAllArgs(true);
             confFile.write( QString("# " + names[i] + " options\n").toLatin1() );
 

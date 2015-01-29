@@ -162,6 +162,11 @@ QStringList argAction::getAllArgs(bool getCommentedOptions)
         value = i.value().getFunction( i.value().object );
         if ( !value.isEmpty() )
         {
+#ifndef Q_OS_WIN        //Crashes if quotation marks are present on Windows... Don't know why... FIXME
+            if( stringMarks && i.value().getFunction == &getLineEdit )
+                value = '\"' + value + '\"';
+#endif
+
             if( static_cast<QWidget *>(i.value().object)->isEnabled() )
                 output << i.key() + '=' + value;
             else
