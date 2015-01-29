@@ -1017,7 +1017,7 @@
        <item row="7" column="0">
         <widget class="QLabel" name="alprobeoffLabel">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Insert these commands at the end of the probing sequence, replacing the standard M0 command. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically disable the probe tool. Use a dollar sign ($) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Insert these commands at the end of the probing sequence, replacing the standard M0 command. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically disable the probe tool. Use a at sign (@) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>al-probe-off</string>
@@ -1037,7 +1037,7 @@
        <item row="6" column="0">
         <widget class="QLabel" name="alprobeonLabel">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Insert these commands at the start of the probing sequence. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically enable the probe tool. Use a dollar sign ($) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Insert these commands at the start of the probing sequence. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically enable the probe tool. Use a at sign (@) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>al-probe-on</string>
@@ -1121,14 +1121,14 @@
        <item row="6" column="1">
         <widget class="QLineEdit" name="alprobeonLineEdit">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Insert these commands at the start of the probing sequence. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically enable the probe tool. Use a dollar sign ($) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Insert these commands at the start of the probing sequence. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically enable the probe tool. Use a at sign (@) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
        <item row="7" column="1">
         <widget class="QLineEdit" name="alprobeoffLineEdit">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Insert these commands at the end of the probing sequence, replacing the standard M0 command. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically disable the probe tool. Use a dollar sign ($) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Insert these commands at the end of the probing sequence, replacing the standard M0 command. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically disable the probe tool. Use a at sign (@) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
