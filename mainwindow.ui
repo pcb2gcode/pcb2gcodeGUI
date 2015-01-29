@@ -57,7 +57,7 @@
         <x>10</x>
         <y>10</y>
         <width>317</width>
-        <height>301</height>
+        <height>375</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="commonGridLayout">
@@ -1135,7 +1135,7 @@
        <item row="2" column="1">
         <widget class="QComboBox" name="softwareComboBox">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The height probing commands are different from software to software. Use this option to select the used software; currently supported softwares are LinuxCNC, &lt;font color=&quot;Red&quot;&gt;Mach3 (UNTESTED)&lt;/font&gt; and &lt;font color=&quot;Red&quot;&gt;TurboCNC (UNTESTED)&lt;/font&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The height probing commands are different from software to software. Use this option to select the used software; currently supported softwares are LinuxCNC, &lt;span style=&quot; color:#ff0000;&quot;&gt;Mach3 (UNTESTED)&lt;/span&gt;,&lt;span style=&quot; color:#ff0000;&quot;&gt; Mach4 (UNTESTED)&lt;/span&gt; and &lt;span style=&quot; color:#ff0000;&quot;&gt;TurboCNC (UNTESTED)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <item>
           <property name="text">
@@ -1521,7 +1521,7 @@
      <x>0</x>
      <y>0</y>
      <width>795</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
