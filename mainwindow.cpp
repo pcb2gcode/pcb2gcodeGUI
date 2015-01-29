@@ -41,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->setFixedSize(this->width(), this->height());
 
+    pcb2gcodeProcess.setProcessChannelMode(QProcess::MergedChannels);
+
     inputGroup.addButton(ui->inputMetricRadioButton, 0);
     inputGroup.addButton(ui->inputImperialRadioButton, 1);
     outputGroup.addButton(ui->outputMetricRadioButton, 0);
@@ -135,7 +137,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&pcb2gcodeProcess, SIGNAL(finished(int)), this, SLOT(pcb2gcodeStopped()));
     connect(&pcb2gcodeProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(pcb2gcodeError(QProcess::ProcessError)));
     connect(&pcb2gcodeProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(printOutput()));
-    connect(&pcb2gcodeProcess, SIGNAL(readyReadStandardError()), this, SLOT(printOutput()));
     connect(&pcb2gcodeProcess, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(changeKillCloseButtonText(QProcess::ProcessState)));
 
     lastDir = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
@@ -357,7 +358,7 @@ void MainWindow::startPcb2gcode()
         connect(killClosePushButton, SIGNAL(clicked()), this, SLOT(killCloseButtonClicked()));
 
         outputTextEdit = pcb2gcodeOutputWindow->getPlainTextEdit();
-        outputTextEdit->appendPlainText(QString(tr("Starting ")) + PCB2GCODE_EXECUTABLE + ' ' + arguments.join(' ')) ;
+        outputTextEdit->appendPlainText(QString(tr("Starting ")) + PCB2GCODE_EXECUTABLE + ' ' + arguments.join(' ') + '\n' ) ;
 
         pcb2gcodeProcess.start(PCB2GCODE_EXECUTABLE, arguments, QProcess::ReadOnly);
     }
@@ -365,7 +366,6 @@ void MainWindow::startPcb2gcode()
 
 void MainWindow::printOutput()
 {
-    outputTextEdit->appendHtml(QString("<font color=\"Red\">") + pcb2gcodeProcess.readAllStandardError() + "</font>");
     outputTextEdit->appendPlainText(pcb2gcodeProcess.readAllStandardOutput());
 }
 
