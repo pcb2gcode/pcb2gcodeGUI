@@ -79,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ MILLARGS ].insert("mill-feed", ui->millfeedSpinBox);
     args[ MILLARGS ].insert("mill-speed", ui->millspeedSpinBox);
     args[ MILLARGS ].insert("offset", ui->offsetDoubleSpinBox);
-    args[ MILLARGS ].insert("extra-passes", ui->extraassesSpinBox);
+    args[ MILLARGS ].insert("extra-passes", ui->extrapassesSpinBox);
 
     args[ DRILLARGS ].insert("zdrill", ui->zdrillDoubleSpinBox);
     args[ DRILLARGS ].insert("drill-feed", ui->drillfeedSpinBox);
@@ -87,6 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ DRILLARGS ].insert("milldrill", ui->milldrillCheckBox);
     args[ DRILLARGS ].insert("drill-front", ui->drillfrontCheckBox);
     args[ DRILLARGS ].insert("onedrill", ui->onedrillCheckBox);
+    args[ DRILLARGS ].insert("nog81", ui->nog81CheckBox);
 
     args[ OUTLINEARGS ].insert("cutter-diameter", ui->cutterdiameterDoubleSpinBox);
     args[ OUTLINEARGS ].insert("zcut", ui->zcutDoubleSpinBox);

@@ -500,7 +500,7 @@
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QSpinBox" name="extraassesSpinBox">
+        <widget class="QSpinBox" name="extrapassesSpinBox">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of additional isolation passes For each extra pass, engraving is repeated with the offset width increased by half its original value, creating wider isolation areas&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
@@ -538,7 +538,7 @@
         <x>10</x>
         <y>10</y>
         <width>311</width>
-        <height>185</height>
+        <height>211</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="drillGridLayout">
@@ -680,6 +680,16 @@
          </property>
          <property name="value">
           <number>10000</number>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QCheckBox" name="nog81CheckBox">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;replace G81 with G0+G1. This option makes the gcode compatible with low-end cnc controllers (like grbl), but also makes it bigger and less clean&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>nog81</string>
          </property>
         </widget>
        </item>
@@ -1521,7 +1531,7 @@
      <x>0</x>
      <y>0</y>
      <width>795</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
