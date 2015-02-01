@@ -296,7 +296,7 @@ QStringList MainWindow::getCmdLineArguments()
     if( !ui->drillLineEdit->text().isEmpty() )
         arguments += args[ DRILLARGS ].getAllArgs(false);
 
-    if( !ui->outlineLineEdit->text().isEmpty() )
+    if( !ui->outlineLineEdit->text().isEmpty() || ui->milldrillCheckBox->isChecked() )
         arguments += args[ OUTLINEARGS ].getAllArgs(false);
 
     if ( (ui->alfrontCheckBox->isChecked() || ui->albackCheckBox->isChecked()) &&
