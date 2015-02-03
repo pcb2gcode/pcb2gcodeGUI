@@ -37,11 +37,11 @@ static const char *about_pcb2gcode_str = "pcb2gcode v%1<br>"
 static const char *about_pcb2gcodegui_str = "pcb2gcodeGUI v%1<br>"
                                             "Created by Nicola Corna (nicola@corna.info)<br>"
                                             "<a href='https://github.com/Corna/pcb2gcodeGUI'>https://github.com/Corna/pcb2gcodeGUI</a>";
-static const char *manual_link = "https://github.com/patkan/pcb2gcode/wiki/Manual";
+static const char *manual_link = "https://sourceforge.net/p/pcb2gcode/wiki/Manual/";
 
 static const char *default_config_filename = "/default_millproject";
 
-static const char *gerber_file_filter = "Gerber files (RS-274X) (*.gbr *.gtl *.gtp *.gto *.gbs *.gts);;All types (*.*)";
+static const char *gerber_file_filter = "Gerber files (*.gbr *.gtl *.gtp *.gto *.gbs *.gts);;All types (*.*)";
 static const char *excellon_file_filter = "Excellon files (*.drl);;All types (*.*)";
 static const char *gcode_file_filter = "G-Code files (*.nc *.cnc *.ncc *.ecs *.ncg *.fan *.hnc);;All types (*.*)";
 static const char *text_file_filter = "Text files (*.*)";
