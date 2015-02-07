@@ -152,7 +152,7 @@ bool argAction::setValue(const QString key, const QString value)
     return false;
 }
 
-QStringList argAction::getAllArgs(bool getCommentedOptions)
+QStringList argAction::getAllArgs(const QString prepend, bool getCommentedOptions)
 {
     QStringList output;
     QString value;
@@ -163,10 +163,10 @@ QStringList argAction::getAllArgs(bool getCommentedOptions)
         if ( !value.isEmpty() )
         {
             if( static_cast<QWidget *>(i.value().object)->isEnabled() )
-                output << i.key() + '=' + value;
+                output << prepend + i.key() + '=' + value;
             else
                 if(getCommentedOptions)
-                    output << "#@#" + i.key() + '=' + value;
+                    output << prepend + "#@#" + i.key() + '=' + value;
         }
     }
 

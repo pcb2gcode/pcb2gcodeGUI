@@ -45,7 +45,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="commonTab">
      <attribute name="title">
@@ -1132,6 +1132,9 @@
         <widget class="QLineEdit" name="alprobeonLineEdit">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Insert these commands at the start of the probing sequence. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically enable the probe tool. Use a at sign (@) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="placeholderText">
+          <string/>
          </property>
         </widget>
        </item>

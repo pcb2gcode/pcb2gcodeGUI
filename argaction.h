@@ -66,20 +66,14 @@ protected:
     };
 
     QMap<QString,argElement> argList;
-    bool stringMarks;
 
 public:
     explicit argAction();
     ~argAction();
 
     bool setValue(const QString key, const QString value);
-    QStringList getAllArgs(bool getCommentedOptions);
+    QStringList getAllArgs(const QString prepend, bool getCommentedOptions);
     bool setEnabled(const QString key, const bool enabled);
-
-    inline void setStringMarks (bool stringMarks)
-    {
-        this->stringMarks = stringMarks;
-    }
 
     inline void insert( const QString argName, QDoubleSpinBox *doubleSpinBox)
     {

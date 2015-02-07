@@ -106,8 +106,8 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ AUTOLEVELLERARGS ].insert("al-x", ui->alxDoubleSpinBox);
     args[ AUTOLEVELLERARGS ].insert("al-y", ui->alyDoubleSpinBox);
     args[ AUTOLEVELLERARGS ].insert("al-probefeed", ui->alprobefeedSpinBox);
-    args[ AUTOLEVELLERARGS ].insert("al-probeon", ui->alprobeonLineEdit);
-    args[ AUTOLEVELLERARGS ].insert("al-probeoff", ui->alprobeoffLineEdit);
+    args[ AUTOLEVELLERARGS ].insert("al-probe-on", ui->alprobeonLineEdit);
+    args[ AUTOLEVELLERARGS ].insert("al-probe-off", ui->alprobeoffLineEdit);
 
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui->actionAbout_pcb2gcode, SIGNAL(triggered()), this, SLOT(menu_aboutpcb2gcode()));
@@ -281,55 +281,22 @@ void MainWindow::adjustMetricImperial(QDoubleSpinBox *doubleSpinBox, const doubl
 QStringList MainWindow::getCmdLineArguments()
 {
     QStringList arguments;
-    int i;
-    int pos;
 
-    for( i = FILEARGS; i <= AUTOLEVELLERARGS; i++ )
-        args[i].setStringMarks(true);
-
-    arguments += args[ FILEARGS ].getAllArgs(false);
-    arguments += args[ COMMONARGS ].getAllArgs(false);
+    arguments += args[ FILEARGS ].getAllArgs("--", false);
+    arguments += args[ COMMONARGS ].getAllArgs("--", false);
 
     if( !ui->frontLineEdit->text().isEmpty() || !ui->backLineEdit->text().isEmpty() )
-        arguments += args[ MILLARGS ].getAllArgs(false);
+        arguments += args[ MILLARGS ].getAllArgs("--", false);
 
     if( !ui->drillLineEdit->text().isEmpty() )
-        arguments += args[ DRILLARGS ].getAllArgs(false);
+        arguments += args[ DRILLARGS ].getAllArgs("--", false);
 
     if( !ui->outlineLineEdit->text().isEmpty() || ui->milldrillCheckBox->isChecked() )
-        arguments += args[ OUTLINEARGS ].getAllArgs(false);
+        arguments += args[ OUTLINEARGS ].getAllArgs("--", false);
 
     if ( (ui->alfrontCheckBox->isChecked() || ui->albackCheckBox->isChecked()) &&
          (!ui->frontLineEdit->text().isEmpty() || !ui->backLineEdit->text().isEmpty()) )
-        arguments += args[ AUTOLEVELLERARGS ].getAllArgs(false);
-
-    i = 0;
-
-    while( i < arguments.size() )
-    {
-        if( arguments[i].contains("al-probe-") )
-        {
-            pos = arguments[i].indexOf('=');
-
-            if( pos > 0 )
-            {
-                arguments[i].prepend("--");
-                arguments[i].insert( pos + 1, '\'');
-                arguments[i].append('\'');
-                i++;
-            }
-            else
-                arguments.removeAt(i);
-        }
-        else if( !arguments[i].contains("=false") )   //Remove lines with a false boolean option ("--metric=false")
-        {
-            arguments[i].remove("=true");   //Remove =true ("--metric=true" --> "--metric")
-            arguments[i].prepend("--");     //Add the "--"
-            i++;
-        }
-        else
-            arguments.removeAt(i);
-    }
+        arguments += args[ AUTOLEVELLERARGS ].getAllArgs("--", false);
 
     return arguments;
 }
@@ -586,8 +553,7 @@ void MainWindow::saveConfFile(const QString filename)
 
         for( int i = COMMONARGS; i <= AUTOLEVELLERARGS; i++ )
         {
-            args[i].setStringMarks(false);
-            arguments = args[i].getAllArgs(true);
+            arguments = args[i].getAllArgs("", true);
             confFile.write( QString("# " + names[i] + " options\n").toLatin1() );
 
             for( QStringList::const_iterator j = arguments.begin(); j != arguments.constEnd(); j++ )
