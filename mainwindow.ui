@@ -70,7 +70,7 @@
           <string>custom g64</string>
          </property>
          <property name="checked">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <property name="tristate">
           <bool>false</bool>
@@ -166,6 +166,9 @@
          <property name="text">
           <string>optimise</string>
          </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item row="7" column="0">
@@ -184,7 +187,7 @@
        <item row="5" column="1">
         <widget class="QDoubleSpinBox" name="g64DoubleSpinBox">
          <property name="enabled">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set a custom g64 value (maximum deviation from toolpath), overrides internal calculation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -706,7 +709,7 @@
         <x>10</x>
         <y>10</y>
         <width>311</width>
-        <height>331</height>
+        <height>321</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="outlineGridLayout">
@@ -716,7 +719,7 @@
        <property name="verticalSpacing">
         <number>6</number>
        </property>
-       <item row="8" column="0">
+       <item row="9" column="0">
         <widget class="QCheckBox" name="cutfrontCheckBox">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cut from the front side. Default is from the back side&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -732,7 +735,7 @@
        <item row="6" column="1">
         <widget class="QDoubleSpinBox" name="bridgesDoubleSpinBox">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add four bridges with the given width to the outline cut&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add bridges with the given width to the outline cut.  --bridgesnum bridges will be created for each outline closed line. This option requires --optimise&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="suffix">
           <string> mm</string>
@@ -747,7 +750,7 @@
           <double>0.050000000000000</double>
          </property>
          <property name="value">
-          <double>1.000000000000000</double>
+          <double>0.500000000000000</double>
          </property>
         </widget>
        </item>
@@ -853,7 +856,7 @@
        <item row="6" column="0">
         <widget class="QLabel" name="bridgesLabel">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add four bridges with the given width to the outline cut&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add bridges with the given width to the outline cut.  --bridgesnum bridges will be created for each outline closed line. This option requires --optimise&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>bridges</string>
@@ -947,7 +950,7 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="0">
+       <item row="10" column="0">
         <widget class="QCheckBox" name="filloutlineCheckBox">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If fill-outline is given, it is assumed that the outline file contains not a polygon but a closed chain of lines. The board will be cut along the centres of these lines&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -995,6 +998,32 @@
          </property>
          <property name="value">
           <number>10000</number>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="bridgesnumLabel">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sets the numer of bridges to be created (--bridgesnum bridges for each closed line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>bridgesnum</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QSpinBox" name="bridgesnumSpinBox">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sets the numer of bridges to be created (--bridgesnum bridges for each closed line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>2</number>
          </property>
         </widget>
        </item>

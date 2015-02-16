@@ -97,6 +97,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ OUTLINEARGS ].insert("outline-width", ui->outlinewidthDoubleSpinBox);
     args[ OUTLINEARGS ].insert("bridges", ui->bridgesDoubleSpinBox);
     args[ OUTLINEARGS ].insert("zbridges", ui->zbridgesDoubleSpinBox);
+    args[ OUTLINEARGS ].insert("bridgesnum", ui->bridgesnumSpinBox);
     args[ OUTLINEARGS ].insert("cut-front", ui->cutfrontCheckBox);
     args[ OUTLINEARGS ].insert("fill-outline", ui->filloutlineCheckBox);
 
@@ -132,6 +133,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->g64CheckBox, SIGNAL(toggled(bool)), ui->g64DoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->filloutlineCheckBox, SIGNAL(toggled(bool)), ui->outlinewidthDoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->svgCheckBox, SIGNAL(toggled(bool)), ui->svgLineEdit, SLOT(setEnabled(bool)));
+    connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), ui->bridgesDoubleSpinBox, SLOT(setEnabled(bool)));
+    connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), ui->zbridgesDoubleSpinBox, SLOT(setEnabled(bool)));
+    connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), ui->bridgesnumSpinBox, SLOT(setEnabled(bool)));
+
     connect(ui->startPushButton, SIGNAL(clicked()), this, SLOT(startPcb2gcode()));
     connect(ui->inputMetricRadioButton, SIGNAL(toggled(bool)), this, SLOT(changeMetricInputUnits(bool)));
 
@@ -516,7 +521,6 @@ bool MainWindow::loadConfFile(const QString filename)
                     QMessageBox::information(this, tr("Error"), tr("Invalid parameter in configuration file: key=") + key + tr(" value=") + value);
             }
         }
-
         ui->g64CheckBox->setChecked(ui->g64DoubleSpinBox->isEnabled());   //Sync checkBox checked state with doubleSpinBox enabled state
         ui->svgCheckBox->setChecked(ui->svgLineEdit->isEnabled());      //Sync checkBox checked state with lineEdit enabled state
 
