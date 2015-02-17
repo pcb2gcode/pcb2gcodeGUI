@@ -33,11 +33,11 @@
 #define PCB2GCODE_GUI_VERSION 0.1
 
 static const char *about_pcb2gcode_str = "pcb2gcode v%1<br>"
-                                         "<a href='http://sourceforge.net/projects/pcb2gcode/'>http://sourceforge.net/projects/pcb2gcode/</a><br>";
+                                         "<a href='https://github.com/pcb2gcode/pcb2gcode'>https://github.com/pcb2gcode/pcb2gcode</a><br>";
 static const char *about_pcb2gcodegui_str = "pcb2gcodeGUI v%1<br>"
                                             "Created by Nicola Corna (nicola@corna.info)<br>"
-                                            "<a href='https://github.com/Corna/pcb2gcodeGUI'>https://github.com/Corna/pcb2gcodeGUI</a>";
-static const char *manual_link = "https://sourceforge.net/p/pcb2gcode/wiki/Manual/";
+                                            "<a href='https://github.com/pcb2gcode/pcb2gcodeGUI'>https://github.com/pcb2gcode/pcb2gcodeGUI</a>";
+static const char *manual_link = "https://github.com/pcb2gcode/pcb2gcode/wiki/Manual";
 
 static const char *default_config_filename = "/default_millproject";
 

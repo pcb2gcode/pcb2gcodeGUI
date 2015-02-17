@@ -8,8 +8,8 @@ git version)
 ## Build
 ### Build on Debian Jessie/Sid, Ubuntu Trusty/Utopic/Vivid
     
-    sudo apt-get install git qt5-default
-    git clone https://github.com/Corna/pcb2gcodeGUI.git
+    sudo apt-get install build-essential git qt5-default
+    git clone https://github.com/pcb2gcode/pcb2gcodeGUI.git
     cd pcb2gcodeGUI/
     qmake
     make
