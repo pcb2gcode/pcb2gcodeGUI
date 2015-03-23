@@ -23,6 +23,7 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QDateTime>
+#include <QRegularExpression>
 #include "settings.h"
 
 const QString MainWindow::names[] = { "File", "Common", "Mill", "Drill", "Outline", "Autoleveller" };
@@ -439,13 +440,16 @@ void MainWindow::menu_aboutpcb2gcode()
 QString MainWindow::getPcb2gcodeVersion()
 {
     QProcess pcb2gcodeVersionProcess(this);
-    QByteArray version;
+    QRegularExpressionMatch res;
 
     pcb2gcodeVersionProcess.start(PCB2GCODE_EXECUTABLE, QStringList("--version"), QProcess::ReadOnly);
     pcb2gcodeVersionProcess.waitForReadyRead(2000);
-    version = pcb2gcodeVersionProcess.readAllStandardOutput();
+    res = QRegularExpression("\\d+\\.\\d+\\.\\d+").match( pcb2gcodeVersionProcess.readAllStandardOutput() );
 
-    return QString(version);
+    if(res.hasMatch())
+        return res.captured();
+    else
+        return "UNABLE TO RETRIEVE VERSION";
 }
 
 void MainWindow::menu_aboutpcb2gcodeGUI()
