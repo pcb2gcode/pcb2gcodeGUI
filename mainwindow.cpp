@@ -310,6 +310,8 @@ QStringList MainWindow::getCmdLineArguments()
 void MainWindow::startPcb2gcode()
 {
     QStringList arguments;
+    QString arguments_formatted;
+    int pos;
 
     if( ui->outputDirLineEdit->text().isEmpty() )
         getOutputDirectory();
@@ -320,6 +322,16 @@ void MainWindow::startPcb2gcode()
 
         arguments << "--noconfigfile";
         arguments += getCmdLineArguments();
+
+        for(QStringList::iterator iter = arguments.begin(); iter != arguments.end(); iter++) {
+            pos = iter->indexOf('=');
+            if( pos > 0 ) {
+                if(iter->contains(' '))
+                    arguments_formatted += iter->left( pos + 1 ) + '\"' + iter->right( iter->length() - pos - 1 ) + "\" ";
+                else
+                    arguments_formatted += *iter + ' ';
+            }
+        }
 
         pcb2gcodeOutputWindow = new outputWindow(this);
         pcb2gcodeOutputWindow->setWindowTitle(PCB2GCODE_COMMAND_NAME " output");
@@ -332,7 +344,7 @@ void MainWindow::startPcb2gcode()
         connect(killClosePushButton, SIGNAL(clicked()), this, SLOT(killCloseButtonClicked()));
 
         outputTextEdit = pcb2gcodeOutputWindow->getPlainTextEdit();
-        outputTextEdit->appendPlainText(QString(tr("Starting ")) + PCB2GCODE_EXECUTABLE + ' ' + arguments.join(' ') + '\n' ) ;
+        outputTextEdit->appendPlainText(QString(tr("Starting ")) + PCB2GCODE_EXECUTABLE + ' ' + arguments_formatted + '\n' ) ;
 
         pcb2gcodeProcess.start(PCB2GCODE_EXECUTABLE, arguments, QProcess::ReadOnly);
     }
