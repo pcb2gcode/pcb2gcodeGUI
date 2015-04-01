@@ -456,11 +456,11 @@ void MainWindow::menu_aboutpcb2gcode()
 QString MainWindow::getPcb2gcodeVersion()
 {
     QProcess pcb2gcodeVersionProcess(this);
-    QRegularExpressionMatch res;
 
     pcb2gcodeVersionProcess.start(PCB2GCODE_EXECUTABLE, QStringList("--version"), QProcess::ReadOnly);
     pcb2gcodeVersionProcess.waitForReadyRead(2000);
-    res = QRegularExpression("\\d+\\.\\d+\\.\\d+").match( pcb2gcodeVersionProcess.readAllStandardOutput() );
+
+    QRegularExpressionMatch res = QRegularExpression("\\d+\\.\\d+\\.\\d+").match( pcb2gcodeVersionProcess.readAllStandardOutput() );
 
     if(res.hasMatch())
         return res.captured();
