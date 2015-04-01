@@ -161,7 +161,7 @@
        <item row="6" column="0">
         <widget class="QCheckBox" name="optimiseCheckBox">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Optimize output gcode, reducing its output size up to 40%, while accepting a little loss of precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;optimise output gcode, reducing its output size up to 95%, while accepting a very little loss of precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>optimise</string>
@@ -541,7 +541,7 @@
         <x>10</x>
         <y>10</y>
         <width>311</width>
-        <height>211</height>
+        <height>214</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="drillGridLayout">
@@ -709,7 +709,7 @@
         <x>10</x>
         <y>10</y>
         <width>311</width>
-        <height>321</height>
+        <height>360</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="outlineGridLayout">
@@ -1040,7 +1040,7 @@
         <x>10</x>
         <y>10</y>
         <width>311</width>
-        <height>291</height>
+        <height>371</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="autolevellerGridLayout">
@@ -1060,6 +1060,19 @@
          </property>
          <property name="text">
           <string>al-probe-off</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="alprobecodeLabel">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;custom Z probe code. For example, LinuxCNC uses G38.2 while Mach3, Mach4 and TurboCNC use G31. If unspecified, G31 will be used. This option is relevant only when --software=custom&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>al-probecode</string>
          </property>
         </widget>
        </item>
@@ -1150,7 +1163,7 @@
        <item row="2" column="0">
         <widget class="QLabel" name="softwareLabel">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The height probing commands are different from software to software. Use this option to select the used software; currently supported softwares are LinuxCNC, &lt;font color=&quot;Red&quot;&gt;Mach3 (UNTESTED)&lt;/font&gt; and &lt;font color=&quot;Red&quot;&gt;TurboCNC (UNTESTED)&lt;/font&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;the height probing commands are different from software to software. Use this option to select the used software; currently supported softwares are LinuxCNC, Mach3, Mach4 and custom. With custom you can specify al-probecode, al-probevar and al-setzzero, in order to generate gcode for an unsupported software. For compatibility reasons, the custom gcode is much bigger (3-4 times) than the gcode for a supported software.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>software</string>
@@ -1177,7 +1190,7 @@
        <item row="2" column="1">
         <widget class="QComboBox" name="softwareComboBox">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The height probing commands are different from software to software. Use this option to select the used software; currently supported softwares are LinuxCNC, &lt;span style=&quot; color:#ff0000;&quot;&gt;Mach3 (UNTESTED)&lt;/span&gt;,&lt;span style=&quot; color:#ff0000;&quot;&gt; Mach4 (UNTESTED)&lt;/span&gt; and &lt;span style=&quot; color:#ff0000;&quot;&gt;TurboCNC (UNTESTED)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;the height probing commands are different from software to software. Use this option to select the used software; currently supported softwares are LinuxCNC, Mach3, Mach4 and custom. With custom you can specify al-probecode, al-probevar and al-setzzero, in order to generate gcode for an unsupported software. For compatibility reasons, the custom gcode is much bigger (3-4 times) than the gcode for a supported software.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <item>
           <property name="text">
@@ -1196,7 +1209,7 @@
          </item>
          <item>
           <property name="text">
-           <string>TurboCNC</string>
+           <string>custom</string>
           </property>
          </item>
         </widget>
@@ -1243,6 +1256,83 @@
          </property>
          <property name="value">
           <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="alprobevarLabel">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;custom Z probe result variable. For example, LinuxCNC uses 5063 while Mach3, Mach4 and TurboCNC use 2002. If unspecified,  2002  will be used. This option is relevant only when --software=custom&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>al-probevar</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QLabel" name="alsetzzeroLabel">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;custom gcode for setting the actual height as the zero of the Z axis. For example, LinuxCNC uses G10 L20 P0 Z0 while Mach3, Mach4 and TurboCNC use G92 Z0. If unspecified, G92 Z0 will be used. This option is relevant only when --software=custom&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>al-setzzero</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QLineEdit" name="alprobecodeLineEdit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;custom Z probe code. For example, LinuxCNC uses G38.2 while Mach3, Mach4 and TurboCNC use G31. If unspecified, G31 will be used. This option is relevant only when --software=custom&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>G31</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <widget class="QLineEdit" name="alsetzzeroLineEdit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;custom gcode for setting the actual height as the zero of the Z axis. For example, LinuxCNC uses G10 L20 P0 Z0 while Mach3, Mach4 and TurboCNC use G92 Z0. If unspecified, G92 Z0 will be used. This option is relevant only when --software=custom&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>G92 Z0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QSpinBox" name="alprobevarSpinBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;custom Z probe result variable. For example, LinuxCNC uses 5063 while Mach3, Mach4 and TurboCNC use 2002. If unspecified,  2002  will be used. This option is relevant only when --software=custom&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="suffix">
+          <string/>
+         </property>
+         <property name="prefix">
+          <string/>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>100000</number>
+         </property>
+         <property name="value">
+          <number>2002</number>
          </property>
         </widget>
        </item>
@@ -1563,7 +1653,7 @@
      <x>0</x>
      <y>0</y>
      <width>795</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

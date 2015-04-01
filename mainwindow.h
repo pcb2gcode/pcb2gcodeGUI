@@ -76,6 +76,8 @@ private slots:
     void resetDefaultConfFile();
     void loadDefaultConfFile();
 
+    void updateAlCustomEnableState(QString text);
+
 private:
     enum ArgsType { FILEARGS = 0, COMMONARGS = 1, MILLARGS = 2, DRILLARGS = 3, OUTLINEARGS = 4, AUTOLEVELLERARGS = 5 };
     static const QString names[];

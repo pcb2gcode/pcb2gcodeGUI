@@ -110,6 +110,9 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ AUTOLEVELLERARGS ].insert("al-probefeed", ui->alprobefeedSpinBox);
     args[ AUTOLEVELLERARGS ].insert("al-probe-on", ui->alprobeonLineEdit);
     args[ AUTOLEVELLERARGS ].insert("al-probe-off", ui->alprobeoffLineEdit);
+    args[ AUTOLEVELLERARGS ].insert("al-probecode", ui->alprobecodeLineEdit);
+    args[ AUTOLEVELLERARGS ].insert("al-probevar", ui->alprobevarSpinBox);
+    args[ AUTOLEVELLERARGS ].insert("al-setzzero", ui->alsetzzeroLineEdit);
 
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui->actionAbout_pcb2gcode, SIGNAL(triggered()), this, SLOT(menu_aboutpcb2gcode()));
@@ -137,6 +140,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), ui->bridgesDoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), ui->zbridgesDoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), ui->bridgesnumSpinBox, SLOT(setEnabled(bool)));
+    connect(ui->softwareComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateAlCustomEnableState(QString)));
 
     connect(ui->startPushButton, SIGNAL(clicked()), this, SLOT(startPcb2gcode()));
     connect(ui->inputMetricRadioButton, SIGNAL(toggled(bool)), this, SLOT(changeMetricInputUnits(bool)));
@@ -632,4 +636,13 @@ void MainWindow::resetDefaultConfFile()
             else
                 loadDefaultConfFile();
     }
+}
+
+void MainWindow::updateAlCustomEnableState(QString text)
+{
+    bool enabled = text == "custom";
+
+    ui->alprobecodeLineEdit->setEnabled(enabled);
+    ui->alprobevarSpinBox->setEnabled(enabled);
+    ui->alsetzzeroLineEdit->setEnabled(enabled);
 }
