@@ -462,6 +462,8 @@ QString MainWindow::getPcb2gcodeVersion()
 
     QRegularExpressionMatch res = QRegularExpression("\\d+\\.\\d+\\.\\d+").match( pcb2gcodeVersionProcess.readAllStandardOutput() );
 
+    pcb2gcodeVersionProcess.waitForFinished(500);
+
     if(res.hasMatch())
         return res.captured();
     else
