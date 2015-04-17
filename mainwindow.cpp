@@ -237,7 +237,7 @@ void MainWindow::changeMetricInputUnits(bool metric)
 
     const unsigned int doubleSpinBoxesLen =  sizeof(doubleSpinBoxes) / sizeof(doubleSpinBoxes[0]);
     const unsigned int spinBoxesLen =  sizeof(spinBoxes) / sizeof(spinBoxes[0]);
-    const double cfactor = metric ? 1/2.54 : 2.54;
+    const double cfactor = metric ? 25.4 : 1/25.4;
     const char *distance = metric ? " mm" : " in" ;
     const char *speed = metric ? " mm/min" : " in/min" ;
 
