@@ -1217,7 +1217,7 @@
        <item row="0" column="0">
         <widget class="QCheckBox" name="alfrontCheckBox">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable the autoleveller for the front side (&lt;font color=&quot;Red&quot;&gt;EXPERIMENTAL&lt;/font&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable the autoleveller for the front side&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>al-front</string>
@@ -1230,7 +1230,7 @@
        <item row="1" column="0">
         <widget class="QCheckBox" name="albackCheckBox">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable the autoleveller for the back side (&lt;font color=&quot;Red&quot;&gt;EXPERIMENTAL&lt;/font&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable the autoleveller for the front side&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>al-back</string>

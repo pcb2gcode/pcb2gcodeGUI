@@ -19,137 +19,128 @@
 
 #include "argaction.h"
 
-argAction::argAction()
-{
-
-}
-
-argAction::~argAction()
-{
-
-}
-
-bool argAction::setDoubleSpinBox(void *doubleSpinBox, const QString argValue)
+bool argDoubleSpinBox::setValue(const QString value)
 {
     bool ok;
-    double value = argValue.toDouble(&ok);
+    const double numericalValue = value.toDouble(&ok);
 
     if (ok)
-        static_cast<QDoubleSpinBox *>(doubleSpinBox)->setValue(value);
+        object->setValue(numericalValue);
 
     return ok;
 }
 
-bool argAction::setSpinBox(void *spinBox, const QString argValue)
+QString argDoubleSpinBox::getValue()
+{
+    return QString::number(object->value(), 'f', 4);
+}
+
+bool argSpinBox::setValue(const QString value)
 {
     bool ok;
-    int value = argValue.toInt(&ok, 10);
+    double numericalValue = value.toInt(&ok);
 
     if (ok)
-        static_cast<QSpinBox *>(spinBox)->setValue(value);
+        object->setValue(numericalValue);
 
     return ok;
 }
 
-bool argAction::setCheckBox(void *checkBox, const QString argValue)
+QString argSpinBox::getValue()
 {
-    if(argValue == "1" || argValue.compare("true", Qt::CaseInsensitive) == 0)
+    return QString::number(object->value());
+}
+
+bool argCheckBox::setValue(const QString value)
+{
+    if(value == "1" || value.compare("true", Qt::CaseInsensitive) == 0)
     {
-        static_cast<QCheckBox *>(checkBox)->setChecked(true);
+        object->setChecked(true);
         return true;
     }
-    else if (argValue == "0" || argValue.compare("false", Qt::CaseInsensitive) == 0)
+    else if (value == "0" || value.compare("false", Qt::CaseInsensitive) == 0)
     {
-        static_cast<QCheckBox *>(checkBox)->setChecked(false);
+        object->setChecked(false);
         return true;
     }
     else
         return false;
 }
 
-bool argAction::setLineEdit(void *lineEdit, const QString argValue)
+QString argCheckBox::getValue()
 {
-    static_cast<QLineEdit *>(lineEdit)->setText(argValue);
+    if(object->isChecked())
+        return "true";
+    else
+        return "false";
+}
+
+bool argLineEdit::setValue(const QString value)
+{
+    object->setText(value);
+    return true;
+}
+
+QString argLineEdit::getValue()
+{
+    return object->text();
+}
+
+bool argComboBox::setValue(const QString value)
+{
+    const int index = object->findText(value, Qt::MatchFixedString);
+
+    if( index >= 0 )
+    {
+        object->setCurrentIndex(index);
+        return true;
+    }
+    else
+        return false;
+}
+
+QString argComboBox::getValue()
+{
+    return object->currentText();
+}
+
+bool argRadioButtonPair::setValue(const QString value)
+{
+    if(value == "1" || value.compare("true", Qt::CaseInsensitive) == 0)
+    {
+        object.first->setChecked(true);
+        object.second->setChecked(false);
+        return true;
+    }
+    else if(value == "0" || value.compare("false", Qt::CaseInsensitive) == 0)
+    {
+        object.first->setChecked(false);
+        object.second->setChecked(true);
+        return true;
+    }
+    else
+        return false;
+}
+
+QString argRadioButtonPair::getValue()
+{
+    if(object.first->isChecked())
+        return "true";
+    else
+        return "false";
+}
+
+bool argRadioButtonPair::setEnabled(bool enabled)
+{
+    object.first->setEnabled(enabled);
+    object.second->setEnabled(enabled);
 
     return true;
 }
 
-bool argAction::setComboBox(void *comboBox, const QString argValue)
+bool argRadioButtonPair::getEnabled()
 {
-    int index = static_cast<QComboBox *>(comboBox)->findText(argValue, Qt::MatchFixedString);
-
-    if( index >= 0 )
-    {
-        static_cast<QComboBox *>(comboBox)->setCurrentIndex(index);
-        return true;
-    }
-    else
-        return false;
-}
-
-bool argAction::setRadioButtonPair(void *radioButtonPair, const QString argValue)
-{
-    if(argValue == "1" || argValue.compare("true", Qt::CaseInsensitive) == 0)
-    {
-        static_cast<QWidgetPair<QRadioButton, QRadioButton> *>(radioButtonPair)->object1->setChecked(true);
-        return true;
-    }
-    else if(argValue == "0" || argValue.compare("false", Qt::CaseInsensitive) == 0)
-    {
-        static_cast<QWidgetPair<QRadioButton, QRadioButton> *>(radioButtonPair)->object2->setChecked(true);
-        return true;
-    }
-    else
-        return false;
-}
-
-QString argAction::getDoubleSpinBox(void *doubleSpinBox)
-{
-    return QString::number(static_cast<QDoubleSpinBox *>(doubleSpinBox)->value(), 'f', 4);
-}
-
-QString argAction::getSpinBox(void *spinBox)
-{
-    return QString::number(static_cast<QSpinBox *>(spinBox)->value(), 10);
-}
-
-QString argAction::getCheckBox(void *checkBox)
-{
-    if(static_cast<QCheckBox *>(checkBox)->isChecked())
-        return "true";
-    else
-        return "false";
-}
-
-QString argAction::getLineEdit(void *lineEdit)
-{
-    return static_cast<QLineEdit *>(lineEdit)->text();
-}
-
-QString argAction::getComboBox(void *comboBox)
-{
-    return static_cast<QComboBox *>(comboBox)->currentText();
-}
-
-QString argAction::getRadioButtonPair(void *radioButtonPair)
-{
-    if(static_cast<QWidgetPair<QRadioButton, QRadioButton> *>(radioButtonPair)->object1->isChecked())
-        return "true";
-    else
-        return "false";
-}
-
-bool argAction::setValue(const QString key, const QString value)
-{
-    argElement element;
-
-    if( argList.contains(key) )
-    {
-        element = argList.value(key);
-        return element.setFunction( element.object, value );
-    }
-
-    return false;
+    return object.first->isEnabled();
 }
 
 QStringList argAction::getAllArgs(const QString prepend, bool getCommentedOptions)
@@ -157,12 +148,12 @@ QStringList argAction::getAllArgs(const QString prepend, bool getCommentedOption
     QStringList output;
     QString value;
 
-    for(QMap<QString, argElement>::const_iterator i = argList.constBegin(); i != argList.constEnd(); i++)
+    for(QMap<QString, argBase *>::const_iterator i = objects.constBegin(); i != objects.constEnd(); i++)
     {
-        value = i.value().getFunction( i.value().object );
+        value = i.value()->getValue();
         if ( !value.isEmpty() )
         {
-            if( static_cast<QWidget *>(i.value().object)->isEnabled() )
+            if( i.value()->getEnabled() )
                 output << prepend + i.key() + '=' + value;
             else
                 if(getCommentedOptions)
@@ -171,15 +162,4 @@ QStringList argAction::getAllArgs(const QString prepend, bool getCommentedOption
     }
 
     return output;
-}
-
-bool argAction::setEnabled(const QString key, const bool enabled)
-{
-    if( argList.contains(key) )
-    {
-        static_cast<QWidget *>(argList.value(key).object)->setEnabled(enabled);
-        return true;
-    }
-    else
-        return false;
 }

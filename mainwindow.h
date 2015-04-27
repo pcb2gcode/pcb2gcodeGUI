@@ -26,7 +26,6 @@
 #include <QProcess>
 #include <QStringList>
 #include <QLineEdit>
-#include <QButtonGroup>
 #include <QPushButton>
 #include <QPlainTextEdit>
 #include <QHash>
@@ -85,10 +84,6 @@ private:
     Ui::MainWindow *ui;
 
     QString lastDir;
-    QWidgetPair<QRadioButton, QRadioButton> *input;
-    QWidgetPair<QRadioButton, QRadioButton> *output;
-    QButtonGroup inputGroup;
-    QButtonGroup outputGroup;
     QProcess pcb2gcodeProcess;
     bool pcb2gcodeKilled;
     bool changeMetricImperialValues;

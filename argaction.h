@@ -30,86 +30,211 @@
 #include <QLineEdit>
 #include <QComboBox>
 
-template <class T1, class T2> class QWidgetPair : public QWidget
+class argBase
 {
 public:
-    explicit QWidgetPair() {}
-    explicit QWidgetPair(T1 *object1, T2 *object2) :
-       object1(object1), object2(object2) {}
+    virtual bool setValue(const QString)
+    {
+        return false;
+    }
 
-    T1 *object1;
-    T2 *object2;
+    virtual QString getValue()
+    {
+        return "";
+    }
+
+    virtual bool setEnabled(bool)
+    {
+        return false;
+    }
+
+    virtual bool getEnabled()
+    {
+        return false;
+    }
 };
 
-class argAction
+
+class argDoubleSpinBox : public argBase
 {
-protected:
-    static bool setDoubleSpinBox(void *doubleSpinBox, const QString argValue);
-    static bool setSpinBox(void *spinBox, const QString argValue);
-    static bool setCheckBox(void *checkBox, const QString argValue);
-    static bool setLineEdit(void *lineEdit, const QString argValue);
-    static bool setComboBox(void *comboBox, const QString argValue);
-    static bool setRadioButtonPair(void *radioButtonPair, const QString argValue);
-
-    static QString getDoubleSpinBox(void *doubleSpinBox);
-    static QString getSpinBox(void *spinBox);
-    static QString getCheckBox(void *checkBox);
-    static QString getLineEdit(void *lineEdit);
-    static QString getComboBox(void *comboBox);
-    static QString getRadioButtonPair(void *radioButtonPair);
-
-    struct argElement
-    {
-        bool (*setFunction)(void *object, QString argValue);
-        QString (*getFunction)(void *object);
-        void *object;
-    };
-
-    QMap<QString,argElement> argList;
-
 public:
-    explicit argAction();
-    ~argAction();
+    argDoubleSpinBox(QDoubleSpinBox *object) : object(object) {}
 
-    bool setValue(const QString key, const QString value);
+    bool setValue(const QString value);
+    QString getValue();
+
+    inline bool setEnabled(bool enabled)
+    {
+        object->setEnabled(enabled);
+        return true;
+    }
+
+    inline bool getEnabled() {
+        return object->isEnabled();
+    }
+
+protected:
+    QDoubleSpinBox *object;
+};
+
+
+class argSpinBox : public argBase
+{
+public:
+    argSpinBox(QSpinBox *object) : object(object) {}
+
+    bool setValue(const QString value);
+    QString getValue();
+
+    inline bool setEnabled(bool enabled)
+    {
+        object->setEnabled(enabled);
+        return true;
+    }
+
+    inline bool getEnabled()
+    {
+        return object->isEnabled();
+    }
+
+protected:
+    QSpinBox *object;
+};
+
+
+class argCheckBox : public argBase
+{
+public:
+    argCheckBox(QCheckBox *object) : object(object) {}
+
+    bool setValue(const QString value);
+    QString getValue();
+
+    inline bool setEnabled(bool enabled)
+    {
+        object->setEnabled(enabled);
+        return true;
+    }
+
+    inline bool getEnabled()
+    {
+        return object->isEnabled();
+    }
+
+protected:
+    QCheckBox *object;
+};
+
+
+class argLineEdit : public argBase
+{
+public:
+    argLineEdit(QLineEdit *object) : object(object) {}
+
+    bool setValue(const QString value);
+    QString getValue();
+
+    inline bool setEnabled(bool enabled)
+    {
+        object->setEnabled(enabled);
+        return true;
+    }
+
+    inline bool getEnabled()
+    {
+        return object->isEnabled();
+    }
+
+protected:
+    QLineEdit *object;
+};
+
+
+class argComboBox : public argBase
+{
+public:
+    argComboBox(QComboBox *object) : object(object) {}
+
+    bool setValue(const QString value);
+    QString getValue();
+
+    inline bool setEnabled(bool enabled)
+    {
+        object->setEnabled(enabled);
+        return true;
+    }
+
+    inline bool getEnabled()
+    {
+        return object->isEnabled();
+    }
+
+protected:
+    QComboBox *object;
+};
+
+
+class argRadioButtonPair : public argBase
+{
+public:
+    argRadioButtonPair(QPair<QRadioButton *, QRadioButton *> object) : object(object) {}
+
+    bool setValue(const QString value);
+    QString getValue();
+    bool setEnabled(bool enabled);
+    bool getEnabled();
+
+protected:
+    QPair<QRadioButton *, QRadioButton *> object;
+};
+
+
+class argAction {
+public:
     QStringList getAllArgs(const QString prepend, bool getCommentedOptions);
-    bool setEnabled(const QString key, const bool enabled);
 
-    inline void insert( const QString argName, QDoubleSpinBox *doubleSpinBox)
+    inline bool setValue(const QString key, const QString value)
     {
-        argList.insert( argName, (argElement){ .setFunction = &setDoubleSpinBox, .getFunction = &getDoubleSpinBox,
-                                               .object = doubleSpinBox } );
+        return objects.value(key, new argBase)->setValue(value);
     }
 
-    inline void insert( const QString argName, QSpinBox *spinBox)
+    inline bool setEnabled(const QString key, const bool enabled)
     {
-        argList.insert( argName, (argElement){ .setFunction = &setSpinBox, .getFunction = &getSpinBox,
-                                               .object = spinBox } );
+        return objects.value(key, new argBase)->setEnabled(enabled);
     }
 
-    inline void insert( const QString argName, QCheckBox *checkBox)
+    inline void insert(const QString argName, QDoubleSpinBox *doubleSpinBox)
     {
-        argList.insert( argName, (argElement){ .setFunction = &setCheckBox, .getFunction = &getCheckBox,
-                                               .object = checkBox } );
+        objects.insert( argName, new argDoubleSpinBox(doubleSpinBox) );
     }
 
-    inline void insert( const QString argName, QLineEdit *lineEdit)
+    inline void insert(const QString argName, QSpinBox *spinBox)
     {
-        argList.insert( argName, (argElement){ .setFunction = &setLineEdit, .getFunction = &getLineEdit,
-                                               .object = lineEdit } );
+        objects.insert( argName, new argSpinBox(spinBox) );
     }
 
-    inline void insert( const QString argName, QComboBox *comboBox)
+    inline void insert(const QString argName, QCheckBox *checkBox)
     {
-        argList.insert( argName, (argElement){ .setFunction = &setComboBox, .getFunction = &getComboBox,
-                                               .object = comboBox } );
+        objects.insert( argName, new argCheckBox(checkBox) );
     }
 
-    inline void insert( const QString argName, QWidgetPair<QRadioButton, QRadioButton> *radioButtonPair)
+    inline void insert(const QString argName, QLineEdit *lineEdit)
     {
-        argList.insert( argName, (argElement){ .setFunction = &setRadioButtonPair, .getFunction = &getRadioButtonPair,
-                                               .object = radioButtonPair } );
+        objects.insert( argName, new argLineEdit(lineEdit) );
     }
+
+    inline void insert(const QString argName, QComboBox *comboBox)
+    {
+        objects.insert( argName, new argComboBox(comboBox) );
+    }
+
+    inline void insert(const QString argName, QPair<QRadioButton *, QRadioButton *> radioButtonPair)
+    {
+        objects.insert( argName, new argRadioButtonPair(radioButtonPair) );
+    }
+
+protected:
+    QMap<QString, argBase *> objects;
 };
 
 #endif // ARGACTION_H

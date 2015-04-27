@@ -24,6 +24,8 @@
 #include <QDesktopServices>
 #include <QDateTime>
 #include <QRegularExpression>
+#include <cmath>
+
 #include "settings.h"
 
 const QString MainWindow::names[] = { "File", "Common", "Mill", "Drill", "Outline", "Autoleveller" };
@@ -31,8 +33,6 @@ const QString MainWindow::names[] = { "File", "Common", "Mill", "Drill", "Outlin
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    inputGroup(this),
-    outputGroup(this),
     pcb2gcodeProcess(this),
     pcb2gcodeKilled(false),
     changeMetricImperialValues(true)
@@ -44,18 +44,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     pcb2gcodeProcess.setProcessChannelMode(QProcess::MergedChannels);
 
-    inputGroup.addButton(ui->inputMetricRadioButton, 0);
-    inputGroup.addButton(ui->inputImperialRadioButton, 1);
-    outputGroup.addButton(ui->outputMetricRadioButton, 0);
-    outputGroup.addButton(ui->outputImperialRadioButton, 1);
-    inputGroup.button(0)->setChecked(true);
-    outputGroup.button(0)->setChecked(true);
-
-    input = new QWidgetPair<QRadioButton, QRadioButton>
-            (ui->inputMetricRadioButton, ui->inputImperialRadioButton);
-    output = new QWidgetPair<QRadioButton, QRadioButton>
-            (ui->outputMetricRadioButton, ui->outputImperialRadioButton);
-
     args[ FILEARGS ].insert("front", ui->frontLineEdit);
     args[ FILEARGS ].insert("back", ui->backLineEdit);
     args[ FILEARGS ].insert("outline", ui->outlineLineEdit);
@@ -65,8 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ FILEARGS ].insert("postamble", ui->postambleLineEdit);
     args[ FILEARGS ].insert("output-dir", ui->outputDirLineEdit);
 
-    args[ COMMONARGS ].insert("metric", input);
-    args[ COMMONARGS ].insert("metricoutput", output);
+    args[ COMMONARGS ].insert("metric", QPair<QRadioButton *, QRadioButton *>(ui->inputMetricRadioButton, ui->inputImperialRadioButton) );
+    args[ COMMONARGS ].insert("metricoutput", QPair<QRadioButton *, QRadioButton *>(ui->outputMetricRadioButton, ui->outputImperialRadioButton) );
     args[ COMMONARGS ].insert("zsafe", ui->zsafeDoubleSpinBox);
     args[ COMMONARGS ].insert("zchange", ui->zchangeDoubleSpinBox);
     args[ COMMONARGS ].insert("g64", ui->g64DoubleSpinBox);
