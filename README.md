@@ -13,10 +13,17 @@ git version)
     cd pcb2gcodeGUI/
     qmake
     make
+    sudo make install
 
 Now just run the built executable with
 
-    ./pcb2gcodeGUI
+    pcb2gcodeGUI
+
+You can also specify a different installation path with
+
+    qmake PREFIX=<prefix path>
+
+pcb2gcodeGUI will be installed in PREFIX/bin
 
 ### Build on Debian Wheezy
 You need wheezy-backports: add this line to /etc/apt/sources.list

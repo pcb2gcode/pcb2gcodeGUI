@@ -1,14 +1,16 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2014-12-30T13:44:55
-#
-#-------------------------------------------------
-
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+isEmpty(PREFIX) {
+    PREFIX = /usr/local
+}
+
 TARGET = pcb2gcodeGUI
+target.path = $$PREFIX/bin
+
+INSTALLS += target
+
 TEMPLATE = app
 
 SOURCES += main.cpp\
@@ -23,3 +25,4 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     outputwindow.ui
+
