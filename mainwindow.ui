@@ -360,6 +360,66 @@
          </property>
         </widget>
        </item>
+       <item row="12" column="1">
+        <layout class="QHBoxLayout" name="tileHorizontalLayout">
+         <item>
+          <widget class="QLabel" name="tilexLabel">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;number of tiling columns&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>x</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="tilexSpinBox">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;number of tiling columns&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="tileyLabel">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;number of tiling rows&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>y</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="tileySpinBox">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;number of tiling rows&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="12" column="0">
+        <widget class="QLabel" name="tileLabel">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;number of tiling rows/columns&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>tile</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -551,6 +611,16 @@
        <property name="verticalSpacing">
         <number>6</number>
        </property>
+       <item row="6" column="0">
+        <widget class="QCheckBox" name="nog81CheckBox">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;replace G81 with G0+G1. This option makes the gcode compatible with low-end cnc controllers (like grbl), but also makes it bigger and less clean&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>nog81</string>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="0">
         <widget class="QLabel" name="zdrillLabel">
          <property name="toolTip">
@@ -562,19 +632,6 @@
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QCheckBox" name="drillfrontCheckBox">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the coordinates of the front side for drilling instead of the coordinates of the back side&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="text">
-          <string>drill-front</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
         <widget class="QCheckBox" name="milldrillCheckBox">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If milldrill is given, the milling head will be used to drill the holes in the PCB. Holes up to the size of the milling head will be drilled regularly (possibly creating a bigger hole than intended), the other holes are created by moving the head in circles using the feed and infeed parameters used in cutting&lt;/p&gt;&lt;p&gt;Remember that you have to set also &amp;quot;outline&amp;quot; parameters if you set this option&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -686,13 +743,35 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
-        <widget class="QCheckBox" name="nog81CheckBox">
+       <item row="3" column="1">
+        <widget class="QComboBox" name="drillsideComboBox">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;replace G81 with G0+G1. This option makes the gcode compatible with low-end cnc controllers (like grbl), but also makes it bigger and less clean&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;choose the drill side. Valid choices are front, back or auto (default). In auto mode the drill side is automatically chosen (always front unless only the back side is specified)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>auto</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>front</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>back</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="drillsideLabel">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;choose the drill side. Valid choices are front, back or auto (default). In auto mode the drill side is automatically chosen (always front unless only the back side is specified)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
-          <string>nog81</string>
+          <string>drill-side</string>
          </property>
         </widget>
        </item>
@@ -719,19 +798,6 @@
        <property name="verticalSpacing">
         <number>6</number>
        </property>
-       <item row="9" column="0">
-        <widget class="QCheckBox" name="cutfrontCheckBox">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cut from the front side. Default is from the back side&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="text">
-          <string>cut-front</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
        <item row="6" column="1">
         <widget class="QDoubleSpinBox" name="bridgesDoubleSpinBox">
          <property name="toolTip">
@@ -1024,6 +1090,38 @@
          </property>
          <property name="value">
           <number>2</number>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QComboBox" name="cutsideComboBox">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;choose the cut side. Valid choices are front, back or auto (default). In auto mode the cut side is automatically chosen (always front unless only the back side is specified)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>auto</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>front</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>back</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="cutsideLabel">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;choose the cut side. Valid choices are front, back or auto (default). In auto mode the cut side is automatically chosen (always front unless only the back side is specified)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>cut-side</string>
          </property>
         </widget>
        </item>
@@ -1653,7 +1751,7 @@
      <x>0</x>
      <y>0</y>
      <width>795</width>
-     <height>24</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

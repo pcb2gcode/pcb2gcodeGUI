@@ -63,6 +63,8 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ COMMONARGS ].insert("mirror-absolute", ui->mirrorabsoluteCheckBox);
     args[ COMMONARGS ].insert("svg", ui->svgLineEdit);
     args[ COMMONARGS ].insert("dpi", ui->dpiSpinBox);
+    args[ COMMONARGS ].insert("tile-x", ui->tilexSpinBox);
+    args[ COMMONARGS ].insert("tile-y", ui->tileySpinBox);
 
     args[ MILLARGS ].insert("zwork", ui->zworkDoubleSpinBox);
     args[ MILLARGS ].insert("mill-feed", ui->millfeedSpinBox);
@@ -74,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ DRILLARGS ].insert("drill-feed", ui->drillfeedSpinBox);
     args[ DRILLARGS ].insert("drill-speed", ui->drillspeedSpinBox);
     args[ DRILLARGS ].insert("milldrill", ui->milldrillCheckBox);
-    args[ DRILLARGS ].insert("drill-front", ui->drillfrontCheckBox);
+    args[ DRILLARGS ].insert("drill-side", ui->drillsideComboBox);
     args[ DRILLARGS ].insert("onedrill", ui->onedrillCheckBox);
     args[ DRILLARGS ].insert("nog81", ui->nog81CheckBox);
 
@@ -87,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ OUTLINEARGS ].insert("bridges", ui->bridgesDoubleSpinBox);
     args[ OUTLINEARGS ].insert("zbridges", ui->zbridgesDoubleSpinBox);
     args[ OUTLINEARGS ].insert("bridgesnum", ui->bridgesnumSpinBox);
-    args[ OUTLINEARGS ].insert("cut-front", ui->cutfrontCheckBox);
+    args[ OUTLINEARGS ].insert("cut-side", ui->cutsideComboBox);
     args[ OUTLINEARGS ].insert("fill-outline", ui->filloutlineCheckBox);
 
     args[ AUTOLEVELLERARGS ].insert("al-front", ui->alfrontCheckBox);
@@ -518,6 +520,24 @@ bool MainWindow::loadConfFile(const QString filename)
                 key = currentLine.left( equalPosition );
                 value = currentLine.right( currentLine.size() - equalPosition - 1 );
                 value.chop(1);      //Chop the last character ('/n')
+
+                if (key == "drill-front")
+                {
+                    key = "drill-side";
+                    if(value == "1" || value.compare("true", Qt::CaseInsensitive) == 0)
+                        value = "front";
+                    else
+                        value = "back";
+                }
+
+                if (key == "cut-front")
+                {
+                    key = "cut-side";
+                    if(value == "1" || value.compare("true", Qt::CaseInsensitive) == 0)
+                        value = "front";
+                    else
+                        value = "back";
+                }
 
                 result = false;
                 for(int i = COMMONARGS; i <= AUTOLEVELLERARGS && !result; i++)
