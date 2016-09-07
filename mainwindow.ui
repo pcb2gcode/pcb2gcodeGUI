@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>795</width>
-    <height>504</height>
+    <height>615</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,7 +29,7 @@
       <x>440</x>
       <y>10</y>
       <width>341</width>
-      <height>431</height>
+      <height>521</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -45,7 +45,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="commonTab">
      <attribute name="title">
@@ -57,17 +57,17 @@
         <x>10</x>
         <y>10</y>
         <width>317</width>
-        <height>375</height>
+        <height>468</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="commonGridLayout">
-       <item row="4" column="0">
-        <widget class="QCheckBox" name="g64CheckBox">
+       <item row="5" column="0">
+        <widget class="QCheckBox" name="nog64CheckBox">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable the custom g64 value&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;do not explicitly set G64 inside the output gcode. This option makes the gcode compatible with low-end cnc controllers (like grbl)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
-          <string>custom g64</string>
+          <string>nog64</string>
          </property>
          <property name="checked">
           <bool>false</bool>
@@ -77,7 +77,7 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="0">
+       <item row="9" column="0">
         <widget class="QCheckBox" name="mirrorabsoluteCheckBox">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mirror operations on the back side along the Y axis instead of the board center, which is the default&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -87,13 +87,13 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="g64Label">
+       <item row="6" column="0">
+        <widget class="QLabel" name="toleranceLabel">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set a custom g64 value (maximum deviation from toolpath), overrides internal calculation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;maximum deviation from toolpath&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
-          <string>g64 custom value</string>
+          <string>tolerance</string>
          </property>
         </widget>
        </item>
@@ -119,7 +119,7 @@
          </property>
         </widget>
        </item>
-       <item row="11" column="1">
+       <item row="12" column="1">
         <widget class="QSpinBox" name="dpiSpinBox">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Resolution used internally&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -148,7 +148,7 @@
          </property>
         </widget>
        </item>
-       <item row="11" column="0">
+       <item row="12" column="0">
         <widget class="QLabel" name="dpiLabel">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Resolution used internally&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -158,7 +158,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
+       <item row="7" column="0">
         <widget class="QCheckBox" name="optimiseCheckBox">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;optimise output gcode, reducing its output size up to 95%, while accepting a very little loss of precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -171,7 +171,7 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="0">
+       <item row="8" column="0">
         <widget class="QCheckBox" name="zerostartCheckBox">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;set the starting point of the project at (0,0). With this option the projet will be between (0,0) and (max_x_value, max_y_value) (positive values)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -184,13 +184,13 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
-        <widget class="QDoubleSpinBox" name="g64DoubleSpinBox">
+       <item row="6" column="1">
+        <widget class="QDoubleSpinBox" name="toleranceDoubleSpinBox">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set a custom g64 value (maximum deviation from toolpath), overrides internal calculation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;maximum deviation from toolpath&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="suffix">
           <string> mm</string>
@@ -202,14 +202,14 @@
           <double>10.000000000000000</double>
          </property>
          <property name="singleStep">
-          <double>0.010000000000000</double>
+          <double>0.001000000000000</double>
          </property>
          <property name="value">
-          <double>0.050000000000000</double>
+          <double>0.010000000000000</double>
          </property>
         </widget>
        </item>
-       <item row="9" column="0">
+       <item row="10" column="0">
         <widget class="QCheckBox" name="svgCheckBox">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output SVG file (&lt;font color=&quot;Red&quot;&gt;EXPERIMENTAL&lt;/font&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -239,7 +239,7 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="0">
+       <item row="11" column="0">
         <widget class="QLabel" name="svgLabel">
          <property name="text">
           <string>svg output file</string>
@@ -353,14 +353,14 @@
          </item>
         </layout>
        </item>
-       <item row="10" column="1">
+       <item row="11" column="1">
         <widget class="QLineEdit" name="svgLineEdit">
          <property name="enabled">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="12" column="1">
+       <item row="13" column="1">
         <layout class="QHBoxLayout" name="tileHorizontalLayout">
          <item>
           <widget class="QLabel" name="tilexLabel">
@@ -410,13 +410,23 @@
          </item>
         </layout>
        </item>
-       <item row="12" column="0">
+       <item row="13" column="0">
         <widget class="QLabel" name="tileLabel">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;number of tiling rows/columns&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>tile</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QCheckBox" name="vectorialCheckBox">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;enable the EXPERIMENTAL vectorial core. This new core offers much better performances, higher precision, smaller output files and support for internal cutoffs (like thermal pads). When --vectorial is enabled, --dpi is ignored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>vectorial</string>
          </property>
         </widget>
        </item>
@@ -433,7 +443,7 @@
         <x>10</x>
         <y>10</y>
         <width>311</width>
-        <height>166</height>
+        <height>207</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="millGridLayout">
@@ -490,7 +500,7 @@
        <item row="3" column="0">
         <widget class="QLabel" name="offsetLabel">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Distance by which the tool movement will be outset from the contours in the gerber file to be engraved. If this distance can't be satisfied because copper areas are too close, a warning will be printed and the line will be drawn between the areas. This behavior can be used to get voronoi-style (flood-filling) areas; simply set the offset to a large value (like 30 mm / 1 inch)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;distance by which the tool movement will be outset from the contours in the gerber file to be engraved. If you want to obtain a PCB as similar as possible to the original file, you should set this value to half of the tool diameter.              If this distance can't be satisfied because copper areas are too close, a warning will be printed and the line will be drawn between the areas. This behavior can be used to get voronoi-style (flood-filling) areas; sim‐ply set the offset to a large value (like 1 inch).  When the vectorial mode is in use, --voronoi is preferred.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>offset</string>
@@ -500,7 +510,7 @@
        <item row="3" column="1">
         <widget class="QDoubleSpinBox" name="offsetDoubleSpinBox">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Distance by which the tool movement will be outset from the contours in the gerber file to be engraved. If this distance can't be satisfied because copper areas are too close, a warning will be printed and the line will be drawn between the areas. This behavior can be used to get voronoi-style (flood-filling) areas; simply set the offset to a large value (like 30 mm / 1 inch)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;distance by which the tool movement will be outset from the contours in the gerber file to be engraved. If you want to obtain a PCB as similar as possible to the original file, you should set this value to half of the tool diameter.              If this distance can't be satisfied because copper areas are too close, a warning will be printed and the line will be drawn between the areas. This behavior can be used to get voronoi-style (flood-filling) areas; sim‐ply set the offset to a large value (like 1 inch).  When the vectorial mode is in use, --voronoi is preferred.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="suffix">
           <string> mm</string>
@@ -552,20 +562,20 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item row="5" column="0">
         <widget class="QLabel" name="extrapassesLabel">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of additional isolation passes For each extra pass, engraving is repeated with the offset width increased by half its original value, creating wider isolation areas&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;number of additional isolation passes For each extra pass, engraving is repeated with the offset width increased by half its original value, creating wider isolation areas. This option is ignored when --voronoi is in use.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>extra-passes</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="5" column="1">
         <widget class="QSpinBox" name="extrapassesSpinBox">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of additional isolation passes For each extra pass, engraving is repeated with the offset width increased by half its original value, creating wider isolation areas&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;number of additional isolation passes For each extra pass, engraving is repeated with the offset width increased by half its original value, creating wider isolation areas. This option is ignored when --voronoi is in use.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
@@ -588,6 +598,19 @@
          </property>
         </widget>
        </item>
+       <item row="4" column="0">
+        <widget class="QCheckBox" name="voronoiCheckBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;enable the voronoi mode (requires  --vectorial). This option is more efficient than a large --offset value, and provides the same result.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>voronoi</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -601,7 +624,7 @@
         <x>10</x>
         <y>10</y>
         <width>311</width>
-        <height>214</height>
+        <height>301</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="drillGridLayout">
@@ -611,7 +634,7 @@
        <property name="verticalSpacing">
         <number>6</number>
        </property>
-       <item row="6" column="0">
+       <item row="7" column="0">
         <widget class="QCheckBox" name="nog81CheckBox">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;replace G81 with G0+G1. This option makes the gcode compatible with low-end cnc controllers (like grbl), but also makes it bigger and less clean&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -692,7 +715,7 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
+       <item row="6" column="0">
         <widget class="QCheckBox" name="onedrillCheckBox">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use only one drill bit size&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -775,6 +798,51 @@
          </property>
         </widget>
        </item>
+       <item row="8" column="0">
+        <widget class="QCheckBox" name="nog911CheckBox">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;do not explicitly set G91.1 (incremental arc mode distance) in drill headers.  Some controllers (like Roland's) does not support G91.1 and they can wrongly interpret it as G91 (relative distance). Since the default mode is usually &amp;quot;incremental&amp;quot;, you can safely remove G91.1 in most of the cases&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>nog91-1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="milldrillLabel">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;diameter of milling head which is used with --milldrill; the default value is same as --cutter-diameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>milldrill-diameter</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QDoubleSpinBox" name="milldrilldiameterDoubleSpinBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;diameter of milling head which is used with --milldrill; the default value is same as --cutter-diameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="suffix">
+          <string> mm</string>
+         </property>
+         <property name="decimals">
+          <number>3</number>
+         </property>
+         <property name="maximum">
+          <double>100.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.100000000000000</double>
+         </property>
+         <property name="value">
+          <double>3.000000000000000</double>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -788,7 +856,7 @@
         <x>10</x>
         <y>10</y>
         <width>311</width>
-        <height>360</height>
+        <height>387</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="outlineGridLayout">
@@ -1138,7 +1206,7 @@
         <x>10</x>
         <y>10</y>
         <width>311</width>
-        <height>371</height>
+        <height>390</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="autolevellerGridLayout">
@@ -1444,7 +1512,7 @@
       <x>10</x>
       <y>10</y>
       <width>421</width>
-      <height>271</height>
+      <height>291</height>
      </rect>
     </property>
     <property name="title">
@@ -1456,7 +1524,7 @@
        <x>10</x>
        <y>20</y>
        <width>401</width>
-       <height>248</height>
+       <height>262</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="inputFilesGridLayout">
@@ -1677,7 +1745,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>290</y>
+      <y>310</y>
       <width>421</width>
       <height>61</height>
      </rect>
@@ -1689,7 +1757,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>20</y>
        <width>401</width>
        <height>41</height>
       </rect>
@@ -1732,7 +1800,7 @@
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>450</y>
+      <y>550</y>
       <width>131</width>
       <height>23</height>
      </rect>
@@ -1751,7 +1819,7 @@
      <x>0</x>
      <y>0</y>
      <width>795</width>
-     <height>19</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

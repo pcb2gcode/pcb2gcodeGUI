@@ -57,7 +57,9 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ COMMONARGS ].insert("metricoutput", QPair<QRadioButton *, QRadioButton *>(ui->outputMetricRadioButton, ui->outputImperialRadioButton) );
     args[ COMMONARGS ].insert("zsafe", ui->zsafeDoubleSpinBox);
     args[ COMMONARGS ].insert("zchange", ui->zchangeDoubleSpinBox);
-    args[ COMMONARGS ].insert("g64", ui->g64DoubleSpinBox);
+    args[ COMMONARGS ].insert("vectorial", ui->vectorialCheckBox);
+    args[ COMMONARGS ].insert("nog64", ui->nog64CheckBox);
+    args[ COMMONARGS ].insert("tolerance", ui->toleranceDoubleSpinBox);
     args[ COMMONARGS ].insert("optimise", ui->optimiseCheckBox);
     args[ COMMONARGS ].insert("zero-start", ui->zerostartCheckBox);
     args[ COMMONARGS ].insert("mirror-absolute", ui->mirrorabsoluteCheckBox);
@@ -70,15 +72,18 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ MILLARGS ].insert("mill-feed", ui->millfeedSpinBox);
     args[ MILLARGS ].insert("mill-speed", ui->millspeedSpinBox);
     args[ MILLARGS ].insert("offset", ui->offsetDoubleSpinBox);
+    args[ MILLARGS ].insert("voronoi", ui->voronoiCheckBox);
     args[ MILLARGS ].insert("extra-passes", ui->extrapassesSpinBox);
 
     args[ DRILLARGS ].insert("zdrill", ui->zdrillDoubleSpinBox);
     args[ DRILLARGS ].insert("drill-feed", ui->drillfeedSpinBox);
     args[ DRILLARGS ].insert("drill-speed", ui->drillspeedSpinBox);
     args[ DRILLARGS ].insert("milldrill", ui->milldrillCheckBox);
+    args[ DRILLARGS ].insert("milldrill-diameter", ui->milldrilldiameterDoubleSpinBox);
     args[ DRILLARGS ].insert("drill-side", ui->drillsideComboBox);
     args[ DRILLARGS ].insert("onedrill", ui->onedrillCheckBox);
     args[ DRILLARGS ].insert("nog81", ui->nog81CheckBox);
+    args[ DRILLARGS ].insert("nog91-1", ui->nog911CheckBox);
 
     args[ OUTLINEARGS ].insert("cutter-diameter", ui->cutterdiameterDoubleSpinBox);
     args[ OUTLINEARGS ].insert("zcut", ui->zcutDoubleSpinBox);
@@ -124,12 +129,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->postamblePushButton, SIGNAL(clicked()), this, SLOT(getPostambleFile()));
     connect(ui->outputDirPushButton, SIGNAL(clicked()), this, SLOT(getOutputDirectory()));
 
-    connect(ui->g64CheckBox, SIGNAL(toggled(bool)), ui->g64DoubleSpinBox, SLOT(setEnabled(bool)));
+    connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), this, SLOT(vectorialEnable(bool)));
+    connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), this, SLOT(bridgesAvailable()));
+    connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), ui->voronoiCheckBox, SLOT(setEnabled(bool)));
+    connect(ui->voronoiCheckBox, SIGNAL(toggled(bool)), this, SLOT(extrapassesSetDisabled(bool)));
     connect(ui->filloutlineCheckBox, SIGNAL(toggled(bool)), ui->outlinewidthDoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->svgCheckBox, SIGNAL(toggled(bool)), ui->svgLineEdit, SLOT(setEnabled(bool)));
-    connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), ui->bridgesDoubleSpinBox, SLOT(setEnabled(bool)));
-    connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), ui->zbridgesDoubleSpinBox, SLOT(setEnabled(bool)));
-    connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), ui->bridgesnumSpinBox, SLOT(setEnabled(bool)));
+    connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), this, SLOT(bridgesAvailable()));
+    connect(ui->milldrillCheckBox, SIGNAL(toggled(bool)), ui->milldrilldiameterDoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->softwareComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateAlCustomEnableState(QString)));
 
     connect(ui->startPushButton, SIGNAL(clicked()), this, SLOT(startPcb2gcode()));
@@ -149,6 +156,33 @@ MainWindow::MainWindow(QWidget *parent) :
         QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
     else
         loadConfFile(appDataLocation + default_config_filename);
+}
+
+void MainWindow::vectorialEnable(bool enable)
+{
+    ui->dpiSpinBox->setEnabled(!enable);
+
+    if (enable)
+    {
+        if (ui->voronoiCheckBox->isChecked())
+            ui->extrapassesSpinBox->setEnabled(false);
+    }
+    else
+        ui->extrapassesSpinBox->setEnabled(true);
+}
+
+void MainWindow::extrapassesSetDisabled(bool disable)
+{
+    ui->extrapassesSpinBox->setEnabled(!disable);
+}
+
+void MainWindow::bridgesAvailable()
+{
+    bool bridgesEnabled = ui->vectorialCheckBox->isChecked() || ui->optimiseCheckBox->isChecked();
+
+    ui->bridgesDoubleSpinBox->setEnabled(bridgesEnabled);
+    ui->zbridgesDoubleSpinBox->setEnabled(bridgesEnabled);
+    ui->bridgesnumSpinBox->setEnabled(bridgesEnabled);
 }
 
 MainWindow::~MainWindow()
@@ -221,7 +255,7 @@ void MainWindow::changeMetricInputUnits(bool metric)
                                                   ui->zdrillDoubleSpinBox, ui->zchangeDoubleSpinBox, ui->cutterdiameterDoubleSpinBox,
                                                   ui->zcutDoubleSpinBox, ui->cutinfeedDoubleSpinBox, ui->outlinewidthDoubleSpinBox,
                                                   ui->bridgesDoubleSpinBox, ui->zbridgesDoubleSpinBox, ui->alxDoubleSpinBox,
-                                                  ui->alyDoubleSpinBox, ui->g64DoubleSpinBox };
+                                                  ui->alyDoubleSpinBox, ui->toleranceDoubleSpinBox };
 
     QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->alprobefeedSpinBox };
 
@@ -551,7 +585,6 @@ bool MainWindow::loadConfFile(const QString filename)
                     QMessageBox::information(this, tr("Error"), tr("Invalid parameter in configuration file: key=") + key + tr(" value=") + value);
             }
         }
-        ui->g64CheckBox->setChecked(ui->g64DoubleSpinBox->isEnabled());   //Sync checkBox checked state with doubleSpinBox enabled state
         ui->svgCheckBox->setChecked(ui->svgLineEdit->isEnabled());      //Sync checkBox checked state with lineEdit enabled state
 
         changeMetricImperialValues = true;

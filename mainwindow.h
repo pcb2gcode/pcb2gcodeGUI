@@ -47,6 +47,9 @@ public:
     ~MainWindow();
 
 private slots:
+    void vectorialEnable(bool enable);
+    void extrapassesSetDisabled(bool disable);
+    void bridgesAvailable();
     void changeMetricInputUnits(bool metric);
     void startPcb2gcode();
     void pcb2gcodeStopped();
