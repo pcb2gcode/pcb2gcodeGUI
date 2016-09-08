@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nicola Corna (nicola@corna.info)
+ * Copyright (c) 2015-2016 Nicola Corna (nicola@corna.info)
  *
  * This file is part of pcb2gcodeGUI.
  *
@@ -48,7 +48,7 @@ public:
 
 private slots:
     void vectorialEnable(bool enable);
-    void extrapassesSetDisabled(bool disable);
+    void voronoiEnable(bool disable);
     void bridgesAvailable();
     void changeMetricInputUnits(bool metric);
     void startPcb2gcode();

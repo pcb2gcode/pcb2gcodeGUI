@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nicola Corna (nicola@corna.info)
+ * Copyright (c) 2015-2016 Nicola Corna (nicola@corna.info)
  *
  * This file is part of pcb2gcodeGUI.
  *
@@ -132,7 +132,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), this, SLOT(vectorialEnable(bool)));
     connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), this, SLOT(bridgesAvailable()));
     connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), ui->voronoiCheckBox, SLOT(setEnabled(bool)));
-    connect(ui->voronoiCheckBox, SIGNAL(toggled(bool)), this, SLOT(extrapassesSetDisabled(bool)));
+    connect(ui->voronoiCheckBox, SIGNAL(toggled(bool)), this, SLOT(voronoiEnable(bool)));
     connect(ui->filloutlineCheckBox, SIGNAL(toggled(bool)), ui->outlinewidthDoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->svgCheckBox, SIGNAL(toggled(bool)), ui->svgLineEdit, SLOT(setEnabled(bool)));
     connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), this, SLOT(bridgesAvailable()));
@@ -171,9 +171,10 @@ void MainWindow::vectorialEnable(bool enable)
         ui->extrapassesSpinBox->setEnabled(true);
 }
 
-void MainWindow::extrapassesSetDisabled(bool disable)
+void MainWindow::voronoiEnable(bool enable)
 {
-    ui->extrapassesSpinBox->setEnabled(!disable);
+    ui->extrapassesSpinBox->setEnabled(!enable);
+    ui->offsetDoubleSpinBox->setEnabled(!enable);
 }
 
 void MainWindow::bridgesAvailable()
