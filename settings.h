@@ -41,10 +41,14 @@ static const char *manual_link = "https://github.com/pcb2gcode/pcb2gcode/wiki/Ma
 
 static const char *default_config_filename = "/default_millproject";
 
-static const char *gerber_file_filter = "Gerber files (*.gbr *.gtl *.gtp *.gto *.gbs *.gts *.gbl *.gml);;All types (*.*)";
-static const char *excellon_file_filter = "Excellon files (*.drl *.drd);;All types (*.*)";
-static const char *gcode_file_filter = "G-Code files (*.nc *.cnc *.ncc *.ecs *.ngc *.fan *.hnc);;All types (*.*)";
-static const char *text_file_filter = "Text files (*.*)";
+static const QString gerber_front_file_filter("Gerber front files (*.gbr *.gtl *.gml);;");
+static const QString gerber_back_file_filter("Gerber back files (*.gbr *.gbl *.gml);;");
+static const QString gerber_outline_file_filter("Gerber outline files (*.gbr *.gm1);;");
+
+static const QString gerber_file_filter = "Gerber files (*.gbl *.gbs *.gbo *.gbp *.gko *.gm1 *.gm2 *.g1 *.g2 *.gp1 *.gp2 *.gpb *.gpt *.gtp *.gtl *.gts *.gto *.gbr *.gml);;All types (*.*)";
+static const QString excellon_file_filter = "Excellon files (*.drl *.drd *.dri *.txt);;All types (*.*)";
+static const QString gcode_file_filter = "G-Code files (*.nc *.cnc *.ncc *.ecs *.ngc *.fan *.hnc);;All types (*.*)";
+static const QString text_file_filter = "Text files (*.*)";
 
 #endif // SETTINGS
 

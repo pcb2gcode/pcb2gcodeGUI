@@ -193,17 +193,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::getFrontFile()
 {
-    getFilename(ui->frontLineEdit, tr("front file"), gerber_file_filter);
+    getFilename(ui->frontLineEdit, tr("front file"), gerber_front_file_filter + gerber_file_filter);
 }
 
 void MainWindow::getBackFile()
 {
-    getFilename(ui->backLineEdit, tr("back file"), gerber_file_filter);
+    getFilename(ui->backLineEdit, tr("back file"), gerber_back_file_filter + gerber_file_filter);
 }
 
 void MainWindow::getOutlineFile()
 {
-    getFilename(ui->outlineLineEdit, tr("outline file"), gerber_file_filter);
+    getFilename(ui->outlineLineEdit, tr("outline file"), gerber_outline_file_filter + gerber_file_filter);
 }
 
 void MainWindow::getDrillFile()
@@ -226,7 +226,7 @@ void MainWindow::getPostambleFile()
     getFilename(ui->postambleLineEdit, tr("postamble file"), gcode_file_filter);
 }
 
-void MainWindow::getFilename(QLineEdit *saveTo, const QString name, const char *filter)
+void MainWindow::getFilename(QLineEdit *saveTo, const QString name, QString filter)
 {
     QString filename;
 
