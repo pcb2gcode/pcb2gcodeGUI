@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nicola Corna (nicola@corna.info)
+ * Copyright (c) 2015-2016 Nicola Corna (nicola@corna.info)
  *
  * This file is part of pcb2gcodeGUI.
  *
@@ -21,6 +21,7 @@
 #define SETTINGS
 
 #include <QObject>
+#include <QVector>
 
 #ifdef Q_OS_WIN
 #define PCB2GCODE_COMMAND_NAME "pcb2gcode.exe"
@@ -30,7 +31,7 @@
 #define PCB2GCODE_EXECUTABLE PCB2GCODE_COMMAND_NAME
 #endif
 
-#define PCB2GCODE_GUI_VERSION 0.1
+#define PCB2GCODE_GUI_VERSION "1.3.2"
 
 static const char *about_pcb2gcode_str = "pcb2gcode v%1<br>"
                                          "<a href='https://github.com/pcb2gcode/pcb2gcode'>https://github.com/pcb2gcode/pcb2gcode</a><br>";
@@ -45,10 +46,12 @@ static const QString gerber_front_file_filter("Gerber front files (*.gbr *.gtl *
 static const QString gerber_back_file_filter("Gerber back files (*.gbr *.gbl *.gml);;");
 static const QString gerber_outline_file_filter("Gerber outline files (*.gbr *.gm1);;");
 
-static const QString gerber_file_filter = "Gerber files (*.gbl *.gbs *.gbo *.gbp *.gko *.gm1 *.gm2 *.g1 *.g2 *.gp1 *.gp2 *.gpb *.gpt *.gtp *.gtl *.gts *.gto *.gbr *.gml);;All types (*.*)";
+static const QString gerber_file_filter = "Gerber files (*.gbl *.gbs *.gbo *.gbp *.gko *.gm1 *.gm2 *.g1 *.g2 *.gp1 *.gp2 *.gpb *.gpt *.gtp *.gtl *.gts *.gto *.gbr *.grb *.gml);;All types (*.*)";
 static const QString excellon_file_filter = "Excellon files (*.drl *.drd *.dri *.txt);;All types (*.*)";
 static const QString gcode_file_filter = "G-Code files (*.nc *.cnc *.ncc *.ecs *.ngc *.fan *.hnc);;All types (*.*)";
 static const QString text_file_filter = "Text files (*.*)";
+
+static const QVector<int> targetVersion = {1, 3, 2};
 
 #endif // SETTINGS
 

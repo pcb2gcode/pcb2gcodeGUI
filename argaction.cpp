@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nicola Corna (nicola@corna.info)
+ * Copyright (c) 2015-2016 Nicola Corna (nicola@corna.info)
  *
  * This file is part of pcb2gcodeGUI.
  *
@@ -19,7 +19,8 @@
 
 #include "argaction.h"
 
-bool argDoubleSpinBox::setValue(const QString value)
+template<>
+bool argBase<QDoubleSpinBox>::setValue(const QString value)
 {
     bool ok;
     const double numericalValue = value.toDouble(&ok);
@@ -30,12 +31,14 @@ bool argDoubleSpinBox::setValue(const QString value)
     return ok;
 }
 
-QString argDoubleSpinBox::getValue()
+template<>
+QString argBase<QDoubleSpinBox>::getValue()
 {
     return QString::number(object->value(), 'f', 4);
 }
 
-bool argSpinBox::setValue(const QString value)
+template<>
+bool argBase<QSpinBox>::setValue(const QString value)
 {
     bool ok;
     double numericalValue = value.toInt(&ok);
@@ -46,12 +49,14 @@ bool argSpinBox::setValue(const QString value)
     return ok;
 }
 
-QString argSpinBox::getValue()
+template<>
+QString argBase<QSpinBox>::getValue()
 {
     return QString::number(object->value());
 }
 
-bool argCheckBox::setValue(const QString value)
+template<>
+bool argBase<QCheckBox>::setValue(const QString value)
 {
     if(value == "1" || value.compare("true", Qt::CaseInsensitive) == 0)
     {
@@ -67,7 +72,8 @@ bool argCheckBox::setValue(const QString value)
         return false;
 }
 
-QString argCheckBox::getValue()
+template<>
+QString argBase<QCheckBox>::getValue()
 {
     if(object->isChecked())
         return "true";
@@ -75,18 +81,21 @@ QString argCheckBox::getValue()
         return "false";
 }
 
-bool argLineEdit::setValue(const QString value)
+template<>
+bool argBase<QLineEdit>::setValue(const QString value)
 {
     object->setText(value);
     return true;
 }
 
-QString argLineEdit::getValue()
+template<>
+QString argBase<QLineEdit>::getValue()
 {
     return object->text();
 }
 
-bool argComboBox::setValue(const QString value)
+template<>
+bool argBase<QComboBox>::setValue(const QString value)
 {
     const int index = object->findText(value, Qt::MatchFixedString);
 
@@ -99,48 +108,53 @@ bool argComboBox::setValue(const QString value)
         return false;
 }
 
-QString argComboBox::getValue()
+template<>
+QString argBase<QComboBox>::getValue()
 {
     return object->currentText();
 }
 
-bool argRadioButtonPair::setValue(const QString value)
+template<>
+bool argBase<QButtonGroup>::setValue(const QString value)
 {
     if(value == "1" || value.compare("true", Qt::CaseInsensitive) == 0)
     {
-        object.first->setChecked(true);
-        object.second->setChecked(false);
+        object->button(0)->setChecked(true);
         return true;
     }
     else if(value == "0" || value.compare("false", Qt::CaseInsensitive) == 0)
     {
-        object.first->setChecked(false);
-        object.second->setChecked(true);
+        object->button(1)->setChecked(true);
         return true;
     }
     else
         return false;
 }
 
-QString argRadioButtonPair::getValue()
+template<>
+QString argBase<QButtonGroup>::getValue()
 {
-    if(object.first->isChecked())
+    if(object->checkedId() == 0)
         return "true";
     else
         return "false";
 }
 
-bool argRadioButtonPair::setEnabled(bool enabled)
+template<>
+void argBase<QButtonGroup>::setEnabled(bool enabled)
 {
-    object.first->setEnabled(enabled);
-    object.second->setEnabled(enabled);
+    QList<QAbstractButton *> buttons = object->buttons();
 
-    return true;
+    for (QAbstractButton *button : buttons)
+    {
+        button->setEnabled(enabled);
+    }
 }
 
-bool argRadioButtonPair::getEnabled()
+template<>
+bool argBase<QButtonGroup>::getEnabled()
 {
-    return object.first->isEnabled();
+    return object->button(0)->isEnabled();
 }
 
 QStringList argAction::getAllArgs(const QString prepend, bool getCommentedOptions)
@@ -148,7 +162,7 @@ QStringList argAction::getAllArgs(const QString prepend, bool getCommentedOption
     QStringList output;
     QString value;
 
-    for(QMap<QString, argBase *>::const_iterator i = objects.constBegin(); i != objects.constEnd(); i++)
+    for (auto i = objects.constBegin(); i != objects.constEnd(); i++)
     {
         value = i.value()->getValue();
         if ( !value.isEmpty() )

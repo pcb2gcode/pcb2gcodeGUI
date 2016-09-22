@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,13 +16,20 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     outputwindow.cpp \
-    argaction.cpp
+    argaction.cpp \
+    graphics_view_zoom.cpp \
+    cmdlineargs.cpp
 
 HEADERS  += mainwindow.h \
     outputwindow.h \
     argaction.h \
-    settings.h
+    settings.h \
+    graphics_view_zoom.h \
+    cmdlineargs.h
 
 FORMS    += mainwindow.ui \
-    outputwindow.ui
+    outputwindow.ui \
+    cmdlineargs.ui
 
+RESOURCES += \
+    resource.qrc

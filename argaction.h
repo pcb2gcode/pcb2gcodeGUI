@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nicola Corna (nicola@corna.info)
+ * Copyright (c) 2015-2016 Nicola Corna (nicola@corna.info)
  *
  * This file is part of pcb2gcodeGUI.
  *
@@ -27,167 +27,61 @@
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QRadioButton>
+#include <QButtonGroup>
 #include <QLineEdit>
 #include <QComboBox>
 
-class argBase
+class argBaseVirtual
 {
 public:
-    virtual bool setValue(const QString)
-    {
-        return false;
-    }
-
-    virtual QString getValue()
-    {
-        return "";
-    }
-
-    virtual bool setEnabled(bool)
-    {
-        return false;
-    }
-
-    virtual bool getEnabled()
-    {
-        return false;
-    }
+    virtual bool setValue(const QString) = 0;
+    virtual QString getValue() = 0;
+    virtual void setEnabled(bool) = 0;
+    virtual bool getEnabled() = 0;
 };
 
-
-class argDoubleSpinBox : public argBase
+template <typename T>
+class argBase : public argBaseVirtual
 {
-public:
-    argDoubleSpinBox(QDoubleSpinBox *object) : object(object) {}
-
-    bool setValue(const QString value);
-    QString getValue();
-
-    inline bool setEnabled(bool enabled)
-    {
-        object->setEnabled(enabled);
-        return true;
-    }
-
-    inline bool getEnabled() {
-        return object->isEnabled();
-    }
-
 protected:
-    QDoubleSpinBox *object;
-};
+    T *object;
 
-
-class argSpinBox : public argBase
-{
 public:
-    argSpinBox(QSpinBox *object) : object(object) {}
+    argBase(T *object) : object(object) {}
 
-    bool setValue(const QString value);
+    bool setValue(const QString);
     QString getValue();
 
-    inline bool setEnabled(bool enabled)
+    inline void setEnabled(bool enabled)
     {
         object->setEnabled(enabled);
-        return true;
     }
 
     inline bool getEnabled()
     {
         return object->isEnabled();
     }
-
-protected:
-    QSpinBox *object;
 };
 
+template <> bool argBase<QDoubleSpinBox>::setValue(const QString);
+template <> QString argBase<QDoubleSpinBox>::getValue();
 
-class argCheckBox : public argBase
-{
-public:
-    argCheckBox(QCheckBox *object) : object(object) {}
+template <> bool argBase<QSpinBox>::setValue(const QString);
+template <> QString argBase<QSpinBox>::getValue();
 
-    bool setValue(const QString value);
-    QString getValue();
+template <> bool argBase<QCheckBox>::setValue(const QString);
+template <> QString argBase<QCheckBox>::getValue();
 
-    inline bool setEnabled(bool enabled)
-    {
-        object->setEnabled(enabled);
-        return true;
-    }
+template <> bool argBase<QComboBox>::setValue(const QString);
+template <> QString argBase<QComboBox>::getValue();
 
-    inline bool getEnabled()
-    {
-        return object->isEnabled();
-    }
+template <> bool argBase<QLineEdit>::setValue(const QString);
+template <> QString argBase<QLineEdit>::getValue();
 
-protected:
-    QCheckBox *object;
-};
-
-
-class argLineEdit : public argBase
-{
-public:
-    argLineEdit(QLineEdit *object) : object(object) {}
-
-    bool setValue(const QString value);
-    QString getValue();
-
-    inline bool setEnabled(bool enabled)
-    {
-        object->setEnabled(enabled);
-        return true;
-    }
-
-    inline bool getEnabled()
-    {
-        return object->isEnabled();
-    }
-
-protected:
-    QLineEdit *object;
-};
-
-
-class argComboBox : public argBase
-{
-public:
-    argComboBox(QComboBox *object) : object(object) {}
-
-    bool setValue(const QString value);
-    QString getValue();
-
-    inline bool setEnabled(bool enabled)
-    {
-        object->setEnabled(enabled);
-        return true;
-    }
-
-    inline bool getEnabled()
-    {
-        return object->isEnabled();
-    }
-
-protected:
-    QComboBox *object;
-};
-
-
-class argRadioButtonPair : public argBase
-{
-public:
-    argRadioButtonPair(QPair<QRadioButton *, QRadioButton *> object) : object(object) {}
-
-    bool setValue(const QString value);
-    QString getValue();
-    bool setEnabled(bool enabled);
-    bool getEnabled();
-
-protected:
-    QPair<QRadioButton *, QRadioButton *> object;
-};
-
+template <> bool argBase<QButtonGroup>::setValue(const QString);
+template <> QString argBase<QButtonGroup>::getValue();
+template <> void argBase<QButtonGroup>::setEnabled(bool enabled);
+template <> bool argBase<QButtonGroup>::getEnabled();
 
 class argAction {
 public:
@@ -195,46 +89,27 @@ public:
 
     inline bool setValue(const QString key, const QString value)
     {
-        return objects.value(key, new argBase)->setValue(value);
+        auto pos = objects.find(key);
+
+        if (pos != objects.end())
+            return (*pos)->setValue(value);
+        else
+            return false;
     }
 
-    inline bool setEnabled(const QString key, const bool enabled)
+    inline void setEnabled(const QString key, const bool enabled)
     {
-        return objects.value(key, new argBase)->setEnabled(enabled);
+        objects.value(key)->setEnabled(enabled);
     }
 
-    inline void insert(const QString argName, QDoubleSpinBox *doubleSpinBox)
+    template <typename T>
+    inline void insert(const QString argName, T *object)
     {
-        objects.insert( argName, new argDoubleSpinBox(doubleSpinBox) );
-    }
-
-    inline void insert(const QString argName, QSpinBox *spinBox)
-    {
-        objects.insert( argName, new argSpinBox(spinBox) );
-    }
-
-    inline void insert(const QString argName, QCheckBox *checkBox)
-    {
-        objects.insert( argName, new argCheckBox(checkBox) );
-    }
-
-    inline void insert(const QString argName, QLineEdit *lineEdit)
-    {
-        objects.insert( argName, new argLineEdit(lineEdit) );
-    }
-
-    inline void insert(const QString argName, QComboBox *comboBox)
-    {
-        objects.insert( argName, new argComboBox(comboBox) );
-    }
-
-    inline void insert(const QString argName, QPair<QRadioButton *, QRadioButton *> radioButtonPair)
-    {
-        objects.insert( argName, new argRadioButtonPair(radioButtonPair) );
+        objects.insert(argName, new argBase<T>(object));
     }
 
 protected:
-    QMap<QString, argBase *> objects;
+    QMap<QString, argBaseVirtual *> objects;
 };
 
 #endif // ARGACTION_H

@@ -27,12 +27,17 @@
 #include <QStringList>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QButtonGroup>
 #include <QPlainTextEdit>
 #include <QHash>
 #include <QStandardPaths>
+#include <QSettings>
 #include <QDir>
+#include <QGraphicsScene>
+#include <QMovie>
 #include "outputwindow.h"
 #include "argaction.h"
+#include "graphics_view_zoom.h"
 
 namespace Ui {
 class MainWindow;
@@ -59,6 +64,10 @@ private slots:
     void changeKillCloseButtonText(QProcess::ProcessState state);
     void enableStartButton();
 
+    void generateImages();
+    void imagesGenerated(int exitCode, QProcess::ExitStatus exitStatus);
+    void imageSelected(int index);
+
     void getFrontFile();
     void getBackFile();
     void getOutlineFile();
@@ -68,6 +77,7 @@ private slots:
     void getPostambleFile();
     void getOutputDirectory();
 
+    void menu_showCommandLineArguments();
     void menu_aboutpcb2gcode();
     void menu_aboutpcb2gcodeGUI();
     void menu_manual();
@@ -85,11 +95,27 @@ private:
     static const QString names[];
 
     Ui::MainWindow *ui;
+    QSettings *settings;
 
+    QButtonGroup inputUnits;
+    QButtonGroup outputUnits;
+    QButtonGroup mirrorType;
+
+    const QString pcb2gcodeVersion;
     QString lastDir;
     QProcess pcb2gcodeProcess;
     bool pcb2gcodeKilled;
     bool changeMetricImperialValues;
+
+    Graphics_view_zoom* gview_zoom;
+    QProcess pcb2gcodeImageProcess;
+    QGraphicsScene scene;
+    QMovie loadingIcon;
+    const QString imagesFolder;
+    QStringList imagesFilename;
+    QString currentImagesFolder;
+    bool vectorial;
+    bool fillOutline;
 
     argAction args[6];
 
@@ -97,14 +123,19 @@ private:
     QPlainTextEdit *outputTextEdit;
     QPushButton *killClosePushButton;
 
+    void closeEvent(QCloseEvent *);
     void initUi();
+    void checkPcb2gcodeVersion();
     QStringList getCmdLineArguments();
-    void getFilename(QLineEdit *saveTo, const QString name, QString filter);
+    bool getFilename(QLineEdit *saveTo, const QString name, QString filter);
     void adjustMetricImperial(QSpinBox *spinBox, const double cfactor, const QString suffix);
     void adjustMetricImperial(QDoubleSpinBox *doubleSpinBox, const double cfactor, const QString suffix);
     void saveConfFile(const QString filename);
     bool loadConfFile(const QString filename);
     QString getPcb2gcodeVersion();
+    void clearImages();
+
+    void showImage(QString image);
 };
 
 #endif // MAINWINDOW_H

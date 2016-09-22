@@ -19,12 +19,16 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "cmdlineargs.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QDateTime>
 #include <QRegularExpression>
+#include <QGraphicsSvgItem>
+
 #include <cmath>
+#include <algorithm>
 
 #include "settings.h"
 
@@ -33,16 +37,32 @@ const QString MainWindow::names[] = { "File", "Common", "Mill", "Drill", "Outlin
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    pcb2gcodeVersion(getPcb2gcodeVersion()),
     pcb2gcodeProcess(this),
     pcb2gcodeKilled(false),
-    changeMetricImperialValues(true)
+    changeMetricImperialValues(true),
+    scene(this),
+    loadingIcon(":/images/loading.gif"),
+    imagesFolder(QStandardPaths::writableLocation(QStandardPaths::TempLocation) +
+                    "/pcb2gcode-" + QString::number(QCoreApplication::applicationPid()))
 {
+    checkPcb2gcodeVersion();
+
     QString appDataLocation;
 
     ui->setupUi(this);
-    this->setFixedSize(this->width(), this->height());
+
+    inputUnits.addButton(ui->inputMetricRadioButton, 0);
+    inputUnits.addButton(ui->inputImperialRadioButton, 1);
+    outputUnits.addButton(ui->outputMetricRadioButton, 0);
+    outputUnits.addButton(ui->outputImperialRadioButton, 1);
+    mirrorType.addButton(ui->mirrorAbsoluteOnRadioButton, 0);
+    mirrorType.addButton(ui->mirrorAbsoluteOffRadioButton, 1);
 
     pcb2gcodeProcess.setProcessChannelMode(QProcess::MergedChannels);
+    pcb2gcodeImageProcess.setProcessChannelMode(QProcess::MergedChannels);
+
+    QDir().mkdir(imagesFolder);
 
     args[ FILEARGS ].insert("front", ui->frontLineEdit);
     args[ FILEARGS ].insert("back", ui->backLineEdit);
@@ -53,8 +73,8 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ FILEARGS ].insert("postamble", ui->postambleLineEdit);
     args[ FILEARGS ].insert("output-dir", ui->outputDirLineEdit);
 
-    args[ COMMONARGS ].insert("metric", QPair<QRadioButton *, QRadioButton *>(ui->inputMetricRadioButton, ui->inputImperialRadioButton) );
-    args[ COMMONARGS ].insert("metricoutput", QPair<QRadioButton *, QRadioButton *>(ui->outputMetricRadioButton, ui->outputImperialRadioButton) );
+    args[ COMMONARGS ].insert("metric", &inputUnits);
+    args[ COMMONARGS ].insert("metricoutput", &outputUnits);
     args[ COMMONARGS ].insert("zsafe", ui->zsafeDoubleSpinBox);
     args[ COMMONARGS ].insert("zchange", ui->zchangeDoubleSpinBox);
     args[ COMMONARGS ].insert("vectorial", ui->vectorialCheckBox);
@@ -62,8 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ COMMONARGS ].insert("tolerance", ui->toleranceDoubleSpinBox);
     args[ COMMONARGS ].insert("optimise", ui->optimiseCheckBox);
     args[ COMMONARGS ].insert("zero-start", ui->zerostartCheckBox);
-    args[ COMMONARGS ].insert("mirror-absolute", ui->mirrorabsoluteCheckBox);
-    args[ COMMONARGS ].insert("svg", ui->svgLineEdit);
+    args[ COMMONARGS ].insert("mirror-absolute", &mirrorType);
     args[ COMMONARGS ].insert("dpi", ui->dpiSpinBox);
     args[ COMMONARGS ].insert("tile-x", ui->tilexSpinBox);
     args[ COMMONARGS ].insert("tile-y", ui->tileySpinBox);
@@ -110,9 +129,10 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ AUTOLEVELLERARGS ].insert("al-setzzero", ui->alsetzzeroLineEdit);
 
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+    connect(ui->actionShow_command_line_arguments, SIGNAL(triggered(bool)), this, SLOT(menu_showCommandLineArguments()));
     connect(ui->actionAbout_pcb2gcode, SIGNAL(triggered()), this, SLOT(menu_aboutpcb2gcode()));
     connect(ui->actionAbout_pcb2gcodeGUI, SIGNAL(triggered()), this, SLOT(menu_aboutpcb2gcodeGUI()));
-    connect(ui->actionManual, SIGNAL(triggered()), this, SLOT(menu_manual()));
+    connect(ui->actionPcb2gcodeManual, SIGNAL(triggered()), this, SLOT(menu_manual()));
 
     connect(ui->actionSave_configuration_file, SIGNAL(triggered()), this, SLOT(askAndSaveConfFile()));
     connect(ui->actionLoad_configuration_file, SIGNAL(triggered()), this, SLOT(askAndLoadConfFile()));
@@ -134,7 +154,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), ui->voronoiCheckBox, SLOT(setEnabled(bool)));
     connect(ui->voronoiCheckBox, SIGNAL(toggled(bool)), this, SLOT(voronoiEnable(bool)));
     connect(ui->filloutlineCheckBox, SIGNAL(toggled(bool)), ui->outlinewidthDoubleSpinBox, SLOT(setEnabled(bool)));
-    connect(ui->svgCheckBox, SIGNAL(toggled(bool)), ui->svgLineEdit, SLOT(setEnabled(bool)));
     connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), this, SLOT(bridgesAvailable()));
     connect(ui->milldrillCheckBox, SIGNAL(toggled(bool)), ui->milldrilldiameterDoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->softwareComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateAlCustomEnableState(QString)));
@@ -147,15 +166,75 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&pcb2gcodeProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(printOutput()));
     connect(&pcb2gcodeProcess, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(changeKillCloseButtonText(QProcess::ProcessState)));
 
-    lastDir = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-    if( lastDir.isEmpty() )
-        QMessageBox::information(this, tr("Error"), tr("Can't retrieve home location"));
+    connect(ui->actionGenerate_a_preview_now, SIGNAL(triggered(bool)), this, SLOT(generateImages()));
+    connect(&pcb2gcodeImageProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(imagesGenerated(int,QProcess::ExitStatus)));
+    connect(&pcb2gcodeProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(imagesGenerated(int,QProcess::ExitStatus)));
+    connect(ui->imageComboBox, SIGNAL(activated(int)), this, SLOT(imageSelected(int)));
 
     appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-    if( appDataLocation.isEmpty() )
+    if (appDataLocation.isEmpty())
         QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
     else
+    {
         loadConfFile(appDataLocation + default_config_filename);
+
+        QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, appDataLocation);
+    }
+
+    settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "pcb2gcodeGUI", "", this);
+
+    ui->actionAutomatically_generate_previews->setChecked(settings->value("autoPreview", true).toBool());
+    lastDir = settings->value("lastDir", QStandardPaths::writableLocation(QStandardPaths::HomeLocation)).toString();
+    if (lastDir.isEmpty())
+        QMessageBox::information(this, tr("Error"), tr("Can't retrieve home location"));
+
+    this->resize(settings->value("Window/width", this->width()).toInt(),
+                 settings->value("Window/height", this->height()).toInt());
+
+    ui->gview->setScene(&scene);
+    gview_zoom = new Graphics_view_zoom(ui->gview);
+
+    ui->loadingLabel->setMovie(&loadingIcon);
+    ui->loadingLabel->hide();
+}
+
+void MainWindow::checkPcb2gcodeVersion()
+{
+    if (pcb2gcodeVersion.isEmpty())
+    {
+        QMessageBox *errorBox = new QMessageBox;
+        errorBox->critical(this, tr("Unable to run " PCB2GCODE_COMMAND_NAME),
+                                 tr("Unable to run " PCB2GCODE_COMMAND_NAME "!\n"
+                                    PCB2GCODE_COMMAND_NAME " must be in the PATH or in the same folder of pcb2gcodeGUI."));
+        errorBox->setFixedSize(600,200);
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+        QStringList versionSplit = pcb2gcodeVersion.split('.');
+        QVector<int> versionNumbers;
+
+        for (const QString& str : versionSplit)
+        {
+            versionNumbers.append(str.toInt());
+        }
+
+        if (std::lexicographical_compare(versionNumbers.begin(), versionNumbers.end(),
+                                          targetVersion.begin(), targetVersion.end()))
+        {
+            QMessageBox *warningBox = new QMessageBox;
+            const QString warningMessage = tr("Warning!\n"
+                                              "This version of pcb2gcodeGUI requires " PCB2GCODE_COMMAND_NAME
+                                              " v%1.%2.%3, but v%4.%5.%6 has been detected.\n"
+                                              "Some features may not work.");
+
+            warningBox->warning(this, tr("Old " PCB2GCODE_COMMAND_NAME " detected"),
+                                      warningMessage.arg(targetVersion[0]).arg(targetVersion[1]).arg(targetVersion[2])
+                                      .arg(versionNumbers[0]).arg(versionNumbers[1]).arg(versionNumbers[2]),
+                                      tr("Got it, let's try anyways"));
+            warningBox->setFixedSize(600,200);
+        }
+    }
 }
 
 void MainWindow::vectorialEnable(bool enable)
@@ -193,17 +272,23 @@ MainWindow::~MainWindow()
 
 void MainWindow::getFrontFile()
 {
-    getFilename(ui->frontLineEdit, tr("front file"), gerber_front_file_filter + gerber_file_filter);
+    if (getFilename(ui->frontLineEdit, tr("front file"), gerber_front_file_filter + gerber_file_filter))
+        if (ui->actionAutomatically_generate_previews->isChecked())
+            generateImages();
 }
 
 void MainWindow::getBackFile()
 {
-    getFilename(ui->backLineEdit, tr("back file"), gerber_back_file_filter + gerber_file_filter);
+    if (getFilename(ui->backLineEdit, tr("back file"), gerber_back_file_filter + gerber_file_filter))
+        if (ui->actionAutomatically_generate_previews->isChecked())
+            generateImages();
 }
 
 void MainWindow::getOutlineFile()
 {
-    getFilename(ui->outlineLineEdit, tr("outline file"), gerber_outline_file_filter + gerber_file_filter);
+    if (getFilename(ui->outlineLineEdit, tr("outline file"), gerber_outline_file_filter + gerber_file_filter))
+        if (ui->actionAutomatically_generate_previews->isChecked())
+            generateImages();
 }
 
 void MainWindow::getDrillFile()
@@ -226,15 +311,145 @@ void MainWindow::getPostambleFile()
     getFilename(ui->postambleLineEdit, tr("postamble file"), gcode_file_filter);
 }
 
-void MainWindow::getFilename(QLineEdit *saveTo, const QString name, QString filter)
+void MainWindow::generateImages()
+{
+    QStringList arguments;
+    bool found_output_dir = false;
+
+    loadingIcon.start();
+    ui->loadingLabel->show();
+
+    arguments += getCmdLineArguments();
+
+    for (QString& option : arguments)
+    {
+        if (option.startsWith("--output-dir"))
+        {
+            option = "--output-dir=" + imagesFolder;
+            found_output_dir = true;
+            break;
+        }
+    }
+
+    if (!found_output_dir)
+        arguments << ("--output-dir=" + imagesFolder);
+
+    arguments << "--no-export" << "--noconfigfile";
+
+    if (pcb2gcodeImageProcess.state() != QProcess::NotRunning)
+        pcb2gcodeImageProcess.kill();
+
+    currentImagesFolder = imagesFolder;
+    vectorial = ui->vectorialCheckBox->isChecked();
+    fillOutline = ui->filloutlineCheckBox->isChecked();
+    pcb2gcodeImageProcess.start(PCB2GCODE_EXECUTABLE, arguments, QProcess::ReadOnly);
+}
+
+void MainWindow::imagesGenerated(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    loadingIcon.stop();
+    ui->loadingLabel->hide();
+
+    if (exitCode == EXIT_SUCCESS && exitStatus == QProcess::NormalExit)
+    {
+        QDir dir(currentImagesFolder);
+
+        auto addItem = [&] (QString item, QString filename)
+        {
+            for (const QFileInfo& image : dir.entryInfoList())
+            {
+                if (image.baseName().contains(filename))
+                {
+                    imagesFilename.append(image.absoluteFilePath());
+                    ui->imageComboBox->addItem(item);
+                    break;
+                }
+            }
+        };
+
+        if (vectorial)
+            dir.setNameFilters(QStringList() << "*.svg");
+        else
+            dir.setNameFilters(QStringList() << "*.png");
+
+        dir.setFilter(QDir::Files);
+
+        imagesFilename.clear();
+        ui->imageComboBox->clear();
+
+        addItem(tr("Processed front"), "processed_front");
+        addItem(tr("Processed back"), "processed_back");
+        addItem(tr("Processed outline"), "processed_outline");
+        addItem(tr("Traced front"), "traced_front");
+        addItem(tr("Traced back"), "traced_back");
+        addItem(tr("Masked front"), "masked_front");
+        addItem(tr("Masked back"), "masked_back");
+        addItem(tr("Input front"), "original_front");
+        addItem(tr("Input back"), "original_back");
+        addItem(tr("Input outline"), fillOutline ? "outline_filled" : "original_outline");
+    }
+    else
+    {
+        QMessageBox::critical(this, "Error",
+                                 tr("Error while processing input files (error code ") +
+                                 QString::number(exitCode) + ')' +
+                                 tr("\n\npcb2gcode output:\n") +
+                                 pcb2gcodeImageProcess.readAll());
+    }
+
+    if (ui->imageComboBox->count() > 0)
+    {
+        ui->imageComboBox->setCurrentIndex(0);
+        ui->imageComboBox->setEnabled(true);
+        imageSelected(0);
+    }
+    else
+        ui->imageComboBox->setEnabled(false);
+}
+
+void MainWindow::imageSelected(int index)
+{
+    if (index >= 0)
+        showImage(imagesFilename.at(index));
+    else
+        showImage("");
+}
+
+void MainWindow::showImage(QString image)
+{
+    const bool wasEmpty = scene.items().isEmpty();
+
+    for (QGraphicsItem *item : scene.items())
+    {
+        scene.removeItem(item);
+        delete item;
+    }
+
+    if (!image.isEmpty())
+    {
+        if (image.endsWith(".svg"))
+            scene.addItem(new QGraphicsSvgItem(image));
+        else
+            scene.addItem(new QGraphicsPixmapItem(QPixmap(image)));
+
+        if (wasEmpty)
+            ui->gview->fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
+    }
+}
+
+bool MainWindow::getFilename(QLineEdit *saveTo, const QString name, QString filter)
 {
     QString filename;
 
     filename = QFileDialog::getOpenFileName(this, tr("Select the ") + name, lastDir, filter );
-    if( !filename.isEmpty() )
+
+    if( filename.isEmpty() )
+        return false;
+    else
     {
         lastDir = QFileInfo(filename).path();
-        saveTo->setText( filename );   
+        saveTo->setText( filename );
+        return true;
     }
 }
 
@@ -339,28 +554,22 @@ QStringList MainWindow::getCmdLineArguments()
 void MainWindow::startPcb2gcode()
 {
     QStringList arguments;
-    QString arguments_formatted;
-    int pos;
+
+    if (pcb2gcodeImageProcess.state() != QProcess::NotRunning)
+        pcb2gcodeImageProcess.kill();
 
     if( ui->outputDirLineEdit->text().isEmpty() )
         getOutputDirectory();
 
     if( !ui->outputDirLineEdit->text().isEmpty() )
     {
+        loadingIcon.start();
+        ui->loadingLabel->show();
+
         ui->startPushButton->setEnabled(false);
 
         arguments << "--noconfigfile";
         arguments += getCmdLineArguments();
-
-        for(QStringList::iterator iter = arguments.begin(); iter != arguments.end(); iter++) {
-            pos = iter->indexOf('=');
-            if( pos > 0 ) {
-                if(iter->contains(' '))
-                    arguments_formatted += iter->left( pos + 1 ) + '\"' + iter->right( iter->length() - pos - 1 ) + "\" ";
-                else
-                    arguments_formatted += *iter + ' ';
-            }
-        }
 
         pcb2gcodeOutputWindow = new outputWindow(this);
         pcb2gcodeOutputWindow->setWindowTitle(PCB2GCODE_COMMAND_NAME " output");
@@ -372,16 +581,19 @@ void MainWindow::startPcb2gcode()
         killClosePushButton = pcb2gcodeOutputWindow->getPushButton();
         connect(killClosePushButton, SIGNAL(clicked()), this, SLOT(killCloseButtonClicked()));
 
-        outputTextEdit = pcb2gcodeOutputWindow->getPlainTextEdit();
-        outputTextEdit->appendPlainText(QString(tr("Starting ")) + PCB2GCODE_EXECUTABLE + ' ' + arguments_formatted + '\n' ) ;
+        outputTextEdit = pcb2gcodeOutputWindow->getOutputPlainTextEdit();
 
+        currentImagesFolder = ui->outputDirLineEdit->text();
+        vectorial = ui->vectorialCheckBox->isChecked();
+        fillOutline = ui->filloutlineCheckBox->isChecked();
         pcb2gcodeProcess.start(PCB2GCODE_EXECUTABLE, arguments, QProcess::ReadOnly);
     }
 }
 
 void MainWindow::printOutput()
 {
-    outputTextEdit->appendPlainText(pcb2gcodeProcess.readAllStandardOutput());
+    outputTextEdit->insertPlainText(pcb2gcodeProcess.readAllStandardOutput());
+    outputTextEdit->moveCursor(QTextCursor::End);
 }
 
 void MainWindow::pcb2gcodeError(QProcess::ProcessError error)
@@ -458,23 +670,38 @@ void MainWindow::enableStartButton()
     ui->startPushButton->setEnabled(true);
 }
 
+void MainWindow::menu_showCommandLineArguments()
+{
+    CmdLineArgs *window = new CmdLineArgs(this);
+    QStringList arguments;
+    QString arguments_formatted = PCB2GCODE_COMMAND_NAME;
+
+    arguments << "--noconfigfile";
+    arguments += getCmdLineArguments();
+
+    for(QStringList::iterator iter = arguments.begin(); iter != arguments.end(); iter++) {
+        int pos = iter->indexOf('=');
+
+        if( pos > 0 ) {
+            if(iter->contains(' '))
+                arguments_formatted += iter->left( pos + 1 ) + '\"' + iter->right( iter->length() - pos - 1 ) + "\" ";
+            else
+                arguments_formatted += ' ' + *iter;
+        }
+    }
+
+    window->setText(arguments_formatted);
+    window->show();
+}
+
 void MainWindow::menu_aboutpcb2gcode()
 {
     QMessageBox msgBox(this);
-    QString version;
 
     msgBox.setWindowTitle(tr("About pcb2gcode"));
     msgBox.setTextFormat(Qt::RichText);
-    msgBox.setText( QString(tr(about_pcb2gcode_str)).arg(tr("(retrieving version...)")) );
+    msgBox.setText(QString(tr(about_pcb2gcode_str)).arg(QString(pcb2gcodeVersion)));
     msgBox.show();
-
-    version = getPcb2gcodeVersion();
-
-    if( version.isEmpty() )
-        msgBox.setText( QString(tr(about_pcb2gcode_str)).arg(tr("(<font color=\"Red\">can't run" PCB2GCODE_EXECUTABLE "</font>)")) );
-    else
-        msgBox.setText( QString(tr(about_pcb2gcode_str)).arg(QString(version)) );
-
     msgBox.exec();
 }
 
@@ -483,16 +710,14 @@ QString MainWindow::getPcb2gcodeVersion()
     QProcess pcb2gcodeVersionProcess(this);
 
     pcb2gcodeVersionProcess.start(PCB2GCODE_EXECUTABLE, QStringList("--version"), QProcess::ReadOnly);
-    pcb2gcodeVersionProcess.waitForReadyRead(2000);
-
-    QRegularExpressionMatch res = QRegularExpression("\\d+\\.\\d+\\.\\d+").match( pcb2gcodeVersionProcess.readAllStandardOutput() );
-
     pcb2gcodeVersionProcess.waitForFinished(500);
+
+    QRegularExpressionMatch res = QRegularExpression("\\d+\\.\\d+\\.\\d+").match(pcb2gcodeVersionProcess.readAllStandardOutput());
 
     if(res.hasMatch())
         return res.captured();
     else
-        return "UNABLE TO RETRIEVE VERSION";
+        return "";
 }
 
 void MainWindow::menu_aboutpcb2gcodeGUI()
@@ -578,7 +803,7 @@ bool MainWindow::loadConfFile(const QString filename)
                 for(int i = COMMONARGS; i <= AUTOLEVELLERARGS && !result; i++)
                 {
                     result = args[i].setValue(key, value);
-                    if(result)
+                    if (result)
                         args[i].setEnabled(key, enabledOption);
                 }
 
@@ -586,7 +811,6 @@ bool MainWindow::loadConfFile(const QString filename)
                     QMessageBox::information(this, tr("Error"), tr("Invalid parameter in configuration file: key=") + key + tr(" value=") + value);
             }
         }
-        ui->svgCheckBox->setChecked(ui->svgLineEdit->isEnabled());      //Sync checkBox checked state with lineEdit enabled state
 
         changeMetricImperialValues = true;
         return true;
@@ -689,4 +913,29 @@ void MainWindow::updateAlCustomEnableState(QString text)
     ui->alprobecodeLineEdit->setEnabled(enabled);
     ui->alprobevarSpinBox->setEnabled(enabled);
     ui->alsetzzeroLineEdit->setEnabled(enabled);
+}
+
+void MainWindow::clearImages()
+{
+    QDir dir(imagesFolder);
+
+    dir.setNameFilters(QStringList() << "*.*");
+    dir.setFilter(QDir::Files);
+
+    for (const QString& dirFile : dir.entryList())
+    {
+        dir.remove(dirFile);
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *)
+{
+    clearImages();
+    QDir().rmdir(imagesFolder);
+
+    settings->setValue("autoPreview", ui->actionAutomatically_generate_previews->isChecked());
+    settings->setValue("lastDir", lastDir);
+
+    settings->setValue("Window/width", this->width());
+    settings->setValue("Window/height", this->height());
 }

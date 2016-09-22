@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Nicola Corna (nicola@corna.info)
+ * Copyright (c) 2015-2016 Nicola Corna (nicola@corna.info)
  *
  * This file is part of pcb2gcodeGUI.
  *
@@ -37,7 +37,7 @@ public:
     ~outputWindow();
 
     QPushButton *getPushButton();
-    QPlainTextEdit *getPlainTextEdit();
+    QPlainTextEdit *getOutputPlainTextEdit();
 
 private:
     Ui::outputWindow *ui;
