@@ -293,7 +293,9 @@ void MainWindow::getOutlineFile()
 
 void MainWindow::getDrillFile()
 {
-    getFilename(ui->drillLineEdit, tr("drill file"), excellon_file_filter);
+    if (getFilename(ui->drillLineEdit, tr("drill file"), excellon_file_filter))
+        if (ui->actionAutomatically_generate_previews->isChecked())
+            generateImages();
 }
 
 void MainWindow::getPreambleFile()
@@ -386,6 +388,7 @@ void MainWindow::imagesGenerated(int exitCode, QProcess::ExitStatus exitStatus)
         addItem(tr("Masked back"), "masked_back");
         addItem(tr("Input front"), "original_front");
         addItem(tr("Input back"), "original_back");
+        addItem(tr("Input drill"), "original_drill");
         addItem(tr("Input outline"), fillOutline ? "outline_filled" : "original_outline");
     }
     else
