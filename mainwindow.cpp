@@ -214,7 +214,7 @@ void MainWindow::checkPcb2gcodeVersion()
         QStringList versionSplit = pcb2gcodeVersion.split('.');
         QVector<int> versionNumbers;
 
-        for (const QString& str : versionSplit)
+        foreach (const QString& str, versionSplit)
         {
             versionNumbers.append(str.toInt());
         }
@@ -323,11 +323,11 @@ void MainWindow::generateImages()
 
     arguments += getCmdLineArguments();
 
-    for (QString& option : arguments)
+    for (QStringList::iterator i = arguments.begin(); i != arguments.end(); i++)
     {
-        if (option.startsWith("--output-dir"))
+        if (i->startsWith("--output-dir"))
         {
-            option = "--output-dir=" + imagesFolder;
+            *i = "--output-dir=" + imagesFolder;
             found_output_dir = true;
             break;
         }
@@ -347,6 +347,19 @@ void MainWindow::generateImages()
     pcb2gcodeImageProcess.start(PCB2GCODE_EXECUTABLE, arguments, QProcess::ReadOnly);
 }
 
+void MainWindow::addImageFile(const QDir& dir, const QString& item, const QString& filename)
+{
+    foreach (const QFileInfo& image, dir.entryInfoList())
+    {
+        if (image.baseName().contains(filename))
+        {
+            imagesFilename.append(image.absoluteFilePath());
+            ui->imageComboBox->addItem(item);
+            break;
+        }
+    }
+}
+
 void MainWindow::imagesGenerated(int exitCode, QProcess::ExitStatus exitStatus)
 {
     loadingIcon.stop();
@@ -355,19 +368,6 @@ void MainWindow::imagesGenerated(int exitCode, QProcess::ExitStatus exitStatus)
     if (exitCode == EXIT_SUCCESS && exitStatus == QProcess::NormalExit)
     {
         QDir dir(currentImagesFolder);
-
-        auto addItem = [&] (QString item, QString filename)
-        {
-            for (const QFileInfo& image : dir.entryInfoList())
-            {
-                if (image.baseName().contains(filename))
-                {
-                    imagesFilename.append(image.absoluteFilePath());
-                    ui->imageComboBox->addItem(item);
-                    break;
-                }
-            }
-        };
 
         if (vectorial)
             dir.setNameFilters(QStringList() << "*.svg");
@@ -379,17 +379,17 @@ void MainWindow::imagesGenerated(int exitCode, QProcess::ExitStatus exitStatus)
         imagesFilename.clear();
         ui->imageComboBox->clear();
 
-        addItem(tr("Processed front"), "processed_front");
-        addItem(tr("Processed back"), "processed_back");
-        addItem(tr("Processed outline"), "processed_outline");
-        addItem(tr("Traced front"), "traced_front");
-        addItem(tr("Traced back"), "traced_back");
-        addItem(tr("Masked front"), "masked_front");
-        addItem(tr("Masked back"), "masked_back");
-        addItem(tr("Input front"), "original_front");
-        addItem(tr("Input back"), "original_back");
-        addItem(tr("Input drill"), "original_drill");
-        addItem(tr("Input outline"), fillOutline ? "outline_filled" : "original_outline");
+        addImageFile(dir, tr("Processed front"), "processed_front");
+        addImageFile(dir, tr("Processed back"), "processed_back");
+        addImageFile(dir, tr("Processed outline"), "processed_outline");
+        addImageFile(dir, tr("Traced front"), "traced_front");
+        addImageFile(dir, tr("Traced back"), "traced_back");
+        addImageFile(dir, tr("Masked front"), "masked_front");
+        addImageFile(dir, tr("Masked back"), "masked_back");
+        addImageFile(dir, tr("Input front"), "original_front");
+        addImageFile(dir, tr("Input back"), "original_back");
+        addImageFile(dir, tr("Input drill"), "original_drill");
+        addImageFile(dir, tr("Input outline"), fillOutline ? "outline_filled" : "original_outline");
     }
     else
     {
@@ -422,7 +422,7 @@ void MainWindow::showImage(QString image)
 {
     const bool wasEmpty = scene.items().isEmpty();
 
-    for (QGraphicsItem *item : scene.items())
+    foreach (QGraphicsItem *item, scene.items())
     {
         scene.removeItem(item);
         delete item;
@@ -925,7 +925,7 @@ void MainWindow::clearImages()
     dir.setNameFilters(QStringList() << "*.*");
     dir.setFilter(QDir::Files);
 
-    for (const QString& dirFile : dir.entryList())
+    foreach (const QString& dirFile, dir.entryList())
     {
         dir.remove(dirFile);
     }

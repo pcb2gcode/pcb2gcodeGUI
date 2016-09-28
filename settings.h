@@ -51,7 +51,7 @@ static const QString excellon_file_filter = "Excellon files (*.drl *.drd *.dri *
 static const QString gcode_file_filter = "G-Code files (*.nc *.cnc *.ncc *.ecs *.ngc *.fan *.hnc);;All types (*.*)";
 static const QString text_file_filter = "Text files (*.*)";
 
-static const QVector<int> targetVersion = {1, 3, 2};
+static const QVector<int> targetVersion(QVector<int>() << 1 << 3 << 2);
 
 #endif // SETTINGS
 

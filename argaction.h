@@ -89,7 +89,7 @@ public:
 
     inline bool setValue(const QString key, const QString value)
     {
-        auto pos = objects.find(key);
+        QMap<QString, argBaseVirtual *>::iterator pos = objects.find(key);
 
         if (pos != objects.end())
             return (*pos)->setValue(value);

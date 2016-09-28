@@ -145,7 +145,7 @@ void argBase<QButtonGroup>::setEnabled(bool enabled)
 {
     QList<QAbstractButton *> buttons = object->buttons();
 
-    for (QAbstractButton *button : buttons)
+    foreach (QAbstractButton *button, buttons)
     {
         button->setEnabled(enabled);
     }
@@ -162,7 +162,8 @@ QStringList argAction::getAllArgs(const QString prepend, bool getCommentedOption
     QStringList output;
     QString value;
 
-    for (auto i = objects.constBegin(); i != objects.constEnd(); i++)
+    for (QMap<QString, argBaseVirtual *>::const_iterator i = objects.constBegin();
+            i != objects.constEnd(); i++)
     {
         value = i.value()->getValue();
         if ( !value.isEmpty() )

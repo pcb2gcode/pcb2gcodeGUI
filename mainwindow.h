@@ -67,6 +67,7 @@ private slots:
     void generateImages();
     void imagesGenerated(int exitCode, QProcess::ExitStatus exitStatus);
     void imageSelected(int index);
+    void addImageFile(const QDir& dir, const QString& item, const QString& filename);
 
     void getFrontFile();
     void getBackFile();
