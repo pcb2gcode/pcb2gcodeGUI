@@ -43,7 +43,7 @@
         <property name="minimumSize">
          <size>
           <width>445</width>
-          <height>450</height>
+          <height>455</height>
          </size>
         </property>
         <property name="toolTip">
@@ -63,9 +63,6 @@
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
-        </property>
-        <property name="tabBarAutoHide">
-         <bool>false</bool>
         </property>
         <widget class="QWidget" name="tab_3">
          <attribute name="title">
@@ -2072,9 +2069,6 @@
         </property>
         <property name="horizontalScrollBarPolicy">
          <enum>Qt::ScrollBarAlwaysOff</enum>
-        </property>
-        <property name="sizeAdjustPolicy">
-         <enum>QAbstractScrollArea::AdjustToContents</enum>
         </property>
         <property name="dragMode">
          <enum>QGraphicsView::ScrollHandDrag</enum>
