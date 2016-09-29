@@ -375,7 +375,7 @@
             <x>10</x>
             <y>10</y>
             <width>421</width>
-            <height>411</height>
+            <height>417</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="commonGridLayout">
@@ -612,6 +612,9 @@
                <property name="checked">
                 <bool>true</bool>
                </property>
+               <property name="autoExclusive">
+                <bool>false</bool>
+               </property>
               </widget>
              </item>
              <item>
@@ -623,6 +626,9 @@
                 <string>Imperial</string>
                </property>
                <property name="checked">
+                <bool>false</bool>
+               </property>
+               <property name="autoExclusive">
                 <bool>false</bool>
                </property>
               </widget>
@@ -645,6 +651,9 @@
                <property name="checked">
                 <bool>true</bool>
                </property>
+               <property name="autoExclusive">
+                <bool>false</bool>
+               </property>
               </widget>
              </item>
              <item>
@@ -654,6 +663,9 @@
                </property>
                <property name="text">
                 <string>Imperial</string>
+               </property>
+               <property name="autoExclusive">
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -751,6 +763,9 @@
                <property name="checked">
                 <bool>true</bool>
                </property>
+               <property name="autoExclusive">
+                <bool>false</bool>
+               </property>
               </widget>
              </item>
              <item>
@@ -760,6 +775,9 @@
                </property>
                <property name="text">
                 <string>Y axis</string>
+               </property>
+               <property name="autoExclusive">
+                <bool>false</bool>
                </property>
               </widget>
              </item>
