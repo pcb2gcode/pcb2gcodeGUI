@@ -519,6 +519,9 @@ void MainWindow::adjustMetricImperial(QDoubleSpinBox *doubleSpinBox, const doubl
 
     if( changeMetricImperialValues )
     {
+        if (cfactor < 1)
+            doubleSpinBox->setDecimals(doubleSpinBox->decimals() + 1);
+
         value = doubleSpinBox->value();
         maximum = doubleSpinBox->maximum();
         minimum = doubleSpinBox->minimum();
@@ -526,6 +529,9 @@ void MainWindow::adjustMetricImperial(QDoubleSpinBox *doubleSpinBox, const doubl
         doubleSpinBox->setMaximum( maximum * cfactor );
         doubleSpinBox->setMinimum( minimum * cfactor );
         doubleSpinBox->setValue( value * cfactor );
+
+        if (cfactor >= 1)
+            doubleSpinBox->setDecimals(doubleSpinBox->decimals() - 1);
     }
 
     doubleSpinBox->setSuffix(suffix);
