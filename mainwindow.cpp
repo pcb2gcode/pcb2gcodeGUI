@@ -391,7 +391,7 @@ void MainWindow::imagesGenerated(int exitCode, QProcess::ExitStatus exitStatus)
         addImageFile(dir, tr("Input drill"), "original_drill");
         addImageFile(dir, tr("Input outline"), fillOutline ? "outline_filled" : "original_outline");
     }
-    else
+    else if (sender() != static_cast<QObject *>(&pcb2gcodeProcess)) //Errors from pcb2gcodeProcess are printed in outputWindow
     {
         QMessageBox::critical(this, "Error",
                                  tr("Error while processing input files (error code ") +
