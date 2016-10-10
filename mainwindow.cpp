@@ -44,7 +44,8 @@ MainWindow::MainWindow(QWidget *parent) :
     scene(this),
     loadingIcon(":/images/loading.gif"),
     imagesFolder(QStandardPaths::writableLocation(QStandardPaths::TempLocation) +
-                    "/pcb2gcode-" + QString::number(QCoreApplication::applicationPid()))
+                    "/pcb2gcode-" + QString::number(QCoreApplication::applicationPid())),
+    restarted(false)
 {
     checkPcb2gcodeVersion();
 
@@ -153,7 +154,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), this, SLOT(bridgesAvailable()));
     connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), ui->voronoiCheckBox, SLOT(setEnabled(bool)));
     connect(ui->voronoiCheckBox, SIGNAL(toggled(bool)), this, SLOT(voronoiEnable(bool)));
-    connect(ui->filloutlineCheckBox, SIGNAL(toggled(bool)), ui->outlinewidthDoubleSpinBox, SLOT(setEnabled(bool)));
+    connect(ui->filloutlineCheckBox, SIGNAL(toggled(bool)), this, SLOT(fillOutlineEnable(bool)));
     connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), this, SLOT(bridgesAvailable()));
     connect(ui->milldrillCheckBox, SIGNAL(toggled(bool)), ui->milldrilldiameterDoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->softwareComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateAlCustomEnableState(QString)));
@@ -245,15 +246,28 @@ void MainWindow::vectorialEnable(bool enable)
     {
         if (ui->voronoiCheckBox->isChecked())
             ui->extrapassesSpinBox->setEnabled(false);
+
+        ui->outlinewidthDoubleSpinBox->setEnabled(false);
     }
     else
+    {
+        if (ui->filloutlineCheckBox->isChecked())
+            ui->outlinewidthDoubleSpinBox->setEnabled(true);
+
         ui->extrapassesSpinBox->setEnabled(true);
+    }
 }
 
 void MainWindow::voronoiEnable(bool enable)
 {
     ui->extrapassesSpinBox->setEnabled(!enable);
     ui->offsetDoubleSpinBox->setEnabled(!enable);
+}
+
+void MainWindow::fillOutlineEnable(bool enable)
+{
+    if (!ui->vectorialCheckBox->isChecked())
+        ui->outlinewidthDoubleSpinBox->setEnabled(enable);
 }
 
 void MainWindow::bridgesAvailable()
@@ -318,9 +332,6 @@ void MainWindow::generateImages()
     QStringList arguments;
     bool found_output_dir = false;
 
-    loadingIcon.start();
-    ui->loadingLabel->show();
-
     arguments += getCmdLineArguments();
 
     for (QStringList::iterator i = arguments.begin(); i != arguments.end(); i++)
@@ -339,7 +350,14 @@ void MainWindow::generateImages()
     arguments << "--no-export" << "--noconfigfile";
 
     if (pcb2gcodeImageProcess.state() != QProcess::NotRunning)
+    {
+        restarted = true;
         pcb2gcodeImageProcess.kill();
+        pcb2gcodeImageProcess.waitForFinished(1000);
+    }
+
+    loadingIcon.start();
+    ui->loadingLabel->show();
 
     currentImagesFolder = imagesFolder;
     vectorial = ui->vectorialCheckBox->isChecked();
@@ -389,9 +407,10 @@ void MainWindow::imagesGenerated(int exitCode, QProcess::ExitStatus exitStatus)
         addImageFile(dir, tr("Input front"), "original_front");
         addImageFile(dir, tr("Input back"), "original_back");
         addImageFile(dir, tr("Input drill"), "original_drill");
-        addImageFile(dir, tr("Input outline"), fillOutline ? "outline_filled" : "original_outline");
+        addImageFile(dir, tr("Input outline"), (fillOutline && !vectorial) ? "outline_filled" : "original_outline");
+        addImageFile(dir, tr("Input outline"), "original_outline");
     }
-    else if (sender() != static_cast<QObject *>(&pcb2gcodeProcess)) //Errors from pcb2gcodeProcess are printed in outputWindow
+    else if (sender() != static_cast<QObject *>(&pcb2gcodeProcess) && !restarted) //Errors from pcb2gcodeProcess are printed in outputWindow
     {
         QMessageBox::critical(this, "Error",
                                  tr("Error while processing input files (error code ") +
@@ -408,6 +427,8 @@ void MainWindow::imagesGenerated(int exitCode, QProcess::ExitStatus exitStatus)
     }
     else
         ui->imageComboBox->setEnabled(false);
+
+    restarted = false;
 }
 
 void MainWindow::imageSelected(int index)
@@ -565,7 +586,11 @@ void MainWindow::startPcb2gcode()
     QStringList arguments;
 
     if (pcb2gcodeImageProcess.state() != QProcess::NotRunning)
+    {
+        restarted = true;
         pcb2gcodeImageProcess.kill();
+        pcb2gcodeImageProcess.waitForFinished(1000);
+    }
 
     if( ui->outputDirLineEdit->text().isEmpty() )
         getOutputDirectory();

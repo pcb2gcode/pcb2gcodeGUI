@@ -54,6 +54,7 @@ public:
 private slots:
     void vectorialEnable(bool enable);
     void voronoiEnable(bool disable);
+    void fillOutlineEnable(bool enable);
     void bridgesAvailable();
     void changeMetricInputUnits(bool metric);
     void startPcb2gcode();
@@ -117,6 +118,7 @@ private:
     QString currentImagesFolder;
     bool vectorial;
     bool fillOutline;
+    bool restarted;
 
     argAction args[6];
 

@@ -1629,6 +1629,9 @@
            </item>
            <item row="10" column="1">
             <widget class="QDoubleSpinBox" name="outlinewidthDoubleSpinBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--outline-width&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Thickness of the lines that form the outline (if fill-outline is given)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
