@@ -43,7 +43,7 @@ and install it, then open pcb2gcodeGUI.pro inside Qt creator, select "Release" a
 You can also build pcb2gcodeGUI statically with [MSYS2](http://sourceforge.net/projects/msys2/):
  * Download MSYS2
  * Install the required build packages (follow the instructions for pcb2gcode)
- * `pacman -S mingw-w64-i686-qt5-static mingw-w64-i686-libwebp mingw-w64-i686-dbus` (or `pacman -S mingw-w64-x86_64-qt5-static mingw-w64-x86_64-libwebp mingw-w64-x86_64-dbus` if you want a 64-bit binary)
+ * `pacman --needed -S mingw-w64-i686-qt5-static mingw-w64-i686-libwebp mingw-w64-i686-dbus` (or `pacman --needed -S mingw-w64-x86_64-qt5-static mingw-w64-x86_64-libwebp mingw-w64-x86_64-dbus` if you want a 64-bit binary)
  * `git clone https://github.com/pcb2gcode/pcb2gcodeGUI.git`
  * `cd pcb2gcodeGUI/`
  * `/mingw32/qt5-static/bin/qmake.exe` (or `/mingw64/qt5-static/bin/qmake.exe` for the 64-bit binary)
