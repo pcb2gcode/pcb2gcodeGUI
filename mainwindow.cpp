@@ -78,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ COMMONARGS ].insert("metricoutput", &outputUnits);
     args[ COMMONARGS ].insert("zsafe", ui->zsafeDoubleSpinBox);
     args[ COMMONARGS ].insert("zchange", ui->zchangeDoubleSpinBox);
+    args[ COMMONARGS ].insert("zchange-absolute", ui->zchangeAbsoluteCheckBox);
     args[ COMMONARGS ].insert("vectorial", ui->vectorialCheckBox);
     args[ COMMONARGS ].insert("nog64", ui->nog64CheckBox);
     args[ COMMONARGS ].insert("tolerance", ui->toleranceDoubleSpinBox);

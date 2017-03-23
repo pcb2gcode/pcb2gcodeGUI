@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>850</width>
-    <height>555</height>
+    <height>582</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -43,7 +43,7 @@
         <property name="minimumSize">
          <size>
           <width>445</width>
-          <height>455</height>
+          <height>485</height>
          </size>
         </property>
         <property name="toolTip">
@@ -375,11 +375,11 @@
             <x>10</x>
             <y>10</y>
             <width>421</width>
-            <height>417</height>
+            <height>441</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="commonGridLayout">
-           <item row="5" column="0">
+           <item row="6" column="0">
             <widget class="QCheckBox" name="nog64CheckBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--nog64&lt;/span&gt;&lt;/p&gt;&lt;p&gt;do not explicitly set G64 inside the output gcode. This option makes the gcode compatible with low-end cnc controllers (like grbl)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -395,7 +395,7 @@
              </property>
             </widget>
            </item>
-           <item row="6" column="0">
+           <item row="7" column="0">
             <widget class="QLabel" name="toleranceLabel">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--tolerance&lt;/span&gt;&lt;/p&gt;&lt;p&gt;maximum deviation from toolpath&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -430,7 +430,7 @@
              </property>
             </widget>
            </item>
-           <item row="10" column="1">
+           <item row="11" column="1">
             <widget class="QSpinBox" name="dpiSpinBox">
              <property name="enabled">
               <bool>false</bool>
@@ -468,7 +468,7 @@
              </property>
             </widget>
            </item>
-           <item row="10" column="0">
+           <item row="11" column="0">
             <widget class="QLabel" name="dpiLabel">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--dpi&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Resolution used internally&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -481,7 +481,7 @@
              </property>
             </widget>
            </item>
-           <item row="7" column="0">
+           <item row="8" column="0">
             <widget class="QCheckBox" name="optimiseCheckBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--optimise&lt;/span&gt;&lt;/p&gt;&lt;p&gt;optimise output gcode, reducing its output size up to 95%, while accepting a very little loss of precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -494,7 +494,7 @@
              </property>
             </widget>
            </item>
-           <item row="8" column="0">
+           <item row="9" column="0">
             <widget class="QCheckBox" name="zerostartCheckBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zero-start&lt;/span&gt;&lt;/p&gt;&lt;p&gt;set the starting point of the project at (0,0). With this option the projet will be between (0,0) and (max_x_value, max_y_value) (positive values)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -507,7 +507,7 @@
              </property>
             </widget>
            </item>
-           <item row="6" column="1">
+           <item row="7" column="1">
             <widget class="QDoubleSpinBox" name="toleranceDoubleSpinBox">
              <property name="enabled">
               <bool>true</bool>
@@ -671,7 +671,7 @@
              </item>
             </layout>
            </item>
-           <item row="11" column="1">
+           <item row="12" column="1">
             <layout class="QHBoxLayout" name="tileHorizontalLayout">
              <item>
               <widget class="QLabel" name="tilexLabel">
@@ -727,7 +727,7 @@
              </item>
             </layout>
            </item>
-           <item row="11" column="0">
+           <item row="12" column="0">
             <widget class="QLabel" name="tileLabel">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--tile-x&lt;/span&gt;, &lt;span style=&quot; font-style:italic;&quot;&gt;--tile-y&lt;/span&gt;&lt;/p&gt;&lt;p&gt;number of tiling rows/columns&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -737,7 +737,7 @@
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
+           <item row="5" column="0">
             <widget class="QCheckBox" name="vectorialCheckBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--vectorial&lt;/span&gt;&lt;/p&gt;&lt;p&gt;enable the new vectorial core. This new core offers much better performances, higher precision, smaller output files and support for internal cutoffs (like thermal pads). When --vectorial is enabled, --dpi is ignored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -750,7 +750,7 @@
              </property>
             </widget>
            </item>
-           <item row="9" column="1">
+           <item row="10" column="1">
             <layout class="QHBoxLayout" name="mirrorAbsoluteHorizontalLayout">
              <item>
               <widget class="QRadioButton" name="mirrorAbsoluteOffRadioButton">
@@ -783,7 +783,7 @@
              </item>
             </layout>
            </item>
-           <item row="9" column="0">
+           <item row="10" column="0">
             <widget class="QLabel" name="mirrorAbsoluteLabel">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-absolute&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Mirror operations on the back side along the Y axis instead of the board center, which is the default&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -793,7 +793,7 @@
              </property>
             </widget>
            </item>
-           <item row="12" column="0" colspan="2">
+           <item row="13" column="0" colspan="2">
             <spacer name="verticalSpacer_7">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -805,6 +805,16 @@
               </size>
              </property>
             </spacer>
+           </item>
+           <item row="4" column="0" colspan="2">
+            <widget class="QCheckBox" name="zchangeAbsoluteCheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zchange-absolute&lt;/span&gt;&lt;/p&gt;&lt;p&gt;use zchange as a machine coordinates height (G53)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Use &quot;Tool change height&quot; as machine coordinate</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -992,7 +1002,7 @@
            <item row="3" column="0">
             <widget class="QCheckBox" name="voronoiCheckBox">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--voronoi&lt;/span&gt;&lt;/p&gt;&lt;p&gt;enable the voronoi mode (requires --vectorial). This option is more efficient than a large --offset value, and provides the same result.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -2146,7 +2156,7 @@
      <x>0</x>
      <y>0</y>
      <width>850</width>
-     <height>28</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
