@@ -42,7 +42,7 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>445</width>
+          <width>545</width>
           <height>485</height>
          </size>
         </property>
@@ -747,49 +747,6 @@
              </property>
              <property name="checked">
               <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="10" column="1">
-            <layout class="QHBoxLayout" name="mirrorAbsoluteHorizontalLayout">
-             <item>
-              <widget class="QRadioButton" name="mirrorAbsoluteOffRadioButton">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-absolute=off&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Mirror operations on the back side along the vertical straight line on the board center&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string>Board center</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-               <property name="autoExclusive">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="mirrorAbsoluteOnRadioButton">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-absolute=on&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Mirror operations on the back side along the Y axis&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string>Y axis</string>
-               </property>
-               <property name="autoExclusive">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="10" column="0">
-            <widget class="QLabel" name="mirrorAbsoluteLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-absolute&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Mirror operations on the back side along the Y axis instead of the board center, which is the default&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Backside mirroring</string>
              </property>
             </widget>
            </item>

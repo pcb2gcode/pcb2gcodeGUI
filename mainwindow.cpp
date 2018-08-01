@@ -57,8 +57,6 @@ MainWindow::MainWindow(QWidget *parent) :
     inputUnits.addButton(ui->inputImperialRadioButton, 1);
     outputUnits.addButton(ui->outputMetricRadioButton, 0);
     outputUnits.addButton(ui->outputImperialRadioButton, 1);
-    mirrorType.addButton(ui->mirrorAbsoluteOnRadioButton, 0);
-    mirrorType.addButton(ui->mirrorAbsoluteOffRadioButton, 1);
 
     pcb2gcodeProcess.setProcessChannelMode(QProcess::MergedChannels);
     pcb2gcodeImageProcess.setProcessChannelMode(QProcess::MergedChannels);
@@ -84,7 +82,6 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ COMMONARGS ].insert("tolerance", ui->toleranceDoubleSpinBox);
     args[ COMMONARGS ].insert("optimise", ui->optimiseCheckBox);
     args[ COMMONARGS ].insert("zero-start", ui->zerostartCheckBox);
-    args[ COMMONARGS ].insert("mirror-absolute", &mirrorType);
     args[ COMMONARGS ].insert("dpi", ui->dpiSpinBox);
     args[ COMMONARGS ].insert("tile-x", ui->tilexSpinBox);
     args[ COMMONARGS ].insert("tile-y", ui->tileySpinBox);

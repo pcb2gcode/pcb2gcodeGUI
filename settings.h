@@ -54,4 +54,3 @@ static const QString text_file_filter = "Text files (*.*)";
 static const QVector<int> targetVersion(QVector<int>() << 1 << 3 << 2);
 
 #endif // SETTINGS
-
