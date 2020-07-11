@@ -80,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ COMMONARGS ].insert("vectorial", ui->vectorialCheckBox);
     args[ COMMONARGS ].insert("nog64", ui->nog64CheckBox);
     args[ COMMONARGS ].insert("tolerance", ui->toleranceDoubleSpinBox);
-    args[ COMMONARGS ].insert("optimise", ui->optimiseCheckBox);
+    args[ COMMONARGS ].insert("optimise", ui->optimiseDoubleSpinBox);
     args[ COMMONARGS ].insert("zero-start", ui->zerostartCheckBox);
     args[ COMMONARGS ].insert("dpi", ui->dpiSpinBox);
     args[ COMMONARGS ].insert("tile-x", ui->tilexSpinBox);
@@ -153,7 +153,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), ui->voronoiCheckBox, SLOT(setEnabled(bool)));
     connect(ui->voronoiCheckBox, SIGNAL(toggled(bool)), this, SLOT(voronoiEnable(bool)));
     connect(ui->filloutlineCheckBox, SIGNAL(toggled(bool)), this, SLOT(fillOutlineEnable(bool)));
-    connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), this, SLOT(bridgesAvailable()));
     connect(ui->milldrillCheckBox, SIGNAL(toggled(bool)), ui->milldrilldiameterDoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->softwareComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateAlCustomEnableState(QString)));
 
@@ -270,7 +269,7 @@ void MainWindow::fillOutlineEnable(bool enable)
 
 void MainWindow::bridgesAvailable()
 {
-    bool bridgesEnabled = ui->vectorialCheckBox->isChecked() || ui->optimiseCheckBox->isChecked();
+    bool bridgesEnabled = ui->vectorialCheckBox->isChecked();
 
     ui->bridgesDoubleSpinBox->setEnabled(bridgesEnabled);
     ui->zbridgesDoubleSpinBox->setEnabled(bridgesEnabled);
@@ -493,7 +492,7 @@ void MainWindow::changeMetricInputUnits(bool metric)
                                                   ui->zdrillDoubleSpinBox, ui->zchangeDoubleSpinBox, ui->cutterdiameterDoubleSpinBox,
                                                   ui->zcutDoubleSpinBox, ui->cutinfeedDoubleSpinBox, ui->outlinewidthDoubleSpinBox,
                                                   ui->bridgesDoubleSpinBox, ui->zbridgesDoubleSpinBox, ui->alxDoubleSpinBox,
-                                                  ui->alyDoubleSpinBox, ui->toleranceDoubleSpinBox };
+                                                  ui->alyDoubleSpinBox, ui->toleranceDoubleSpinBox, ui->optimiseDoubleSpinBox };
 
     QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->alprobefeedSpinBox };
 
