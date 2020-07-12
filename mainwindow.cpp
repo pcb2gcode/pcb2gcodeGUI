@@ -82,7 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ COMMONARGS ].insert("tolerance", ui->toleranceDoubleSpinBox);
     args[ COMMONARGS ].insert("optimise", ui->optimiseDoubleSpinBox);
     args[ COMMONARGS ].insert("zero-start", ui->zerostartCheckBox);
-    args[ COMMONARGS ].insert("dpi", ui->dpiSpinBox);
+    args[ COMMONARGS ].insert("mirror-axis", ui->mirroraxisDoubleSpinBox);
     args[ COMMONARGS ].insert("tile-x", ui->tilexSpinBox);
     args[ COMMONARGS ].insert("tile-y", ui->tileySpinBox);
 
@@ -194,6 +194,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->loadingLabel->setMovie(&loadingIcon);
     ui->loadingLabel->hide();
+    ui->mirroraxisDoubleSpinBox->setEnabled(true);
 }
 
 void MainWindow::checkPcb2gcodeVersion()
@@ -237,8 +238,6 @@ void MainWindow::checkPcb2gcodeVersion()
 
 void MainWindow::vectorialEnable(bool enable)
 {
-    ui->dpiSpinBox->setEnabled(!enable);
-
     if (enable)
     {
         if (ui->voronoiCheckBox->isChecked())
@@ -492,7 +491,8 @@ void MainWindow::changeMetricInputUnits(bool metric)
                                                   ui->zdrillDoubleSpinBox, ui->zchangeDoubleSpinBox, ui->cutterdiameterDoubleSpinBox,
                                                   ui->zcutDoubleSpinBox, ui->cutinfeedDoubleSpinBox, ui->outlinewidthDoubleSpinBox,
                                                   ui->bridgesDoubleSpinBox, ui->zbridgesDoubleSpinBox, ui->alxDoubleSpinBox,
-                                                  ui->alyDoubleSpinBox, ui->toleranceDoubleSpinBox, ui->optimiseDoubleSpinBox };
+                                                  ui->alyDoubleSpinBox, ui->toleranceDoubleSpinBox, ui->optimiseDoubleSpinBox,
+                                                  ui->mirroraxisDoubleSpinBox };
 
     QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->alprobefeedSpinBox };
 

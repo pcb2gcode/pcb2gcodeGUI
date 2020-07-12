@@ -563,7 +563,7 @@
            <item row="5" column="0" colspan="2">
             <widget class="QCheckBox" name="vectorialCheckBox">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--vectorial&lt;/span&gt;&lt;/p&gt;&lt;p&gt;enable the new vectorial core. This new core offers much better performances, higher precision, smaller output files and support for internal cutoffs (like thermal pads). When --vectorial is enabled, --dpi is ignored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--vectorial&lt;/span&gt;&lt;/p&gt;&lt;p&gt;enable the new vectorial core. This new core offers much better performances, higher precision, smaller output files and support for internal cutoffs (like thermal pads).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>Vectorial core</string>
@@ -685,40 +685,43 @@
             </widget>
            </item>
            <item row="10" column="0">
-            <widget class="QLabel" name="dpiLabel">
+            <widget class="QLabel" name="mirroraxisLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--dpi&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Resolution used internally&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-axis&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Distance from zero axis to flip the bcb around&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Internal precision</string>
+              <string>Axis mirror offset</string>
              </property>
              <property name="buddy">
-              <cstring>dpiSpinBox</cstring>
+              <cstring>mirroraxisDoubleSpinBox</cstring>
              </property>
             </widget>
            </item>
            <item row="10" column="1">
-            <widget class="QSpinBox" name="dpiSpinBox">
+            <widget class="QDoubleSpinBox" name="mirroraxisDoubleSpinBox">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--dpi&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Resolution used internally&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-axis&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Distance from zero axis to flip the bcb around&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="suffix">
-              <string> dpi</string>
+              <string> mm </string>
+             </property>
+             <property name="decimals">
+              <number>3</number>
              </property>
              <property name="minimum">
-              <number>1</number>
+              <double>0.000000000000000</double>
              </property>
              <property name="maximum">
-              <number>10000</number>
+              <double>10000.000000000000000</double>
              </property>
              <property name="singleStep">
-              <number>100</number>
+              <double>1.000000000000000</double>
              </property>
              <property name="value">
-              <number>1000</number>
+              <double>0.000000000000000</double>
              </property>
             </widget>
            </item>
@@ -2276,7 +2279,7 @@
   <tabstop>toleranceDoubleSpinBox</tabstop>
   <tabstop>optimiseDoubleSpinBox</tabstop>
   <tabstop>zerostartCheckBox</tabstop>
-  <tabstop>dpiSpinBox</tabstop>
+  <tabstop>mirroraxisDoubleSpinBox</tabstop>
   <tabstop>tilexSpinBox</tabstop>
   <tabstop>tileySpinBox</tabstop>
   <tabstop>zworkDoubleSpinBox</tabstop>
