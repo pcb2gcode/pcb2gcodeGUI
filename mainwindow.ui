@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
-    <height>582</height>
+    <width>907</width>
+    <height>709</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -43,7 +43,7 @@
         <property name="minimumSize">
          <size>
           <width>545</width>
-          <height>500</height>
+          <height>600</height>
          </size>
         </property>
         <property name="toolTip">
@@ -59,7 +59,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -74,7 +74,7 @@
             <x>10</x>
             <y>10</y>
             <width>421</width>
-            <height>411</height>
+            <height>550</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="inputFilesGridLayout">
@@ -374,8 +374,8 @@
            <rect>
             <x>10</x>
             <y>10</y>
-            <width>421</width>
-            <height>550</height>
+            <width>531</width>
+            <height>650</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="commonGridLayout">
@@ -667,7 +667,7 @@
               <double>0.000010000000000</double>
              </property>
              <property name="value">
-              <double>0.000½00000000000</double>
+              <double>0.000010000000000</double>
              </property>
             </widget>
            </item>
@@ -813,7 +813,7 @@
            <rect>
             <x>10</x>
             <y>10</y>
-            <width>421</width>
+            <width>430</width>
             <height>411</height>
            </rect>
           </property>
@@ -1022,8 +1022,8 @@
            <rect>
             <x>10</x>
             <y>10</y>
-            <width>421</width>
-            <height>411</height>
+            <width>522</width>
+            <height>421</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="drillGridLayout">
@@ -1282,8 +1282,8 @@
            <rect>
             <x>10</x>
             <y>10</y>
-            <width>421</width>
-            <height>411</height>
+            <width>504</width>
+            <height>553</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="outlineGridLayout">
@@ -1672,8 +1672,8 @@
            <rect>
             <x>10</x>
             <y>10</y>
-            <width>421</width>
-            <height>411</height>
+            <width>537</width>
+            <height>543</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="autolevellerGridLayout">
@@ -2140,8 +2140,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>850</width>
-     <height>25</height>
+     <width>907</width>
+     <height>43</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
