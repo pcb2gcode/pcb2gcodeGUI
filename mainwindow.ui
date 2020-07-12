@@ -620,7 +620,7 @@
            <item row="7" column="0">
             <widget class="QLabel" name="optimiseLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--optimise&lt;/span&gt;&lt;/p&gt;&lt;p&gt;optimise output gcode, reducing its output size up to 95%, while accepting a very little loss of precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--optimise&lt;/span&gt;&lt;/p&gt;&lt;p&gt;optimise output gcode, reducing its output size up to 40%, while accepting a very little loss of precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>optimise val</string>
@@ -636,7 +636,7 @@
               <bool>true</bool>
              </property>
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--optimise&lt;/span&gt;&lt;/p&gt;&lt;p&gt;optimise output gcode, reducing its output size up to 95%, while accepting a very little loss of precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--optimise&lt;/span&gt;&lt;/p&gt;&lt;p&gt;optimise output gcode, reducing its output size up to 40%, while accepting a very little loss of precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="suffix">
               <string> mm </string>
