@@ -561,19 +561,6 @@
             </widget>
            </item>
            <item row="5" column="0" colspan="2">
-            <widget class="QCheckBox" name="vectorialCheckBox">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--vectorial&lt;/span&gt;&lt;/p&gt;&lt;p&gt;enable the new vectorial core. This new core offers much better performances, higher precision, smaller output files and support for internal cutoffs (like thermal pads).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Vectorial core</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0" colspan="2">
             <widget class="QCheckBox" name="nog64CheckBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--nog64&lt;/span&gt;&lt;/p&gt;&lt;p&gt;do not explicitly set G64 inside the output gcode. This option makes the gcode compatible with low-end cnc controllers (like grbl)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -589,7 +576,7 @@
              </property>
             </widget>
            </item>
-           <item row="7" column="0">
+           <item row="6" column="0">
             <widget class="QLabel" name="toleranceLabel">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--tolerance&lt;/span&gt;&lt;/p&gt;&lt;p&gt;maximum deviation from toolpath&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -602,7 +589,7 @@
              </property>
             </widget>
            </item>
-           <item row="7" column="1">
+           <item row="6" column="1">
             <widget class="QDoubleSpinBox" name="toleranceDoubleSpinBox">
              <property name="enabled">
               <bool>true</bool>
@@ -630,7 +617,7 @@
              </property>
             </widget>
            </item>
-           <item row="8" column="0">
+           <item row="7" column="0">
             <widget class="QLabel" name="optimiseLabel">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--optimise&lt;/span&gt;&lt;/p&gt;&lt;p&gt;optimise output gcode, reducing its output size up to 95%, while accepting a very little loss of precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -643,7 +630,7 @@
              </property>
             </widget>
            </item>
-           <item row="8" column="1">
+           <item row="7" column="1">
             <widget class="QDoubleSpinBox" name="optimiseDoubleSpinBox">
              <property name="enabled">
               <bool>true</bool>
@@ -652,7 +639,7 @@
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--optimise&lt;/span&gt;&lt;/p&gt;&lt;p&gt;optimise output gcode, reducing its output size up to 95%, while accepting a very little loss of precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="suffix">
-              <string> in</string>
+              <string> mm </string>
              </property>
              <property name="decimals">
               <number>5</number>
@@ -671,7 +658,7 @@
              </property>
             </widget>
            </item>
-           <item row="9" column="0" colspan="2">
+           <item row="8" column="0" colspan="2">
             <widget class="QCheckBox" name="zerostartCheckBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zero-start&lt;/span&gt;&lt;/p&gt;&lt;p&gt;set the starting point of the project at (0,0). With this option the projet will be between (0,0) and (max_x_value, max_y_value) (positive values)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -684,7 +671,7 @@
              </property>
             </widget>
            </item>
-           <item row="10" column="0">
+           <item row="9" column="0">
             <widget class="QLabel" name="mirroraxisLabel">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-axis&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Distance from zero axis to flip the bcb around&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -697,7 +684,7 @@
              </property>
             </widget>
            </item>
-           <item row="10" column="1">
+           <item row="9" column="1">
             <widget class="QDoubleSpinBox" name="mirroraxisDoubleSpinBox">
              <property name="enabled">
               <bool>true</bool>
@@ -725,7 +712,7 @@
              </property>
             </widget>
            </item>
-           <item row="11" column="0">
+           <item row="10" column="0">
             <widget class="QLabel" name="tileLabel">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--tile-x&lt;/span&gt;, &lt;span style=&quot; font-style:italic;&quot;&gt;--tile-y&lt;/span&gt;&lt;/p&gt;&lt;p&gt;number of tiling rows/columns&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -735,7 +722,7 @@
              </property>
             </widget>
            </item>
-           <item row="11" column="1">
+           <item row="10" column="1">
             <layout class="QHBoxLayout" name="tileHorizontalLayout">
              <item>
               <widget class="QLabel" name="tilexLabel">
@@ -791,7 +778,7 @@
              </item>
             </layout>
            </item>
-           <item row="12" column="0" colspan="2">
+           <item row="11" column="0" colspan="2">
             <spacer name="verticalSpacer_7">
              <property name="orientation">
               <enum>Qt::Vertical</enum>

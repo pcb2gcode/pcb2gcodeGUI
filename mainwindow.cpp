@@ -77,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ COMMONARGS ].insert("zsafe", ui->zsafeDoubleSpinBox);
     args[ COMMONARGS ].insert("zchange", ui->zchangeDoubleSpinBox);
     args[ COMMONARGS ].insert("zchange-absolute", ui->zchangeAbsoluteCheckBox);
-    args[ COMMONARGS ].insert("vectorial", ui->vectorialCheckBox);
+//    args[ COMMONARGS ].insert("vectorial", ui->vectorialCheckBox);
     args[ COMMONARGS ].insert("nog64", ui->nog64CheckBox);
     args[ COMMONARGS ].insert("tolerance", ui->toleranceDoubleSpinBox);
     args[ COMMONARGS ].insert("optimise", ui->optimiseDoubleSpinBox);
@@ -148,9 +148,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->postamblePushButton, SIGNAL(clicked()), this, SLOT(getPostambleFile()));
     connect(ui->outputDirPushButton, SIGNAL(clicked()), this, SLOT(getOutputDirectory()));
 
-    connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), this, SLOT(vectorialEnable(bool)));
-    connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), this, SLOT(bridgesAvailable()));
-    connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), ui->voronoiCheckBox, SLOT(setEnabled(bool)));
+//    connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), this, SLOT(vectorialEnable(bool)));
+//    connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), this, SLOT(bridgesAvailable()));
+//    connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), ui->voronoiCheckBox, SLOT(setEnabled(bool)));
     connect(ui->voronoiCheckBox, SIGNAL(toggled(bool)), this, SLOT(voronoiEnable(bool)));
     connect(ui->milldrillCheckBox, SIGNAL(toggled(bool)), ui->milldrilldiameterDoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->softwareComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateAlCustomEnableState(QString)));
@@ -236,18 +236,18 @@ void MainWindow::checkPcb2gcodeVersion()
     }
 }
 
-void MainWindow::vectorialEnable(bool enable)
-{
-    if (enable)
-    {
-        if (ui->voronoiCheckBox->isChecked())
-            ui->extrapassesSpinBox->setEnabled(false);
-    }
-    else
-    {
-        ui->extrapassesSpinBox->setEnabled(true);
-    }
-}
+// void MainWindow::vectorialEnable(bool enable)
+// {
+//     if (enable)
+//     {
+//         if (ui->voronoiCheckBox->isChecked())
+//             ui->extrapassesSpinBox->setEnabled(false);
+//     }
+//     else
+//     {
+//         ui->extrapassesSpinBox->setEnabled(true);
+//     }
+// }
 
 void MainWindow::voronoiEnable(bool enable)
 {
@@ -257,7 +257,7 @@ void MainWindow::voronoiEnable(bool enable)
 
 void MainWindow::bridgesAvailable()
 {
-    bool bridgesEnabled = ui->vectorialCheckBox->isChecked();
+    bool bridgesEnabled = true;
 
     ui->bridgesDoubleSpinBox->setEnabled(bridgesEnabled);
     ui->zbridgesDoubleSpinBox->setEnabled(bridgesEnabled);
@@ -345,7 +345,7 @@ void MainWindow::generateImages()
     ui->loadingLabel->show();
 
     currentImagesFolder = imagesFolder;
-    vectorial = ui->vectorialCheckBox->isChecked();
+//    vectorial = ui->vectorialCheckBox->isChecked();
     fillOutline = ui->filloutlineCheckBox->isChecked();
     pcb2gcodeImageProcess.start(PCB2GCODE_EXECUTABLE, arguments, QProcess::ReadOnly);
 }
@@ -372,10 +372,10 @@ void MainWindow::imagesGenerated(int exitCode, QProcess::ExitStatus exitStatus)
     {
         QDir dir(currentImagesFolder);
 
-        if (vectorial)
-            dir.setNameFilters(QStringList() << "*.svg");
-        else
-            dir.setNameFilters(QStringList() << "*.png");
+//         if (vectorial)
+//             dir.setNameFilters(QStringList() << "*.svg");
+//         else
+//             dir.setNameFilters(QStringList() << "*.png");
 
         dir.setFilter(QDir::Files);
 
@@ -392,7 +392,8 @@ void MainWindow::imagesGenerated(int exitCode, QProcess::ExitStatus exitStatus)
         addImageFile(dir, tr("Input front"), "original_front");
         addImageFile(dir, tr("Input back"), "original_back");
         addImageFile(dir, tr("Input drill"), "original_drill");
-        addImageFile(dir, tr("Input outline"), (fillOutline && !vectorial) ? "outline_filled" : "original_outline");
+//        addImageFile(dir, tr("Input outline"), (fillOutline && !vectorial) ? "outline_filled" : "original_outline");
+        addImageFile(dir, tr("Input outline"), (fillOutline) ? "outline_filled" : "original_outline");
         addImageFile(dir, tr("Input outline"), "original_outline");
     }
     else if (sender() != static_cast<QObject *>(&pcb2gcodeProcess) && !restarted) //Errors from pcb2gcodeProcess are printed in outputWindow
@@ -604,7 +605,7 @@ void MainWindow::startPcb2gcode()
         outputTextEdit = pcb2gcodeOutputWindow->getOutputPlainTextEdit();
 
         currentImagesFolder = ui->outputDirLineEdit->text();
-        vectorial = ui->vectorialCheckBox->isChecked();
+//        vectorial = ui->vectorialCheckBox->isChecked();
         fillOutline = ui->filloutlineCheckBox->isChecked();
         pcb2gcodeProcess.start(PCB2GCODE_EXECUTABLE, arguments, QProcess::ReadOnly);
     }
