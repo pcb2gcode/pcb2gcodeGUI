@@ -52,7 +52,6 @@ public:
     ~MainWindow();
 
 private slots:
-//    void vectorialEnable(bool enable);
     void voronoiEnable(bool disable);
     void bridgesAvailable();
     void changeMetricInputUnits(bool metric);
@@ -115,7 +114,6 @@ private:
     const QString imagesFolder;
     QStringList imagesFilename;
     QString currentImagesFolder;
-//    bool vectorial;
     bool fillOutline;
     bool restarted;
 
