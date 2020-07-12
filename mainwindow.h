@@ -54,7 +54,6 @@ public:
 private slots:
     void vectorialEnable(bool enable);
     void voronoiEnable(bool disable);
-    void fillOutlineEnable(bool enable);
     void bridgesAvailable();
     void changeMetricInputUnits(bool metric);
     void startPcb2gcode();

@@ -108,7 +108,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ OUTLINEARGS ].insert("cut-feed", ui->cutfeedSpinBox);
     args[ OUTLINEARGS ].insert("cut-speed", ui->cutspeedSpinBox);
     args[ OUTLINEARGS ].insert("cut-infeed", ui->cutinfeedDoubleSpinBox);
-    args[ OUTLINEARGS ].insert("outline-width", ui->outlinewidthDoubleSpinBox);
+    args[ OUTLINEARGS ].insert("cut-vertfeed", ui->cutvertfeedSpinBox);
     args[ OUTLINEARGS ].insert("bridges", ui->bridgesDoubleSpinBox);
     args[ OUTLINEARGS ].insert("zbridges", ui->zbridgesDoubleSpinBox);
     args[ OUTLINEARGS ].insert("bridgesnum", ui->bridgesnumSpinBox);
@@ -152,7 +152,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), this, SLOT(bridgesAvailable()));
     connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), ui->voronoiCheckBox, SLOT(setEnabled(bool)));
     connect(ui->voronoiCheckBox, SIGNAL(toggled(bool)), this, SLOT(voronoiEnable(bool)));
-    connect(ui->filloutlineCheckBox, SIGNAL(toggled(bool)), this, SLOT(fillOutlineEnable(bool)));
     connect(ui->milldrillCheckBox, SIGNAL(toggled(bool)), ui->milldrilldiameterDoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->softwareComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateAlCustomEnableState(QString)));
 
@@ -195,6 +194,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->loadingLabel->setMovie(&loadingIcon);
     ui->loadingLabel->hide();
     ui->mirroraxisDoubleSpinBox->setEnabled(true);
+    ui->cutvertfeedSpinBox->setEnabled(true);
 }
 
 void MainWindow::checkPcb2gcodeVersion()
@@ -242,14 +242,9 @@ void MainWindow::vectorialEnable(bool enable)
     {
         if (ui->voronoiCheckBox->isChecked())
             ui->extrapassesSpinBox->setEnabled(false);
-
-        ui->outlinewidthDoubleSpinBox->setEnabled(false);
     }
     else
     {
-        if (ui->filloutlineCheckBox->isChecked())
-            ui->outlinewidthDoubleSpinBox->setEnabled(true);
-
         ui->extrapassesSpinBox->setEnabled(true);
     }
 }
@@ -258,12 +253,6 @@ void MainWindow::voronoiEnable(bool enable)
 {
     ui->extrapassesSpinBox->setEnabled(!enable);
     ui->offsetDoubleSpinBox->setEnabled(!enable);
-}
-
-void MainWindow::fillOutlineEnable(bool enable)
-{
-    if (!ui->vectorialCheckBox->isChecked())
-        ui->outlinewidthDoubleSpinBox->setEnabled(enable);
 }
 
 void MainWindow::bridgesAvailable()
@@ -489,12 +478,12 @@ void MainWindow::changeMetricInputUnits(bool metric)
 {
     QDoubleSpinBox *doubleSpinBoxes[] = { ui->zworkDoubleSpinBox, ui->zsafeDoubleSpinBox, ui->offsetDoubleSpinBox,
                                                   ui->zdrillDoubleSpinBox, ui->zchangeDoubleSpinBox, ui->cutterdiameterDoubleSpinBox,
-                                                  ui->zcutDoubleSpinBox, ui->cutinfeedDoubleSpinBox, ui->outlinewidthDoubleSpinBox,
+                                                  ui->zcutDoubleSpinBox, ui->cutinfeedDoubleSpinBox,
                                                   ui->bridgesDoubleSpinBox, ui->zbridgesDoubleSpinBox, ui->alxDoubleSpinBox,
                                                   ui->alyDoubleSpinBox, ui->toleranceDoubleSpinBox, ui->optimiseDoubleSpinBox,
                                                   ui->mirroraxisDoubleSpinBox };
 
-    QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->alprobefeedSpinBox };
+    QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->cutvertfeedSpinBox, ui->alprobefeedSpinBox };
 
     const unsigned int doubleSpinBoxesLen =  sizeof(doubleSpinBoxes) / sizeof(doubleSpinBoxes[0]);
     const unsigned int spinBoxesLen =  sizeof(spinBoxes) / sizeof(spinBoxes[0]);

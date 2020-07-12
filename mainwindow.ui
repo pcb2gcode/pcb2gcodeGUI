@@ -1296,114 +1296,6 @@
            <property name="verticalSpacing">
             <number>6</number>
            </property>
-           <item row="4" column="1">
-            <widget class="QDoubleSpinBox" name="cutinfeedDoubleSpinBox">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--cut-infeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Maximum Z distance that is cut away in a single pass (if less then zcut's value, there will be more than one pass)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="suffix">
-              <string> mm</string>
-             </property>
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.050000000000000</double>
-             </property>
-             <property name="value">
-              <double>10.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1">
-            <widget class="QDoubleSpinBox" name="bridgesDoubleSpinBox">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridges&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Add bridges with the given width to the outline cut. --bridgesnum bridges will be created for each outline closed line. This option requires --optimise&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="suffix">
-              <string> mm</string>
-             </property>
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.050000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.500000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="1">
-            <widget class="QDoubleSpinBox" name="zbridgesDoubleSpinBox">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zbridges&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Bridges height (Z-coordinates while engraving bridges). If you want full-height bridges set this to a value greater than 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="suffix">
-              <string> mm</string>
-             </property>
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="minimum">
-              <double>-100.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>0.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.050000000000000</double>
-             </property>
-             <property name="value">
-              <double>-0.600000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="cutinfeedLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--cut-infeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Maximum Z distance that is cut away in a single pass (if less then zcut's value, there will be more than one pass)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Maximum single-pass depth</string>
-             </property>
-             <property name="buddy">
-              <cstring>cutinfeedDoubleSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="zbridgesLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zbridges&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Bridges height (Z-coordinates while engraving bridges). If you want full-height bridges set this to a value greater than 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Bridges depth</string>
-             </property>
-             <property name="buddy">
-              <cstring>zbridgesDoubleSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="bridgesLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridges&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Add bridges with the given width to the outline cut. --bridgesnum bridges will be created for each outline closed line. This option requires --optimise&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Bridges width</string>
-             </property>
-             <property name="buddy">
-              <cstring>bridgesDoubleSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="cutterdiameterLabel">
              <property name="toolTip">
@@ -1414,32 +1306,6 @@
              </property>
              <property name="buddy">
               <cstring>cutterdiameterDoubleSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="cutspeedLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--cut-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Spindle speed during outline cutting (rounds per minute)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Spindle speed</string>
-             </property>
-             <property name="buddy">
-              <cstring>cutspeedSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="cutfeedLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--cut-feed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Feed rate at which outline cutting takes place (horizontal speed)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Horizontal cut speed</string>
-             </property>
-             <property name="buddy">
-              <cstring>cutfeedSpinBox</cstring>
              </property>
             </widget>
            </item>
@@ -1462,6 +1328,19 @@
              </property>
              <property name="value">
               <double>3.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="zcutLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zcut&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Z-coordinate indicating where the outline cutting ends&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Cutting depth</string>
+             </property>
+             <property name="buddy">
+              <cstring>zcutDoubleSpinBox</cstring>
              </property>
             </widget>
            </item>
@@ -1490,29 +1369,16 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="zcutLabel">
+           <item row="2" column="0">
+            <widget class="QLabel" name="cutfeedLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zcut&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Z-coordinate indicating where the outline cutting ends&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--cut-feed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Feed rate at which outline cutting takes place (horizontal speed)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Cutting depth</string>
+              <string>Horizontal cut speed</string>
              </property>
              <property name="buddy">
-              <cstring>zcutDoubleSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="0">
-            <widget class="QCheckBox" name="filloutlineCheckBox">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--fill-outline&lt;/span&gt;&lt;/p&gt;&lt;p&gt;If fill-outline is given, it is assumed that the outline file contains not a polygon but a closed chain of lines. The board will be cut along the centres of these lines&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Fill edge line</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
+              <cstring>cutfeedSpinBox</cstring>
              </property>
             </widget>
            </item>
@@ -1535,7 +1401,52 @@
              </property>
             </widget>
            </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="cutvertfeedLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--cut-vertfeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;PCB vertical cutting feed (if fill-outline is given)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Vertical cutting feed</string>
+             </property>
+            </widget>
+           </item>
            <item row="3" column="1">
+            <widget class="QSpinBox" name="cutvertfeedSpinBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--cut-vertfeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;PCB vertical cutting feed (if fill-outline is given)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm/min</string>
+             </property>
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+             <property name="singleStep">
+              <number>10</number>
+             </property>
+             <property name="value">
+              <number>60</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="cutspeedLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--cut-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Spindle speed during outline cutting (rounds per minute)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Spindle speed</string>
+             </property>
+             <property name="buddy">
+              <cstring>cutspeedSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
             <widget class="QSpinBox" name="cutspeedSpinBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--cut-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Spindle speed during outline cutting (rounds per minute)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1554,7 +1465,154 @@
              </property>
             </widget>
            </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="cutinfeedLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--cut-infeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Maximum Z distance that is cut away in a single pass (if less then zcut's value, there will be more than one pass)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Maximum single-pass depth</string>
+             </property>
+             <property name="buddy">
+              <cstring>cutinfeedDoubleSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QDoubleSpinBox" name="cutinfeedDoubleSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--cut-infeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Maximum Z distance that is cut away in a single pass (if less then zcut's value, there will be more than one pass)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm</string>
+             </property>
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.050000000000000</double>
+             </property>
+             <property name="value">
+              <double>10.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="bridgesnumLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridgesnum&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sets the numer of bridges to be created (--bridgesnum bridges for each closed line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Number of bridges</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QSpinBox" name="bridgesnumSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridgesnum&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sets the numer of bridges to be created (--bridgesnum bridges for each closed line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>2</number>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="bridgesLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridges&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Add bridges with the given width to the outline cut. --bridgesnum bridges will be created for each outline closed line. This option requires --optimise&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Bridges width</string>
+             </property>
+             <property name="buddy">
+              <cstring>bridgesDoubleSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QDoubleSpinBox" name="bridgesDoubleSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridges&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Add bridges with the given width to the outline cut. --bridgesnum bridges will be created for each outline closed line. This option requires --optimise&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm</string>
+             </property>
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.050000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.500000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="zbridgesLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zbridges&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Bridges height (Z-coordinates while engraving bridges). If you want full-height bridges set this to a value greater than 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Bridges depth</string>
+             </property>
+             <property name="buddy">
+              <cstring>zbridgesDoubleSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
            <item row="8" column="1">
+            <widget class="QDoubleSpinBox" name="zbridgesDoubleSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zbridges&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Bridges height (Z-coordinates while engraving bridges). If you want full-height bridges set this to a value greater than 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm</string>
+             </property>
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="minimum">
+              <double>-100.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.050000000000000</double>
+             </property>
+             <property name="value">
+              <double>-0.600000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="cutsideLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--cut-side&lt;/span&gt;&lt;/p&gt;&lt;p&gt;choose the cut side. Valid choices are front, back or auto (default). In auto mode the cut side is automatically chosen (always front unless only the back side is specified)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Board side for cutting</string>
+             </property>
+             <property name="buddy">
+              <cstring>cutsideComboBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
             <widget class="QComboBox" name="cutsideComboBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--cut-side&lt;/span&gt;&lt;/p&gt;&lt;p&gt;choose the cut side. Valid choices are front, back or auto (default). In auto mode the cut side is automatically chosen (always front unless only the back side is specified)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1576,77 +1634,16 @@
              </item>
             </widget>
            </item>
-           <item row="8" column="0">
-            <widget class="QLabel" name="cutsideLabel">
+           <item row="10" column="0" colspan="2">
+            <widget class="QCheckBox" name="filloutlineCheckBox">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--cut-side&lt;/span&gt;&lt;/p&gt;&lt;p&gt;choose the cut side. Valid choices are front, back or auto (default). In auto mode the cut side is automatically chosen (always front unless only the back side is specified)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--fill-outline&lt;/span&gt;&lt;/p&gt;&lt;p&gt;If fill-outline is given, it is assumed that the outline file contains not a polygon but a closed chain of lines. The board will be cut along the centres of these lines&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Board side for cutting</string>
+              <string>Fill edge line</string>
              </property>
-             <property name="buddy">
-              <cstring>cutsideComboBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="bridgesnumLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridgesnum&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sets the numer of bridges to be created (--bridgesnum bridges for each closed line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Number of bridges</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QSpinBox" name="bridgesnumSpinBox">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridgesnum&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sets the numer of bridges to be created (--bridgesnum bridges for each closed line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="minimum">
-              <number>0</number>
-             </property>
-             <property name="maximum">
-              <number>100</number>
-             </property>
-             <property name="value">
-              <number>2</number>
-             </property>
-            </widget>
-           </item>
-           <item row="10" column="0">
-            <widget class="QLabel" name="outlinewidthLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--outline-width&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Thickness of the lines that form the outline (if fill-outline is given)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Edge line width</string>
-             </property>
-            </widget>
-           </item>
-           <item row="10" column="1">
-            <widget class="QDoubleSpinBox" name="outlinewidthDoubleSpinBox">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--outline-width&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Thickness of the lines that form the outline (if fill-outline is given)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="suffix">
-              <string> mm</string>
-             </property>
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.050000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.200000000000000</double>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
