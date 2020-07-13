@@ -177,8 +177,17 @@ MainWindow::MainWindow(QWidget *parent) :
     settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "pcb2gcodeGUI", "", this);
 
     ui->actionAutomatically_generate_previews->setChecked(settings->value("autoPreview", true).toBool());
-    lastDir = settings->value("lastDir", QStandardPaths::writableLocation(QStandardPaths::HomeLocation)).toString();
-    if (lastDir.isEmpty())
+    lastGcodeDir = settings->value("lastGcodeDir", QStandardPaths::writableLocation(QStandardPaths::HomeLocation)).toString();
+    if (lastGcodeDir.isEmpty())
+        QMessageBox::information(this, tr("Error"), tr("Can't retrieve home location"));
+    lastPreambleDir = settings->value("lastPreambleDir", QStandardPaths::writableLocation(QStandardPaths::HomeLocation)).toString();
+    if (lastPreambleDir.isEmpty())
+        QMessageBox::information(this, tr("Error"), tr("Can't retrieve home location"));
+    lastOutputDir = settings->value("lastOutputDir", QStandardPaths::writableLocation(QStandardPaths::HomeLocation)).toString();
+    if (lastOutputDir.isEmpty())
+        QMessageBox::information(this, tr("Error"), tr("Can't retrieve home location"));
+    lastConfigDir = settings->value("lastConfigDir", QStandardPaths::writableLocation(QStandardPaths::HomeLocation)).toString();
+    if (lastConfigDir.isEmpty())
         QMessageBox::information(this, tr("Error"), tr("Can't retrieve home location"));
 
     this->resize(settings->value("Window/width", this->width()).toInt(),
@@ -282,17 +291,17 @@ void MainWindow::getDrillFile()
 
 void MainWindow::getPreambleFile()
 {
-    getFilename(ui->preambleLineEdit, tr("preamble file"), gcode_file_filter);
+    getPreFilename(ui->preambleLineEdit, tr("preamble file"), gcode_file_filter);
 }
 
 void MainWindow::getPreambletextFile()
 {
-    getFilename(ui->preambletextLineEdit, tr("preamble text file"), text_file_filter);
+    getPreFilename(ui->preambletextLineEdit, tr("preamble text file"), text_file_filter);
 }
 
 void MainWindow::getPostambleFile()
 {
-    getFilename(ui->postambleLineEdit, tr("postamble file"), gcode_file_filter);
+    getPreFilename(ui->postambleLineEdit, tr("postamble file"), gcode_file_filter);
 }
 
 void MainWindow::generateImages()
@@ -427,13 +436,29 @@ bool MainWindow::getFilename(QLineEdit *saveTo, const QString name, QString filt
 {
     QString filename;
 
-    filename = QFileDialog::getOpenFileName(this, tr("Select the ") + name, lastDir, filter );
+    filename = QFileDialog::getOpenFileName(this, tr("Select the ") + name, lastGcodeDir, filter );
 
     if( filename.isEmpty() )
         return false;
     else
     {
-        lastDir = QFileInfo(filename).path();
+        lastGcodeDir = QFileInfo(filename).path();
+        saveTo->setText( filename );
+        return true;
+    }
+}
+
+bool MainWindow::getPreFilename(QLineEdit *saveTo, const QString name, QString filter)
+{
+    QString filename;
+
+    filename = QFileDialog::getOpenFileName(this, tr("Select the ") + name, lastPreambleDir, filter );
+
+    if( filename.isEmpty() )
+        return false;
+    else
+    {
+        lastPreambleDir = QFileInfo(filename).path();
         saveTo->setText( filename );
         return true;
     }
@@ -443,10 +468,10 @@ void MainWindow::getOutputDirectory()
 {
     QString dirname;
 
-    dirname = QFileDialog::getExistingDirectory(this, tr("Select the output directory"), lastDir );
+    dirname = QFileDialog::getExistingDirectory(this, tr("Select the output directory"), lastOutputDir );
     if( !dirname.isEmpty() )
     {
-        lastDir = dirname;
+        lastOutputDir = dirname;
         ui->outputDirLineEdit->setText( dirname );
     }
 }
@@ -734,10 +759,10 @@ void MainWindow::askAndLoadConfFile()
 {
     QString filename;
 
-    filename = QFileDialog::getOpenFileName(this, tr("Select a configuration file"), lastDir );
+    filename = QFileDialog::getOpenFileName(this, tr("Select a configuration file"), lastConfigDir );
     if( !filename.isEmpty() )
     {
-        lastDir = QFileInfo(filename).path();
+        lastConfigDir = QFileInfo(filename).path();
         if( !loadConfFile(filename) )
             QMessageBox::information(this, tr("Error"), tr("The selected file can't be opened"));
     }
@@ -819,10 +844,10 @@ void MainWindow::askAndSaveConfFile()
 {
     QString filename;
 
-    filename = QFileDialog::getSaveFileName(this, tr("Save configuration file"), lastDir);
+    filename = QFileDialog::getSaveFileName(this, tr("Save configuration file"), lastConfigDir);
     if( !filename.isEmpty() )
     {
-        lastDir = QFileInfo(filename).path();
+        lastConfigDir = QFileInfo(filename).path();
         saveConfFile(filename);
     }
 }
@@ -930,7 +955,10 @@ void MainWindow::closeEvent(QCloseEvent *)
     QDir().rmdir(imagesFolder);
 
     settings->setValue("autoPreview", ui->actionAutomatically_generate_previews->isChecked());
-    settings->setValue("lastDir", lastDir);
+    settings->setValue("lastGcodeDir", lastGcodeDir);
+    settings->setValue("lastPreambleDir", lastPreambleDir);
+    settings->setValue("lastOutputDir", lastOutputDir);
+    settings->setValue("lastConfigDir", lastConfigDir);
 
     settings->setValue("Window/width", this->width());
     settings->setValue("Window/height", this->height());

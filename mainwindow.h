@@ -102,7 +102,10 @@ private:
     QButtonGroup mirrorType;
 
     const QString pcb2gcodeVersion;
-    QString lastDir;
+    QString lastGcodeDir;
+    QString lastPreambleDir;
+    QString lastOutputDir;
+    QString lastConfigDir;
     QProcess pcb2gcodeProcess;
     bool pcb2gcodeKilled;
     bool changeMetricImperialValues;
@@ -128,6 +131,7 @@ private:
     void checkPcb2gcodeVersion();
     QStringList getCmdLineArguments();
     bool getFilename(QLineEdit *saveTo, const QString name, QString filter);
+    bool getPreFilename(QLineEdit *saveTo, const QString name, QString filter);
     void adjustMetricImperial(QSpinBox *spinBox, const double cfactor, const QString suffix);
     void adjustMetricImperial(QDoubleSpinBox *doubleSpinBox, const double cfactor, const QString suffix);
     void saveConfFile(const QString filename);
