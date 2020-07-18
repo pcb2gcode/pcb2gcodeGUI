@@ -77,12 +77,11 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ COMMONARGS ].insert("zsafe", ui->zsafeDoubleSpinBox);
     args[ COMMONARGS ].insert("zchange", ui->zchangeDoubleSpinBox);
     args[ COMMONARGS ].insert("zchange-absolute", ui->zchangeAbsoluteCheckBox);
-    args[ COMMONARGS ].insert("vectorial", ui->vectorialCheckBox);
     args[ COMMONARGS ].insert("nog64", ui->nog64CheckBox);
     args[ COMMONARGS ].insert("tolerance", ui->toleranceDoubleSpinBox);
-    args[ COMMONARGS ].insert("optimise", ui->optimiseCheckBox);
+    args[ COMMONARGS ].insert("optimise", ui->optimiseDoubleSpinBox);
     args[ COMMONARGS ].insert("zero-start", ui->zerostartCheckBox);
-    args[ COMMONARGS ].insert("dpi", ui->dpiSpinBox);
+    args[ COMMONARGS ].insert("mirror-axis", ui->mirroraxisDoubleSpinBox);
     args[ COMMONARGS ].insert("tile-x", ui->tilexSpinBox);
     args[ COMMONARGS ].insert("tile-y", ui->tileySpinBox);
 
@@ -108,7 +107,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ OUTLINEARGS ].insert("cut-feed", ui->cutfeedSpinBox);
     args[ OUTLINEARGS ].insert("cut-speed", ui->cutspeedSpinBox);
     args[ OUTLINEARGS ].insert("cut-infeed", ui->cutinfeedDoubleSpinBox);
-    args[ OUTLINEARGS ].insert("outline-width", ui->outlinewidthDoubleSpinBox);
+    args[ OUTLINEARGS ].insert("cut-vertfeed", ui->cutvertfeedSpinBox);
     args[ OUTLINEARGS ].insert("bridges", ui->bridgesDoubleSpinBox);
     args[ OUTLINEARGS ].insert("zbridges", ui->zbridgesDoubleSpinBox);
     args[ OUTLINEARGS ].insert("bridgesnum", ui->bridgesnumSpinBox);
@@ -148,12 +147,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->postamblePushButton, SIGNAL(clicked()), this, SLOT(getPostambleFile()));
     connect(ui->outputDirPushButton, SIGNAL(clicked()), this, SLOT(getOutputDirectory()));
 
-    connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), this, SLOT(vectorialEnable(bool)));
-    connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), this, SLOT(bridgesAvailable()));
-    connect(ui->vectorialCheckBox, SIGNAL(toggled(bool)), ui->voronoiCheckBox, SLOT(setEnabled(bool)));
     connect(ui->voronoiCheckBox, SIGNAL(toggled(bool)), this, SLOT(voronoiEnable(bool)));
-    connect(ui->filloutlineCheckBox, SIGNAL(toggled(bool)), this, SLOT(fillOutlineEnable(bool)));
-    connect(ui->optimiseCheckBox, SIGNAL(toggled(bool)), this, SLOT(bridgesAvailable()));
     connect(ui->milldrillCheckBox, SIGNAL(toggled(bool)), ui->milldrilldiameterDoubleSpinBox, SLOT(setEnabled(bool)));
     connect(ui->softwareComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateAlCustomEnableState(QString)));
 
@@ -183,8 +177,17 @@ MainWindow::MainWindow(QWidget *parent) :
     settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "pcb2gcodeGUI", "", this);
 
     ui->actionAutomatically_generate_previews->setChecked(settings->value("autoPreview", true).toBool());
-    lastDir = settings->value("lastDir", QStandardPaths::writableLocation(QStandardPaths::HomeLocation)).toString();
-    if (lastDir.isEmpty())
+    lastGcodeDir = settings->value("lastGcodeDir", QStandardPaths::writableLocation(QStandardPaths::HomeLocation)).toString();
+    if (lastGcodeDir.isEmpty())
+        QMessageBox::information(this, tr("Error"), tr("Can't retrieve home location"));
+    lastPreambleDir = settings->value("lastPreambleDir", QStandardPaths::writableLocation(QStandardPaths::HomeLocation)).toString();
+    if (lastPreambleDir.isEmpty())
+        QMessageBox::information(this, tr("Error"), tr("Can't retrieve home location"));
+    lastOutputDir = settings->value("lastOutputDir", QStandardPaths::writableLocation(QStandardPaths::HomeLocation)).toString();
+    if (lastOutputDir.isEmpty())
+        QMessageBox::information(this, tr("Error"), tr("Can't retrieve home location"));
+    lastConfigDir = settings->value("lastConfigDir", QStandardPaths::writableLocation(QStandardPaths::HomeLocation)).toString();
+    if (lastConfigDir.isEmpty())
         QMessageBox::information(this, tr("Error"), tr("Can't retrieve home location"));
 
     this->resize(settings->value("Window/width", this->width()).toInt(),
@@ -195,6 +198,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->loadingLabel->setMovie(&loadingIcon);
     ui->loadingLabel->hide();
+    ui->mirroraxisDoubleSpinBox->setEnabled(true);
+    ui->cutvertfeedSpinBox->setEnabled(true);
 }
 
 void MainWindow::checkPcb2gcodeVersion()
@@ -236,41 +241,15 @@ void MainWindow::checkPcb2gcodeVersion()
     }
 }
 
-void MainWindow::vectorialEnable(bool enable)
-{
-    ui->dpiSpinBox->setEnabled(!enable);
-
-    if (enable)
-    {
-        if (ui->voronoiCheckBox->isChecked())
-            ui->extrapassesSpinBox->setEnabled(false);
-
-        ui->outlinewidthDoubleSpinBox->setEnabled(false);
-    }
-    else
-    {
-        if (ui->filloutlineCheckBox->isChecked())
-            ui->outlinewidthDoubleSpinBox->setEnabled(true);
-
-        ui->extrapassesSpinBox->setEnabled(true);
-    }
-}
-
 void MainWindow::voronoiEnable(bool enable)
 {
     ui->extrapassesSpinBox->setEnabled(!enable);
     ui->offsetDoubleSpinBox->setEnabled(!enable);
 }
 
-void MainWindow::fillOutlineEnable(bool enable)
-{
-    if (!ui->vectorialCheckBox->isChecked())
-        ui->outlinewidthDoubleSpinBox->setEnabled(enable);
-}
-
 void MainWindow::bridgesAvailable()
 {
-    bool bridgesEnabled = ui->vectorialCheckBox->isChecked() || ui->optimiseCheckBox->isChecked();
+    bool bridgesEnabled = true;
 
     ui->bridgesDoubleSpinBox->setEnabled(bridgesEnabled);
     ui->zbridgesDoubleSpinBox->setEnabled(bridgesEnabled);
@@ -312,17 +291,17 @@ void MainWindow::getDrillFile()
 
 void MainWindow::getPreambleFile()
 {
-    getFilename(ui->preambleLineEdit, tr("preamble file"), gcode_file_filter);
+    getPreFilename(ui->preambleLineEdit, tr("preamble file"), gcode_file_filter);
 }
 
 void MainWindow::getPreambletextFile()
 {
-    getFilename(ui->preambletextLineEdit, tr("preamble text file"), text_file_filter);
+    getPreFilename(ui->preambletextLineEdit, tr("preamble text file"), text_file_filter);
 }
 
 void MainWindow::getPostambleFile()
 {
-    getFilename(ui->postambleLineEdit, tr("postamble file"), gcode_file_filter);
+    getPreFilename(ui->postambleLineEdit, tr("postamble file"), gcode_file_filter);
 }
 
 void MainWindow::generateImages()
@@ -358,7 +337,6 @@ void MainWindow::generateImages()
     ui->loadingLabel->show();
 
     currentImagesFolder = imagesFolder;
-    vectorial = ui->vectorialCheckBox->isChecked();
     fillOutline = ui->filloutlineCheckBox->isChecked();
     pcb2gcodeImageProcess.start(PCB2GCODE_EXECUTABLE, arguments, QProcess::ReadOnly);
 }
@@ -385,11 +363,6 @@ void MainWindow::imagesGenerated(int exitCode, QProcess::ExitStatus exitStatus)
     {
         QDir dir(currentImagesFolder);
 
-        if (vectorial)
-            dir.setNameFilters(QStringList() << "*.svg");
-        else
-            dir.setNameFilters(QStringList() << "*.png");
-
         dir.setFilter(QDir::Files);
 
         imagesFilename.clear();
@@ -405,7 +378,7 @@ void MainWindow::imagesGenerated(int exitCode, QProcess::ExitStatus exitStatus)
         addImageFile(dir, tr("Input front"), "original_front");
         addImageFile(dir, tr("Input back"), "original_back");
         addImageFile(dir, tr("Input drill"), "original_drill");
-        addImageFile(dir, tr("Input outline"), (fillOutline && !vectorial) ? "outline_filled" : "original_outline");
+        addImageFile(dir, tr("Input outline"), (fillOutline) ? "outline_filled" : "original_outline");
         addImageFile(dir, tr("Input outline"), "original_outline");
     }
     else if (sender() != static_cast<QObject *>(&pcb2gcodeProcess) && !restarted) //Errors from pcb2gcodeProcess are printed in outputWindow
@@ -463,13 +436,29 @@ bool MainWindow::getFilename(QLineEdit *saveTo, const QString name, QString filt
 {
     QString filename;
 
-    filename = QFileDialog::getOpenFileName(this, tr("Select the ") + name, lastDir, filter );
+    filename = QFileDialog::getOpenFileName(this, tr("Select the ") + name, lastGcodeDir, filter );
 
     if( filename.isEmpty() )
         return false;
     else
     {
-        lastDir = QFileInfo(filename).path();
+        lastGcodeDir = QFileInfo(filename).path();
+        saveTo->setText( filename );
+        return true;
+    }
+}
+
+bool MainWindow::getPreFilename(QLineEdit *saveTo, const QString name, QString filter)
+{
+    QString filename;
+
+    filename = QFileDialog::getOpenFileName(this, tr("Select the ") + name, lastPreambleDir, filter );
+
+    if( filename.isEmpty() )
+        return false;
+    else
+    {
+        lastPreambleDir = QFileInfo(filename).path();
         saveTo->setText( filename );
         return true;
     }
@@ -479,10 +468,10 @@ void MainWindow::getOutputDirectory()
 {
     QString dirname;
 
-    dirname = QFileDialog::getExistingDirectory(this, tr("Select the output directory"), lastDir );
+    dirname = QFileDialog::getExistingDirectory(this, tr("Select the output directory"), lastOutputDir );
     if( !dirname.isEmpty() )
     {
-        lastDir = dirname;
+        lastOutputDir = dirname;
         ui->outputDirLineEdit->setText( dirname );
     }
 }
@@ -491,11 +480,12 @@ void MainWindow::changeMetricInputUnits(bool metric)
 {
     QDoubleSpinBox *doubleSpinBoxes[] = { ui->zworkDoubleSpinBox, ui->zsafeDoubleSpinBox, ui->offsetDoubleSpinBox,
                                                   ui->zdrillDoubleSpinBox, ui->zchangeDoubleSpinBox, ui->cutterdiameterDoubleSpinBox,
-                                                  ui->zcutDoubleSpinBox, ui->cutinfeedDoubleSpinBox, ui->outlinewidthDoubleSpinBox,
+                                                  ui->zcutDoubleSpinBox, ui->cutinfeedDoubleSpinBox,
                                                   ui->bridgesDoubleSpinBox, ui->zbridgesDoubleSpinBox, ui->alxDoubleSpinBox,
-                                                  ui->alyDoubleSpinBox, ui->toleranceDoubleSpinBox };
+                                                  ui->alyDoubleSpinBox, ui->toleranceDoubleSpinBox, ui->optimiseDoubleSpinBox,
+                                                  ui->mirroraxisDoubleSpinBox };
 
-    QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->alprobefeedSpinBox };
+    QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->cutvertfeedSpinBox, ui->alprobefeedSpinBox };
 
     const unsigned int doubleSpinBoxesLen =  sizeof(doubleSpinBoxes) / sizeof(doubleSpinBoxes[0]);
     const unsigned int spinBoxesLen =  sizeof(spinBoxes) / sizeof(spinBoxes[0]);
@@ -616,7 +606,6 @@ void MainWindow::startPcb2gcode()
         outputTextEdit = pcb2gcodeOutputWindow->getOutputPlainTextEdit();
 
         currentImagesFolder = ui->outputDirLineEdit->text();
-        vectorial = ui->vectorialCheckBox->isChecked();
         fillOutline = ui->filloutlineCheckBox->isChecked();
         pcb2gcodeProcess.start(PCB2GCODE_EXECUTABLE, arguments, QProcess::ReadOnly);
     }
@@ -770,10 +759,10 @@ void MainWindow::askAndLoadConfFile()
 {
     QString filename;
 
-    filename = QFileDialog::getOpenFileName(this, tr("Select a configuration file"), lastDir );
+    filename = QFileDialog::getOpenFileName(this, tr("Select a configuration file"), lastConfigDir );
     if( !filename.isEmpty() )
     {
-        lastDir = QFileInfo(filename).path();
+        lastConfigDir = QFileInfo(filename).path();
         if( !loadConfFile(filename) )
             QMessageBox::information(this, tr("Error"), tr("The selected file can't be opened"));
     }
@@ -855,10 +844,10 @@ void MainWindow::askAndSaveConfFile()
 {
     QString filename;
 
-    filename = QFileDialog::getSaveFileName(this, tr("Save configuration file"), lastDir);
+    filename = QFileDialog::getSaveFileName(this, tr("Save configuration file"), lastConfigDir);
     if( !filename.isEmpty() )
     {
-        lastDir = QFileInfo(filename).path();
+        lastConfigDir = QFileInfo(filename).path();
         saveConfFile(filename);
     }
 }
@@ -966,7 +955,10 @@ void MainWindow::closeEvent(QCloseEvent *)
     QDir().rmdir(imagesFolder);
 
     settings->setValue("autoPreview", ui->actionAutomatically_generate_previews->isChecked());
-    settings->setValue("lastDir", lastDir);
+    settings->setValue("lastGcodeDir", lastGcodeDir);
+    settings->setValue("lastPreambleDir", lastPreambleDir);
+    settings->setValue("lastOutputDir", lastOutputDir);
+    settings->setValue("lastConfigDir", lastConfigDir);
 
     settings->setValue("Window/width", this->width());
     settings->setValue("Window/height", this->height());
