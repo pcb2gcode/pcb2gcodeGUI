@@ -1,7 +1,7 @@
 # pcb2gcodeGUI
 A GUI for [pcb2gcode](https://github.com/pcb2gcode/pcb2gcode).
 
-**!!!!The GUI works with a pretty old verison of pcb2gcode!!!!  If you see a feature missing, either switch to use the command-line pcb2gcode or consider contributing code to this GUI.**
+**!!!!If you see a feature missing, either switch to use the command-line pcb2gcode or consider contributing code to this GUI.**
 
 ## Build
 ### Build on Debian Jessie or newer, Ubuntu Trusty or newer
