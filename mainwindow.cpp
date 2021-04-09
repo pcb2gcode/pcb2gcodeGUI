@@ -82,7 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ COMMONARGS ].insert("optimise", ui->optimiseDoubleSpinBox);
     args[ COMMONARGS ].insert("zero-start", ui->zerostartCheckBox);
     args[ COMMONARGS ].insert("mirror-axis", ui->mirroraxisDoubleSpinBox);
-    args[ COMMONARGS ].insert("mirror-yaxis", ui->mirroryaxis);
+    args[ COMMONARGS ].insert("mirror-yaxis", ui->mirroryaxisCheckBox);
     args[ COMMONARGS ].insert("tile-x", ui->tilexSpinBox);
     args[ COMMONARGS ].insert("tile-y", ui->tileySpinBox);
 

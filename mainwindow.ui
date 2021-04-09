@@ -713,7 +713,7 @@
             </widget>
            </item>
            <item row="10" column="0" colspan="2">
-            <widget class="QCheckBox" name="mirroryaxis">
+            <widget class="QCheckBox" name="mirroryaxisCheckBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-yaxis&lt;/span&gt;&lt;/p&gt;&lt;p&gt;mirror Y axis instead of X&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
@@ -2274,7 +2274,7 @@
   <tabstop>optimiseDoubleSpinBox</tabstop>
   <tabstop>zerostartCheckBox</tabstop>
   <tabstop>mirroraxisDoubleSpinBox</tabstop>
-  <tabstop>mirroryaxis</tabstop>
+  <tabstop>mirroryaxisCheckBox</tabstop>
   <tabstop>tilexSpinBox</tabstop>
   <tabstop>tileySpinBox</tabstop>
   <tabstop>zworkDoubleSpinBox</tabstop>
