@@ -712,7 +712,17 @@
              </property>
             </widget>
            </item>
-           <item row="10" column="0">
+           <item row="10" column="0" colspan="2">
+            <widget class="QCheckBox" name="mirroryaxisCheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-yaxis&lt;/span&gt;&lt;/p&gt;&lt;p&gt;mirror Y axis instead of X&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>mirror Y axis instead of X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
             <widget class="QLabel" name="tileLabel">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--tile-x&lt;/span&gt;, &lt;span style=&quot; font-style:italic;&quot;&gt;--tile-y&lt;/span&gt;&lt;/p&gt;&lt;p&gt;number of tiling rows/columns&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -722,7 +732,7 @@
              </property>
             </widget>
            </item>
-           <item row="10" column="1">
+           <item row="11" column="1">
             <layout class="QHBoxLayout" name="tileHorizontalLayout">
              <item>
               <widget class="QLabel" name="tilexLabel">
@@ -778,7 +788,7 @@
              </item>
             </layout>
            </item>
-           <item row="11" column="0" colspan="2">
+           <item row="12" column="0" colspan="2">
             <spacer name="verticalSpacer_7">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -2264,6 +2274,7 @@
   <tabstop>optimiseDoubleSpinBox</tabstop>
   <tabstop>zerostartCheckBox</tabstop>
   <tabstop>mirroraxisDoubleSpinBox</tabstop>
+  <tabstop>mirroryaxisCheckBox</tabstop>
   <tabstop>tilexSpinBox</tabstop>
   <tabstop>tileySpinBox</tabstop>
   <tabstop>zworkDoubleSpinBox</tabstop>
