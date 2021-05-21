@@ -772,8 +772,10 @@ void MainWindow::askAndLoadConfFile()
 bool MainWindow::loadConfFile(const QString filename)
 {
     QFile confFile (this);
-    QString currentLine;
+    QString fullCurrentLine;   // contains possible comments
+    QString currentLine;       // stripped line without comments
     int equalPosition;
+    int commentPosition;       // position of comment character #
     QString key;
     QString value;
     bool result;
@@ -787,21 +789,26 @@ bool MainWindow::loadConfFile(const QString filename)
         while( !confFile.atEnd() )
         {
             enabledOption = true;
-            currentLine = confFile.readLine();
-            currentLine.remove(' ');
+            fullCurrentLine = confFile.readLine();
+            fullCurrentLine.remove(' ');
 
-            if( currentLine.startsWith("#@#") )
+            if( fullCurrentLine.startsWith("#@#") )
             {
-                currentLine.remove(0, 3);       //A line starting with extra_options_prefix is valid
+                fullCurrentLine.remove(0, 3);       //A line starting with extra_options_prefix is valid
                 enabledOption = false;
             }
 
-            if( !currentLine.startsWith('#') && currentLine.contains('=') )  //Ignore comments and lines without '='
+            if( !fullCurrentLine.startsWith('#') && fullCurrentLine.contains('=') )  //Ignore comments and lines without '='
             {
+                commentPosition = fullCurrentLine.indexOf('#');
+                if (commentPosition!=-1)
+                  currentLine = fullCurrentLine.left( commentPosition+1 );
+                else
+                  currentLine=fullCurrentLine;
                 equalPosition = currentLine.indexOf('=');
                 key = currentLine.left( equalPosition );
                 value = currentLine.right( currentLine.size() - equalPosition - 1 );
-                value.chop(1);      //Chop the last character ('/n')
+                value.chop(1);          // Chop the last character ('/n')
 
                 if (key == "drill-front")
                 {
