@@ -651,7 +651,7 @@ void MainWindow::pcb2gcodeError(QProcess::ProcessError error)
 
             case QProcess::ReadError:
                 outputTextEdit->appendHtml(tr("<font color=\"Red\">"
-                                              "An error occured while reading from pcb2gcode."
+                                              "An error occurred while reading from pcb2gcode."
                                               "Please report this error to the project manager."
                                               "</font>"));
                 break;

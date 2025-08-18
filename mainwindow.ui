@@ -661,7 +661,7 @@
            <item row="8" column="0" colspan="2">
             <widget class="QCheckBox" name="zerostartCheckBox">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zero-start&lt;/span&gt;&lt;/p&gt;&lt;p&gt;set the starting point of the project at (0,0). With this option the projet will be between (0,0) and (max_x_value, max_y_value) (positive values)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zero-start&lt;/span&gt;&lt;/p&gt;&lt;p&gt;set the starting point of the project at (0,0). With this option the project will be between (0,0) and (max_x_value, max_y_value) (positive values)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>Start at (0,0)</string>
@@ -1500,7 +1500,7 @@
            <item row="6" column="0">
             <widget class="QLabel" name="bridgesnumLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridgesnum&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sets the numer of bridges to be created (--bridgesnum bridges for each closed line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridgesnum&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sets the number of bridges to be created (--bridgesnum bridges for each closed line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>Number of bridges</string>
@@ -1510,7 +1510,7 @@
            <item row="6" column="1">
             <widget class="QSpinBox" name="bridgesnumSpinBox">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridgesnum&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sets the numer of bridges to be created (--bridgesnum bridges for each closed line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridgesnum&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sets the number of bridges to be created (--bridgesnum bridges for each closed line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="minimum">
               <number>0</number>
@@ -1699,7 +1699,7 @@
            <item row="2" column="1">
             <widget class="QComboBox" name="softwareComboBox">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--software&lt;/span&gt;&lt;/p&gt;&lt;p&gt;the height probing commands are different from software to software. Use this option to select the used software; currently supported softwares are LinuxCNC, Mach3, Mach4 and custom. With custom you can specify al-probecode, al-probevar and al-setzzero, in order to generate gcode for an unsupported software. For compatibility reasons, the custom gcode is much bigger (3-4 times) than the gcode for a supported software.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--software&lt;/span&gt;&lt;/p&gt;&lt;p&gt;the height probing commands are different from software to software. Use this option to select the used software; currently supported programs are LinuxCNC, Mach3, Mach4 and custom. With custom you can specify al-probecode, al-probevar and al-setzzero, in order to generate gcode for an unsupported software. For compatibility reasons, the custom gcode is much bigger (3-4 times) than the gcode for a supported software.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <item>
               <property name="text">
@@ -1957,7 +1957,7 @@
            <item row="2" column="0">
             <widget class="QLabel" name="softwareLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--software&lt;/span&gt;&lt;/p&gt;&lt;p&gt;the height probing commands are different from software to software. Use this option to select the used software; currently supported softwares are LinuxCNC, Mach3, Mach4 and custom. With custom you can specify al-probecode, al-probevar and al-setzzero, in order to generate gcode for an unsupported software. For compatibility reasons, the custom gcode is much bigger (3-4 times) than the gcode for a supported software.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--software&lt;/span&gt;&lt;/p&gt;&lt;p&gt;the height probing commands are different from software to software. Use this option to select the used software; currently supported programs are LinuxCNC, Mach3, Mach4 and custom. With custom you can specify al-probecode, al-probevar and al-setzzero, in order to generate gcode for an unsupported software. For compatibility reasons, the custom gcode is much bigger (3-4 times) than the gcode for a supported software.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>Control software</string>
