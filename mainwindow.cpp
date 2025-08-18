@@ -156,7 +156,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->inputMetricRadioButton, SIGNAL(toggled(bool)), this, SLOT(changeMetricInputUnits(bool)));
 
     connect(&pcb2gcodeProcess, SIGNAL(finished(int)), this, SLOT(pcb2gcodeStopped()));
+    // Keep compatibility with Qt 5
+	#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     connect(&pcb2gcodeProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(pcb2gcodeError(QProcess::ProcessError)));
+    #else
+    connect(&pcb2gcodeProcess, SIGNAL(errorOccurred(QProcess::ProcessError)), this, SLOT(pcb2gcodeError(QProcess::ProcessError)));
+    #endif
     connect(&pcb2gcodeProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(printOutput()));
     connect(&pcb2gcodeProcess, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(changeKillCloseButtonText(QProcess::ProcessState)));
 
@@ -165,7 +170,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&pcb2gcodeProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(imagesGenerated(int,QProcess::ExitStatus)));
     connect(ui->imageComboBox, SIGNAL(activated(int)), this, SLOT(imageSelected(int)));
 
-    appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    appDataLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     if (appDataLocation.isEmpty())
         QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
     else
@@ -884,7 +889,7 @@ void MainWindow::saveConfFile(const QString filename)
 
 void MainWindow::saveDefaultConfFile()
 {
-    QString appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QString appDataLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
 
     if( appDataLocation.isEmpty() )
         QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
@@ -897,7 +902,7 @@ void MainWindow::saveDefaultConfFile()
 
 void MainWindow::loadDefaultConfFile()
 {
-    QString appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QString appDataLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     if( appDataLocation.isEmpty() )
         QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
     else
@@ -915,7 +920,7 @@ void MainWindow::resetDefaultConfFile()
                           tr("Are you sure you want to reset the default configuration?"),
                           QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes )
     {
-        appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+        appDataLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
         if( appDataLocation.isEmpty() )
             QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
         else
