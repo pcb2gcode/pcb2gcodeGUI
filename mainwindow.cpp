@@ -72,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ FILEARGS ].insert("postamble", ui->postambleLineEdit);
     args[ FILEARGS ].insert("basename", ui->basenameLineEdit);
     args[ FILEARGS ].insert("output-dir", ui->outputDirLineEdit);
+    args[ FILEARGS ].insert("no-export", ui->noExportCheckBox);
 
     args[ COMMONARGS ].insert("metric", &inputUnits);
     args[ COMMONARGS ].insert("metricoutput", &outputUnits);
