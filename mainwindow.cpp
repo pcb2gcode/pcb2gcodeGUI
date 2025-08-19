@@ -70,6 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ FILEARGS ].insert("preamble", ui->preambleLineEdit);
     args[ FILEARGS ].insert("preamble-text", ui->preambletextLineEdit);
     args[ FILEARGS ].insert("postamble", ui->postambleLineEdit);
+    args[ FILEARGS ].insert("basename", ui->basenameLineEdit);
     args[ FILEARGS ].insert("output-dir", ui->outputDirLineEdit);
 
     args[ COMMONARGS ].insert("metric", &inputUnits);
