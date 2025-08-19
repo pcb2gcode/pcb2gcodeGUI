@@ -92,6 +92,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ MILLARGS ].insert("mill-speed", ui->millspeedSpinBox);
     args[ MILLARGS ].insert("offset", ui->offsetDoubleSpinBox);
     args[ MILLARGS ].insert("voronoi", ui->voronoiCheckBox);
+    args[ MILLARGS ].insert("preserve-thermal-reliefs", ui->preserveThermalRelievesCheckBox);
     args[ MILLARGS ].insert("isolation-width", ui->isolationwidthDoubleSpinBox);
 
     args[ DRILLARGS ].insert("zdrill", ui->zdrillDoubleSpinBox);
@@ -252,6 +253,7 @@ void MainWindow::voronoiEnable(bool enable)
 {
     ui->isolationwidthDoubleSpinBox->setEnabled(!enable);
     ui->offsetDoubleSpinBox->setEnabled(!enable);
+    ui->preserveThermalRelievesCheckBox->setEnabled(enable);
 }
 
 void MainWindow::bridgesAvailable()

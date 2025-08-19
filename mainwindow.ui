@@ -959,7 +959,23 @@
              </property>
              <property name="text">
               <string>Voronoi regions</string>
-                          </property>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QCheckBox" name="preserveThermalRelievesCheckBox">
+              <property name="enabled">
+                <bool>false</bool>
+              </property>
+              <property name="checked">
+                <bool>true</bool>
+             </property>
+              <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--preserve-thermal-reliefs&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Generate mill paths for thermal reliefs in voronoi mode.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+                <string>Preserve thermal reliefs</string>
+              </property>
             </widget>
            </item>
            <item row="4" column="0">
