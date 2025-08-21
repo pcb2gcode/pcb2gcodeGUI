@@ -917,7 +917,103 @@
              </item>
             </layout>
            </item>
-           <item row="13" column="0" colspan="2">
+           <item row="13" column="0">
+            <widget class="QLabel" name="spindleTimesLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--spinup-time&lt;/span&gt;, &lt;span style=&quot; font-style:italic;&quot;&gt;--spindown-time&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Time required for the spindle to reach speed/stop completely&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Spindle times</string>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="1">
+            <layout class="QHBoxLayout" name="spindletimesHorizontalLayout">
+             <item>
+              <widget class="QLabel" name="spinupLabel">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--spinup-time&lt;/span&gt;&lt;/p&gt;&lt;p&gt;time required to the spindle to reach the correct speed&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>spinup</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="buddy">
+                <cstring>spinupDoubleSpinBox</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="spinupDoubleSpinBox">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--spinup-time&lt;/span&gt;&lt;/p&gt;&lt;p&gt;time required to the spindle to reach the correct speed&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> s </string>
+               </property>
+               <property name="decimals">
+                 <number>3</number>
+               </property>
+               <property name="minimum">
+                 <double>0.001</double>
+               </property>
+               <property name="maximum">
+                 <double>20.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                 <double>0.01</double>
+               </property>
+               <property name="value">
+                 <double>0.001</double>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="spindownLabel">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--spindown-time&lt;/span&gt;&lt;/p&gt;&lt;p&gt;time required for the spindle to return to 0 rpm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>spindown</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="buddy">
+                <cstring>spindownDoubleSpinBox</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="spindownDoubleSpinBox">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--spindown-time&lt;/span&gt;&lt;/p&gt;&lt;p&gt;time required for the spindle to return to 0 rpm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> s </string>
+               </property>
+               <property name="decimals">
+                 <number>3</number>
+               </property>
+               <property name="minimum">
+                 <double>0.001</double>
+               </property>
+               <property name="maximum">
+                 <double>20.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                 <double>0.01</double>
+               </property>
+               <property name="value">
+                 <double>0.001</double>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="14" column="0" colspan="2">
             <spacer name="verticalSpacer_7">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -2446,6 +2542,8 @@
   <tabstop>tileySpinBox</tabstop>
   <tabstop>offsetXDoubleSpinBox</tabstop>
   <tabstop>offsetYDoubleSpinBox</tabstop>
+  <tabstop>spinupDoubleSpinBox</tabstop>
+  <tabstop>spindownDoubleSpinBox</tabstop>
   <tabstop>zworkDoubleSpinBox</tabstop>
   <tabstop>millfeedSpinBox</tabstop>
   <tabstop>millspeedSpinBox</tabstop>

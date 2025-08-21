@@ -89,6 +89,8 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ COMMONARGS ].insert("tile-y", ui->tileySpinBox);
     args[ COMMONARGS ].insert("x-offset", ui->offsetXDoubleSpinBox);
     args[ COMMONARGS ].insert("y-offset", ui->offsetYDoubleSpinBox);
+    args[ COMMONARGS ].insert("spinup-time", ui->spinupDoubleSpinBox);
+    args[ COMMONARGS ].insert("spindown-time", ui->spindownDoubleSpinBox);
 
     args[ MILLARGS ].insert("zwork", ui->zworkDoubleSpinBox);
     args[ MILLARGS ].insert("mill-feed", ui->millfeedSpinBox);
