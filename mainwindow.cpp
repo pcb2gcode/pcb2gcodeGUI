@@ -87,6 +87,8 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ COMMONARGS ].insert("mirror-yaxis", ui->mirroryaxisCheckBox);
     args[ COMMONARGS ].insert("tile-x", ui->tilexSpinBox);
     args[ COMMONARGS ].insert("tile-y", ui->tileySpinBox);
+    args[ COMMONARGS ].insert("x-offset", ui->offsetXDoubleSpinBox);
+    args[ COMMONARGS ].insert("y-offset", ui->offsetYDoubleSpinBox);
 
     args[ MILLARGS ].insert("zwork", ui->zworkDoubleSpinBox);
     args[ MILLARGS ].insert("mill-feed", ui->millfeedSpinBox);

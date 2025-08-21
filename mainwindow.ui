@@ -821,7 +821,103 @@
              </item>
             </layout>
            </item>
-           <item row="12" column="0" colspan="2">
+           <item row="12" column="0">
+            <widget class="QLabel" name="axisoffsetLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--x-offset&lt;/span&gt;, &lt;span style=&quot; font-style:italic;&quot;&gt;--y-offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Offset from the origin in the X/Y axis&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Offset from origin</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="1">
+            <layout class="QHBoxLayout" name="axisoffsetHorizontalLayout">
+             <item>
+              <widget class="QLabel" name="axisoffsetxLabel">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--x-offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;offset the origin on the x-axis this distance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>x</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="buddy">
+                <cstring>offsetXDoubleSpinBox</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="offsetXDoubleSpinBox">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--x-offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;offset the origin on the x-axis this distance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> mm </string>
+               </property>
+               <property name="decimals">
+                 <number>3</number>
+               </property>
+               <property name="minimum">
+                 <double>-10000.000000000000000</double>
+               </property>
+               <property name="maximum">
+                 <double>10000.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                 <double>1.000000000000000</double>
+               </property>
+               <property name="value">
+                 <double>0.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="axisoffsetyLabel">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--y-offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;offset the origin on the y-axis this distance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>y</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="buddy">
+                <cstring>offsetYDoubleSpinBox</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="offsetYDoubleSpinBox">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--y-offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;offset the origin on the y-axis this distance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> mm </string>
+               </property>
+               <property name="decimals">
+                 <number>3</number>
+               </property>
+               <property name="minimum">
+                 <double>-10000.000000000000000</double>
+               </property>
+               <property name="maximum">
+                 <double>10000.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                 <double>1.000000000000000</double>
+               </property>
+               <property name="value">
+                 <double>0.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="13" column="0" colspan="2">
             <spacer name="verticalSpacer_7">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
