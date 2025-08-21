@@ -59,7 +59,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>1</number> <!-- Initially selected tab -->
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -707,7 +707,7 @@
            <item row="9" column="0">
             <widget class="QLabel" name="mirroraxisLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-axis&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Distance from zero axis to flip the bcb around&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-axis&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Distance from zero axis to flip the PCB around&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>Axis mirror offset</string>
@@ -723,7 +723,7 @@
               <bool>true</bool>
              </property>
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-axis&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Distance from zero axis to flip the bcb around&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-axis&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Distance from zero axis to flip the PCB around&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="suffix">
               <string> mm </string>
@@ -2424,6 +2424,10 @@
   <tabstop>outlinePushButton</tabstop>
   <tabstop>drillLineEdit</tabstop>
   <tabstop>drillPushButton</tabstop>
+  <tabstop>basenameLineEdit</tabstop>
+  <tabstop>outputDirLineEdit</tabstop>
+  <tabstop>outputDirPushButton</tabstop>
+  <tabstop>noExportCheckBox</tabstop>
   <tabstop>optionsTab</tabstop>
   <tabstop>inputMetricRadioButton</tabstop>
   <tabstop>inputImperialRadioButton</tabstop>
@@ -2431,7 +2435,7 @@
   <tabstop>outputImperialRadioButton</tabstop>
   <tabstop>zsafeDoubleSpinBox</tabstop>
   <tabstop>zchangeDoubleSpinBox</tabstop>
-  <tabstop>vectorialCheckBox</tabstop>
+  <tabstop>zchangeAbsoluteCheckBox</tabstop>
   <tabstop>nog64CheckBox</tabstop>
   <tabstop>toleranceDoubleSpinBox</tabstop>
   <tabstop>optimiseDoubleSpinBox</tabstop>
@@ -2440,10 +2444,13 @@
   <tabstop>mirroryaxisCheckBox</tabstop>
   <tabstop>tilexSpinBox</tabstop>
   <tabstop>tileySpinBox</tabstop>
+  <tabstop>offsetXDoubleSpinBox</tabstop>
+  <tabstop>offsetYDoubleSpinBox</tabstop>
   <tabstop>zworkDoubleSpinBox</tabstop>
   <tabstop>millfeedSpinBox</tabstop>
   <tabstop>millspeedSpinBox</tabstop>
   <tabstop>voronoiCheckBox</tabstop>
+  <tabstop>preserveThermalRelievesCheckBox</tabstop>
   <tabstop>offsetDoubleSpinBox</tabstop>
   <tabstop>isolationwidthDoubleSpinBox</tabstop>
   <tabstop>zdrillDoubleSpinBox</tabstop>
@@ -2458,8 +2465,10 @@
   <tabstop>cutterdiameterDoubleSpinBox</tabstop>
   <tabstop>zcutDoubleSpinBox</tabstop>
   <tabstop>cutfeedSpinBox</tabstop>
+  <tabstop>cutvertfeedSpinBox</tabstop>
   <tabstop>cutspeedSpinBox</tabstop>
   <tabstop>cutinfeedDoubleSpinBox</tabstop>
+  <tabstop>bridgesnumSpinBox</tabstop>
   <tabstop>bridgesDoubleSpinBox</tabstop>
   <tabstop>zbridgesDoubleSpinBox</tabstop>
   <tabstop>cutsideComboBox</tabstop>

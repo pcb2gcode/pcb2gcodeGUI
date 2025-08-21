@@ -495,7 +495,8 @@ void MainWindow::changeMetricInputUnits(bool metric)
                                                   ui->zcutDoubleSpinBox, ui->cutinfeedDoubleSpinBox,
                                                   ui->bridgesDoubleSpinBox, ui->zbridgesDoubleSpinBox, ui->alxDoubleSpinBox,
                                                   ui->alyDoubleSpinBox, ui->toleranceDoubleSpinBox, ui->optimiseDoubleSpinBox,
-                                                  ui->mirroraxisDoubleSpinBox };
+                                                  ui->mirroraxisDoubleSpinBox, ui->isolationwidthDoubleSpinBox, ui->offsetXDoubleSpinBox,
+                                                  ui->offsetYDoubleSpinBox };
 
     QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->cutvertfeedSpinBox, ui->alprobefeedSpinBox };
 
