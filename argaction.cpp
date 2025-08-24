@@ -166,7 +166,7 @@ QStringList argAction::getAllArgs(const QString prepend, bool getCommentedOption
             i != objects.constEnd(); i++)
     {
         value = i.value()->getValue();
-        if ( !value.isEmpty() )
+        if ( !value.isEmpty() && !isDefault(i.key()))
         {
             if( i.value()->getEnabled() )
                 output << prepend + i.key() + '=' + value;

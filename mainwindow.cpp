@@ -72,43 +72,43 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ FILEARGS ].insert("postamble", ui->postambleLineEdit);
     args[ FILEARGS ].insert("basename", ui->basenameLineEdit);
     args[ FILEARGS ].insert("output-dir", ui->outputDirLineEdit);
-    args[ FILEARGS ].insert("no-export", ui->noExportCheckBox);
+    args[ FILEARGS ].insert("no-export", ui->noExportCheckBox, "false");
 
-    args[ COMMONARGS ].insert("metric", &inputUnits);
-    args[ COMMONARGS ].insert("metricoutput", &outputUnits);
+    args[ COMMONARGS ].insert("metric", &inputUnits, "false");
+    args[ COMMONARGS ].insert("metricoutput", &outputUnits, "false");
     args[ COMMONARGS ].insert("zsafe", ui->zsafeDoubleSpinBox);
     args[ COMMONARGS ].insert("zchange", ui->zchangeDoubleSpinBox);
-    args[ COMMONARGS ].insert("zchange-absolute", ui->zchangeAbsoluteCheckBox);
-    args[ COMMONARGS ].insert("nog64", ui->nog64CheckBox);
+    args[ COMMONARGS ].insert("zchange-absolute", ui->zchangeAbsoluteCheckBox, "false");
+    args[ COMMONARGS ].insert("nog64", ui->nog64CheckBox, "false");
     args[ COMMONARGS ].insert("tolerance", ui->toleranceDoubleSpinBox);
-    args[ COMMONARGS ].insert("optimise", ui->optimiseDoubleSpinBox);
-    args[ COMMONARGS ].insert("zero-start", ui->zerostartCheckBox);
-    args[ COMMONARGS ].insert("mirror-axis", ui->mirroraxisDoubleSpinBox);
-    args[ COMMONARGS ].insert("mirror-yaxis", ui->mirroryaxisCheckBox);
-    args[ COMMONARGS ].insert("tile-x", ui->tilexSpinBox);
-    args[ COMMONARGS ].insert("tile-y", ui->tileySpinBox);
-    args[ COMMONARGS ].insert("x-offset", ui->offsetXDoubleSpinBox);
-    args[ COMMONARGS ].insert("y-offset", ui->offsetYDoubleSpinBox);
-    args[ COMMONARGS ].insert("spinup-time", ui->spinupDoubleSpinBox);
+    args[ COMMONARGS ].insert("optimise", ui->optimiseDoubleSpinBox, "0.0025", "0.0001");
+    args[ COMMONARGS ].insert("zero-start", ui->zerostartCheckBox, "false");
+    args[ COMMONARGS ].insert("mirror-axis", ui->mirroraxisDoubleSpinBox, "0.0000");
+    args[ COMMONARGS ].insert("mirror-yaxis", ui->mirroryaxisCheckBox, "false");
+    args[ COMMONARGS ].insert("tile-x", ui->tilexSpinBox, "1");
+    args[ COMMONARGS ].insert("tile-y", ui->tileySpinBox, "1");
+    args[ COMMONARGS ].insert("x-offset", ui->offsetXDoubleSpinBox, "0.0000");
+    args[ COMMONARGS ].insert("y-offset", ui->offsetYDoubleSpinBox, "0.0000");
+    args[ COMMONARGS ].insert("spinup-time", ui->spinupDoubleSpinBox, "0.0010");
     args[ COMMONARGS ].insert("spindown-time", ui->spindownDoubleSpinBox);
 
     args[ MILLARGS ].insert("zwork", ui->zworkDoubleSpinBox);
     args[ MILLARGS ].insert("mill-feed", ui->millfeedSpinBox);
     args[ MILLARGS ].insert("mill-speed", ui->millspeedSpinBox);
-    args[ MILLARGS ].insert("offset", ui->offsetDoubleSpinBox);
-    args[ MILLARGS ].insert("voronoi", ui->voronoiCheckBox);
-    args[ MILLARGS ].insert("preserve-thermal-reliefs", ui->preserveThermalRelievesCheckBox);
-    args[ MILLARGS ].insert("isolation-width", ui->isolationwidthDoubleSpinBox);
+    args[ MILLARGS ].insert("offset", ui->offsetDoubleSpinBox, "0.0000");
+    args[ MILLARGS ].insert("voronoi", ui->voronoiCheckBox, "false");
+    args[ MILLARGS ].insert("preserve-thermal-reliefs", ui->preserveThermalRelievesCheckBox, "true");
+    args[ MILLARGS ].insert("isolation-width", ui->isolationwidthDoubleSpinBox, "0.0000");
 
     args[ DRILLARGS ].insert("zdrill", ui->zdrillDoubleSpinBox);
     args[ DRILLARGS ].insert("drill-feed", ui->drillfeedSpinBox);
     args[ DRILLARGS ].insert("drill-speed", ui->drillspeedSpinBox);
     args[ DRILLARGS ].insert("milldrill", ui->milldrillCheckBox);
     args[ DRILLARGS ].insert("milldrill-diameter", ui->milldrilldiameterDoubleSpinBox);
-    args[ DRILLARGS ].insert("drill-side", ui->drillsideComboBox);
-    args[ DRILLARGS ].insert("onedrill", ui->onedrillCheckBox);
-    args[ DRILLARGS ].insert("nog81", ui->nog81CheckBox);
-    args[ DRILLARGS ].insert("nog91-1", ui->nog911CheckBox);
+    args[ DRILLARGS ].insert("drill-side", ui->drillsideComboBox, "auto");
+    args[ DRILLARGS ].insert("onedrill", ui->onedrillCheckBox, "false");
+    args[ DRILLARGS ].insert("nog81", ui->nog81CheckBox, "false");
+    args[ DRILLARGS ].insert("nog91-1", ui->nog911CheckBox, "false");
 
     args[ OUTLINEARGS ].insert("cutter-diameter", ui->cutterdiameterDoubleSpinBox);
     args[ OUTLINEARGS ].insert("zcut", ui->zcutDoubleSpinBox);
@@ -116,11 +116,11 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ OUTLINEARGS ].insert("cut-speed", ui->cutspeedSpinBox);
     args[ OUTLINEARGS ].insert("cut-infeed", ui->cutinfeedDoubleSpinBox);
     args[ OUTLINEARGS ].insert("cut-vertfeed", ui->cutvertfeedSpinBox);
-    args[ OUTLINEARGS ].insert("bridges", ui->bridgesDoubleSpinBox);
+    args[ OUTLINEARGS ].insert("bridges", ui->bridgesDoubleSpinBox, "0.0000");
     args[ OUTLINEARGS ].insert("zbridges", ui->zbridgesDoubleSpinBox);
-    args[ OUTLINEARGS ].insert("bridgesnum", ui->bridgesnumSpinBox);
-    args[ OUTLINEARGS ].insert("cut-side", ui->cutsideComboBox);
-    args[ OUTLINEARGS ].insert("fill-outline", ui->filloutlineCheckBox);
+    args[ OUTLINEARGS ].insert("bridgesnum", ui->bridgesnumSpinBox, "2");
+    args[ OUTLINEARGS ].insert("cut-side", ui->cutsideComboBox, "auto");
+    args[ OUTLINEARGS ].insert("fill-outline", ui->filloutlineCheckBox, "true");
 
     args[ AUTOLEVELLERARGS ].insert("al-front", ui->alfrontCheckBox);
     args[ AUTOLEVELLERARGS ].insert("al-back", ui->albackCheckBox);
@@ -130,16 +130,16 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ AUTOLEVELLERARGS ].insert("al-probefeed", ui->alprobefeedSpinBox);
     args[ AUTOLEVELLERARGS ].insert("al-probe-on", ui->alprobeonLineEdit);
     args[ AUTOLEVELLERARGS ].insert("al-probe-off", ui->alprobeoffLineEdit);
-    args[ AUTOLEVELLERARGS ].insert("al-probecode", ui->alprobecodeLineEdit);
-    args[ AUTOLEVELLERARGS ].insert("al-probevar", ui->alprobevarSpinBox);
-    args[ AUTOLEVELLERARGS ].insert("al-setzzero", ui->alsetzzeroLineEdit);
+    args[ AUTOLEVELLERARGS ].insert("al-probecode", ui->alprobecodeLineEdit, "G31");
+    args[ AUTOLEVELLERARGS ].insert("al-probevar", ui->alprobevarSpinBox, "2002");
+    args[ AUTOLEVELLERARGS ].insert("al-setzzero", ui->alsetzzeroLineEdit, "G92 Z0");
 
-    args[ OPTIMISEARGS ].insert("eulerian-paths", ui->eulerianCheckBox);
-    args[ OPTIMISEARGS ].insert("vectorial", ui->vectorialCheckBox);
-    args[ OPTIMISEARGS ].insert("tsp-2opt", ui->tsp2optCheckBox);
-    args[ OPTIMISEARGS ].insert("path-finding-limit", ui->pathfindinglimitSpinBox);
-    args[ OPTIMISEARGS ].insert("g0-vertical-speed", ui->g0verticalspeedSpinBox);
-    args[ OPTIMISEARGS ].insert("g0-horizontal-speed", ui->g0horizontalspeedSpinBox);
+    args[ OPTIMISEARGS ].insert("eulerian-paths", ui->eulerianCheckBox, "true");
+    args[ OPTIMISEARGS ].insert("vectorial", ui->vectorialCheckBox, "true");
+    args[ OPTIMISEARGS ].insert("tsp-2opt", ui->tsp2optCheckBox, "true");
+    args[ OPTIMISEARGS ].insert("path-finding-limit", ui->pathfindinglimitSpinBox, "1");
+    args[ OPTIMISEARGS ].insert("g0-vertical-speed", ui->g0verticalspeedSpinBox, "1270", "50");
+    args[ OPTIMISEARGS ].insert("g0-horizontal-speed", ui->g0horizontalspeedSpinBox, "2540", "100");
 
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui->actionShow_command_line_arguments, SIGNAL(triggered(bool)), this, SLOT(menu_showCommandLineArguments()));
