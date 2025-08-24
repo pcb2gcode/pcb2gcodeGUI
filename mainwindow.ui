@@ -2206,12 +2206,6 @@
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-probevar&lt;/span&gt;&lt;/p&gt;&lt;p&gt;custom Z probe result variable. For example, LinuxCNC uses 5063 while Mach3, Mach4 and TurboCNC use 2002. If unspecified, 2002 will be used. This option is relevant only when --software=custom&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
-             <property name="suffix">
-              <string/>
-             </property>
-             <property name="prefix">
-              <string/>
-             </property>
             <property name="minimum">
               <number>1</number>
              </property>
@@ -2254,6 +2248,183 @@
            </item>
            <item row="11" column="0" colspan="2">
             <spacer name="verticalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="optimizationTab">
+         <attribute name="title">
+          <string>Optimizations</string>
+         </attribute>
+         <widget class="QWidget" name="formLayoutWidget_6">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>504</width>
+            <height>553</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="outlineGridLayout_1">
+           <property name="horizontalSpacing">
+            <number>12</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>6</number>
+           </property>
+           <item row="0" column="0" colspan="2">
+            <widget class="QCheckBox" name="eulerianCheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-style:italic&quot;&gt;--eulerian-paths&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Don't mill the same path twice if milling loops overlap. Can save up to 50% of milling time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Eulerian paths</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="QCheckBox" name="vectorialCheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-style:italic&quot;&gt;--vectorial&lt;/span&gt;&lt;/p&gt;&lt;p&gt;enable or disable the vectorial rendering engine.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Vectorial engine</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QCheckBox" name="tsp2optCheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-style:italic&quot;&gt;--tsp-2opt&lt;/span&gt;&lt;/p&gt;&lt;p&gt;use TSP 2OPT to find a faster toolpath (but slows down gcode generation).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>TSP 2OPT optimization</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="pathfindinglimitLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--path-finding-limit&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Use path finding for up to this many steps in the search (more is slower but makes a faster gcode path)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Path finding limit</string>
+             </property>
+             <property name="buddy">
+              <cstring>pathfindinglimitSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="pathfindinglimitSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--path-finding-limit&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Use path finding for up to this many steps in the search (more is slower but makes a faster gcode path)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> steps</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>100000</number>
+             </property>
+             <property name="value">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="g0verticalspeedLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--g0-vertical-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;speed of vertical G0 movements, for use in path-finding&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Path finding vertical speed</string>
+             </property>
+             <property name="buddy">
+              <cstring>g0verticalspeedSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QSpinBox" name="g0verticalspeedSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--g0-vertical-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;speed of vertical G0 movements, for use in path-finding&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm/min</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+             <property name="singleStep">
+              <number>50</number>
+             </property>
+             <property name="value">
+              <double>1270</double>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="g0horizontalspeedLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--g0-horizontal-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;speed of horizontal G0 movements, for use in path-finding&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Path finding horizontal speed</string>
+             </property>
+             <property name="buddy">
+              <cstring>g0horizontalspeedSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QSpinBox" name="g0horizontalspeedSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--g0-horizontal-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;speed of horizontal G0 movements, for use in path-finding&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm/min</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+             <property name="singleStep">
+              <number>50</number>
+             </property>
+             <property name="value">
+              <double>2540</double>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0" colspan="2">
+            <spacer name="verticalSpacer_8">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -2582,6 +2753,12 @@
   <tabstop>alprobecodeLineEdit</tabstop>
   <tabstop>alprobevarSpinBox</tabstop>
   <tabstop>alsetzzeroLineEdit</tabstop>
+  <tabstop>eulerianCheckBox</tabstop>
+  <tabstop>vectorialCheckBox</tabstop>
+  <tabstop>tsp2optCheckBox</tabstop>
+  <tabstop>pathfindinglimitSpinBox</tabstop>
+  <tabstop>g0verticalspeedSpinBox</tabstop>
+  <tabstop>g0horizontalspeedSpinBox</tabstop>
   <tabstop>imageComboBox</tabstop>
   <tabstop>gview</tabstop>
  </tabstops>

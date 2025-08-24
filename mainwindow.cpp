@@ -32,7 +32,7 @@
 
 #include "settings.h"
 
-const QString MainWindow::names[] = { "File", "Common", "Mill", "Drill", "Outline", "Autoleveller" };
+const QString MainWindow::names[] = { "File", "Common", "Mill", "Drill", "Outline", "Autoleveller", "Optimisations" };
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -133,6 +133,13 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ AUTOLEVELLERARGS ].insert("al-probecode", ui->alprobecodeLineEdit);
     args[ AUTOLEVELLERARGS ].insert("al-probevar", ui->alprobevarSpinBox);
     args[ AUTOLEVELLERARGS ].insert("al-setzzero", ui->alsetzzeroLineEdit);
+
+    args[ OPTIMISEARGS ].insert("eulerian-paths", ui->eulerianCheckBox);
+    args[ OPTIMISEARGS ].insert("vectorial", ui->vectorialCheckBox);
+    args[ OPTIMISEARGS ].insert("tsp-2opt", ui->tsp2optCheckBox);
+    args[ OPTIMISEARGS ].insert("path-finding-limit", ui->pathfindinglimitSpinBox);
+    args[ OPTIMISEARGS ].insert("g0-vertical-speed", ui->g0verticalspeedSpinBox);
+    args[ OPTIMISEARGS ].insert("g0-horizontal-speed", ui->g0horizontalspeedSpinBox);
 
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui->actionShow_command_line_arguments, SIGNAL(triggered(bool)), this, SLOT(menu_showCommandLineArguments()));
@@ -500,7 +507,8 @@ void MainWindow::changeMetricInputUnits(bool metric)
                                                   ui->mirroraxisDoubleSpinBox, ui->isolationwidthDoubleSpinBox, ui->offsetXDoubleSpinBox,
                                                   ui->offsetYDoubleSpinBox };
 
-    QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->cutvertfeedSpinBox, ui->alprobefeedSpinBox };
+    QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->cutvertfeedSpinBox, ui->alprobefeedSpinBox,
+                                ui->g0verticalspeedSpinBox, ui->g0horizontalspeedSpinBox };
 
     const unsigned int doubleSpinBoxesLen =  sizeof(doubleSpinBoxes) / sizeof(doubleSpinBoxes[0]);
     const unsigned int spinBoxesLen =  sizeof(spinBoxes) / sizeof(spinBoxes[0]);
@@ -580,6 +588,8 @@ QStringList MainWindow::getCmdLineArguments()
     if ( (ui->alfrontCheckBox->isChecked() || ui->albackCheckBox->isChecked()) &&
          (!ui->frontLineEdit->text().isEmpty() || !ui->backLineEdit->text().isEmpty()) )
         arguments += args[ AUTOLEVELLERARGS ].getAllArgs("--", false);
+    
+    arguments += args[ OPTIMISEARGS ].getAllArgs("--", false);
 
     return arguments;
 }

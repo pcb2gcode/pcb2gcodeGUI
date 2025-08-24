@@ -91,7 +91,7 @@ private slots:
     void updateAlCustomEnableState(QString text);
 
 private:
-    enum ArgsType { FILEARGS = 0, COMMONARGS = 1, MILLARGS = 2, DRILLARGS = 3, OUTLINEARGS = 4, AUTOLEVELLERARGS = 5 };
+    enum ArgsType { FILEARGS = 0, COMMONARGS = 1, MILLARGS = 2, DRILLARGS = 3, OUTLINEARGS = 4, AUTOLEVELLERARGS = 5,  OPTIMISEARGS = 6};
     static const QString names[];
 
     Ui::MainWindow *ui;
@@ -120,7 +120,7 @@ private:
     bool fillOutline;
     bool restarted;
 
-    argAction args[6];
+    argAction args[7];
 
     outputWindow *pcb2gcodeOutputWindow;
     QPlainTextEdit *outputTextEdit;
