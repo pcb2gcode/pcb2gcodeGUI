@@ -140,6 +140,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ OPTIMISEARGS ].insert("path-finding-limit", ui->pathfindinglimitSpinBox, "1");
     args[ OPTIMISEARGS ].insert("g0-vertical-speed", ui->g0verticalspeedSpinBox, "1270", "50");
     args[ OPTIMISEARGS ].insert("g0-horizontal-speed", ui->g0horizontalspeedSpinBox, "2540", "100");
+    args[ OPTIMISEARGS ].insert("backtrack", ui->backtrackSpinBox, "0");
 
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui->actionShow_command_line_arguments, SIGNAL(triggered(bool)), this, SLOT(menu_showCommandLineArguments()));
@@ -508,19 +509,18 @@ void MainWindow::changeMetricInputUnits(bool metric)
                                                   ui->offsetYDoubleSpinBox };
 
     QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->cutvertfeedSpinBox, ui->alprobefeedSpinBox,
-                                ui->g0verticalspeedSpinBox, ui->g0horizontalspeedSpinBox };
+                                ui->g0verticalspeedSpinBox, ui->g0horizontalspeedSpinBox, ui->backtrackSpinBox };
 
     const unsigned int doubleSpinBoxesLen =  sizeof(doubleSpinBoxes) / sizeof(doubleSpinBoxes[0]);
     const unsigned int spinBoxesLen =  sizeof(spinBoxes) / sizeof(spinBoxes[0]);
     const double cfactor = metric ? 25.4 : 1/25.4;
-    const char *distance = metric ? " mm" : " in" ;
-    const char *speed = metric ? " mm/min" : " in/min" ;
+    const char *unit = metric ? " mm" : " in" ;
 
     for( unsigned int i = 0; i < doubleSpinBoxesLen; i++ )
-        adjustMetricImperial( doubleSpinBoxes[i], cfactor, distance );
+        adjustMetricImperial( doubleSpinBoxes[i], cfactor, unit );
 
     for( unsigned int i = 0; i < spinBoxesLen; i++ )
-        adjustMetricImperial( spinBoxes[i], cfactor, speed );
+        adjustMetricImperial( spinBoxes[i], cfactor, unit );
 }
 
 void MainWindow::adjustMetricImperial(QSpinBox *spinBox, const double cfactor, const QString suffix)
@@ -540,7 +540,7 @@ void MainWindow::adjustMetricImperial(QSpinBox *spinBox, const double cfactor, c
         spinBox->setValue( round( value * cfactor ) );
     }
 
-    spinBox->setSuffix(suffix);
+    spinBox->setSuffix(suffix + (spinBox->suffix().contains("/min",Qt::CaseInsensitive) ? "/min" : "/s"));
 }
 
 void MainWindow::adjustMetricImperial(QDoubleSpinBox *doubleSpinBox, const double cfactor, const QString suffix)
@@ -566,7 +566,7 @@ void MainWindow::adjustMetricImperial(QDoubleSpinBox *doubleSpinBox, const doubl
             doubleSpinBox->setDecimals(doubleSpinBox->decimals() - 1);
     }
 
-    doubleSpinBox->setSuffix(suffix);
+    doubleSpinBox->setSuffix(suffix + (doubleSpinBox->suffix().contains("/min",Qt::CaseInsensitive) ? "/min" : ""));
 }
 
 QStringList MainWindow::getCmdLineArguments()

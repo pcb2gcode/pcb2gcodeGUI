@@ -2423,6 +2423,41 @@
              </property>
             </widget>
            </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="backtrackLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--backtrack&lt;/span&gt;&lt;/p&gt;&lt;p&gt;allow retracing a milled path if it's faster than retract-move-lower.  For example, set to 5in/s if you are willing to remill 5 inches of trace in order to save 1 second of milling time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Backtrack distance</string>
+             </property>
+             <property name="buddy">
+              <cstring>backtrackSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QSpinBox" name="backtrackSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--backtrack&lt;/span&gt;&lt;/p&gt;&lt;p&gt;allow retracing a milled path if it's faster than retract-move-lower.  For example, set to 5in/s if you are willing to remill 5 inches of trace in order to save 1 second of milling time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm/s</string>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <double>0</double>
+             </property>
+            </widget>
+           </item>
            <item row="7" column="0" colspan="2">
             <spacer name="verticalSpacer_8">
              <property name="orientation">
@@ -2759,6 +2794,7 @@
   <tabstop>pathfindinglimitSpinBox</tabstop>
   <tabstop>g0verticalspeedSpinBox</tabstop>
   <tabstop>g0horizontalspeedSpinBox</tabstop>
+  <tabstop>backtrackSpinBox</tabstop>
   <tabstop>imageComboBox</tabstop>
   <tabstop>gview</tabstop>
  </tabstops>
