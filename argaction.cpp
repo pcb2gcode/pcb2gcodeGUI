@@ -157,10 +157,11 @@ bool argBase<QButtonGroup>::getEnabled()
     return object->button(0)->isEnabled();
 }
 
-QStringList argAction::getAllArgs(const QString prepend, bool getCommentedOptions)
+QStringList argAction::getAllArgs(bool getCommentedOptions)
 {
     QStringList output;
     QString value;
+    const QString prepend = getCommentedOptions ? "" : "--";
 
     for (QMap<QString, argBaseVirtual *>::const_iterator i = objects.constBegin();
             i != objects.constEnd(); i++)

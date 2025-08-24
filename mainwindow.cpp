@@ -573,23 +573,23 @@ QStringList MainWindow::getCmdLineArguments()
 {
     QStringList arguments;
 
-    arguments += args[ FILEARGS ].getAllArgs("--", false);
-    arguments += args[ COMMONARGS ].getAllArgs("--", false);
+    arguments += args[ FILEARGS ].getAllArgs();
+    arguments += args[ COMMONARGS ].getAllArgs();
 
     if( !ui->frontLineEdit->text().isEmpty() || !ui->backLineEdit->text().isEmpty() )
-        arguments += args[ MILLARGS ].getAllArgs("--", false);
+        arguments += args[ MILLARGS ].getAllArgs();
 
     if( !ui->drillLineEdit->text().isEmpty() )
-        arguments += args[ DRILLARGS ].getAllArgs("--", false);
+        arguments += args[ DRILLARGS ].getAllArgs();
 
     if( !ui->outlineLineEdit->text().isEmpty() || ui->milldrillCheckBox->isChecked() )
-        arguments += args[ OUTLINEARGS ].getAllArgs("--", false);
+        arguments += args[ OUTLINEARGS ].getAllArgs();
 
     if ( (ui->alfrontCheckBox->isChecked() || ui->albackCheckBox->isChecked()) &&
          (!ui->frontLineEdit->text().isEmpty() || !ui->backLineEdit->text().isEmpty()) )
-        arguments += args[ AUTOLEVELLERARGS ].getAllArgs("--", false);
+        arguments += args[ AUTOLEVELLERARGS ].getAllArgs();
     
-    arguments += args[ OPTIMISEARGS ].getAllArgs("--", false);
+    arguments += args[ OPTIMISEARGS ].getAllArgs();
 
     return arguments;
 }
@@ -891,7 +891,7 @@ void MainWindow::saveConfFile(const QString filename)
 
         for( int i = COMMONARGS; i <= AUTOLEVELLERARGS; i++ )
         {
-            arguments = args[i].getAllArgs("", true);
+            arguments = args[i].getAllArgs(true);
             confFile.write( QString("# " + names[i] + " options\n").toLatin1() );
 
             for( QStringList::const_iterator j = arguments.begin(); j != arguments.constEnd(); j++ )

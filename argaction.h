@@ -85,7 +85,7 @@ template <> bool argBase<QButtonGroup>::getEnabled();
 
 class argAction {
 public:
-    QStringList getAllArgs(const QString prepend, bool getCommentedOptions);
+    QStringList getAllArgs(bool getCommentedOptions=false);
 
     inline bool setValue(const QString key, const QString value)
     {
