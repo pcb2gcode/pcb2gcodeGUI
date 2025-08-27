@@ -108,6 +108,8 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ DRILLARGS ].insert("zmilldrill", ui->zmilldrillDoubleSpinBox);
     args[ DRILLARGS ].insert("drill-side", ui->drillsideComboBox, "auto");
     args[ DRILLARGS ].insert("onedrill", ui->onedrillCheckBox, "false");
+    args[ DRILLARGS ].insert("drills-available", ui->drillsAvailableLineEdit);
+    args[ DRILLARGS ].insert("nom6", ui->nom6CheckBox, "false");
     args[ DRILLARGS ].insert("nog81", ui->nog81CheckBox, "false");
     args[ DRILLARGS ].insert("nog91-1", ui->nog911CheckBox, "false");
 
@@ -166,6 +168,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->voronoiCheckBox, SIGNAL(toggled(bool)), this, SLOT(voronoiEnable(bool)));
     connect(ui->milldrillholediameterDoubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(enableMilldrill(double)));
+    connect(ui->onedrillCheckBox, SIGNAL(toggled(bool)), this, SLOT(drillListDisable(bool)));
+    connect(ui->drillsAvailableLineEdit, SIGNAL(textChanged(QString)), this, SLOT(enableNoM6(QString)));
     connect(ui->softwareComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateAlCustomEnableState(QString)));
 
     connect(ui->startPushButton, SIGNAL(clicked()), this, SLOT(startPcb2gcode()));
@@ -268,6 +272,21 @@ void MainWindow::voronoiEnable(bool enable)
     ui->isolationwidthDoubleSpinBox->setEnabled(!enable);
     ui->offsetDoubleSpinBox->setEnabled(!enable);
     ui->preserveThermalRelievesCheckBox->setEnabled(enable);
+}
+
+void MainWindow::enableMilldrill(double value) {
+    ui->milldrilldiameterDoubleSpinBox->setEnabled(value > 0.0);
+    ui->zmilldrillDoubleSpinBox->setEnabled(value > 0.0);
+}
+
+void MainWindow::drillListDisable(bool disable) {
+    ui->drillsAvailableLabel->setVisible(!disable);
+    ui->drillsAvailableLineEdit->setVisible(!disable);
+    ui->nom6CheckBox->setVisible(!disable);
+}
+
+void MainWindow::enableNoM6(QString text) {
+    ui->nom6CheckBox->setEnabled(text.trimmed().length()>0);
 }
 
 void MainWindow::bridgesAvailable()
@@ -989,9 +1008,4 @@ void MainWindow::closeEvent(QCloseEvent *)
 
     settings->setValue("Window/width", this->width());
     settings->setValue("Window/height", this->height());
-}
-
-void MainWindow::enableMilldrill(double value) {
-    ui->milldrilldiameterDoubleSpinBox->setEnabled(value > 0.0);
-    ui->zmilldrillDoubleSpinBox->setEnabled(value > 0.0);
 }

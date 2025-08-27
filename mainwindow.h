@@ -78,6 +78,8 @@ private slots:
     void getOutputDirectory();
 
     void enableMilldrill(double value);
+    void drillListDisable(bool disable);
+    void enableNoM6(QString text);
 
     void menu_showCommandLineArguments();
     void menu_aboutpcb2gcode();

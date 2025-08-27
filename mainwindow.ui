@@ -1560,6 +1560,42 @@
             </widget>
            </item>
            <item row="8" column="0">
+            <widget class="QLabel" name="drillsAvailableLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drills-available&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Comma-separated list of available drills. Each entry must consist of a numeric value followed by a unit(inch,mm,m)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Available drills list</string>
+             </property>
+             <property name="buddy">
+              <cstring>drillsAvailableLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLineEdit" name="drillsAvailableLineEdit">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drills-available&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Comma-separated list of available drills. Each entry must consist of a numeric value followed by a unit(inch,mm,m)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="placeholderText">
+              <string>0.5mm,1.75mm,0.125inch,0.004m</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QCheckBox" name="nom6CheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--nom6&lt;/span&gt;&lt;/p&gt;&lt;p&gt;do not emit M6 on tool changes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Remove M6 from G-code</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0">
             <widget class="QCheckBox" name="nog81CheckBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--nog81&lt;/span&gt;&lt;/p&gt;&lt;p&gt;replace G81 with G0+G1. This option makes the gcode compatible with low-end cnc controllers (like grbl), but also makes it bigger and less clean&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1569,7 +1605,7 @@
              </property>
             </widget>
            </item>
-           <item row="9" column="0">
+           <item row="11" column="0">
             <widget class="QCheckBox" name="nog911CheckBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--nog91-1&lt;/span&gt;&lt;/p&gt;&lt;p&gt;do not explicitly set G91.1 (incremental arc mode distance) in drill headers. Some controllers (like Roland's) does not support G91.1 and they can wrongly interpret it as G91 (relative distance). Since the default mode is usually &amp;quot;incremental&amp;quot;, you can safely remove G91.1 in most of the cases&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
