@@ -1305,7 +1305,7 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
+           <item row="0" column="1" colspan="2">
             <widget class="QDoubleSpinBox" name="zdrillDoubleSpinBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zdrill&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Z value down to which will be drilled&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1343,7 +1343,7 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
+           <item row="1" column="1" colspan="2">
             <widget class="QSpinBox" name="drillfeedSpinBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drill-feed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Feed rate for drilling (vertical speed)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1375,7 +1375,7 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
+           <item row="2" column="1" colspan="2">
             <widget class="QSpinBox" name="drillspeedSpinBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drill-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Spindle speed during drilling&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1407,7 +1407,7 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="1">
+           <item row="3" column="1" colspan="2">
             <widget class="QComboBox" name="drillsideComboBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drill-side&lt;/span&gt;&lt;/p&gt;&lt;p&gt;choose the drill side. Valid choices are front, back or auto (default). In auto mode the drill side is automatically chosen (always front unless only the back side is specified)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1429,124 +1429,139 @@
              </item>
             </widget>
            </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="milldrillEnableLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--min-milldrill-hole-diameter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;minimum hole width for milldrilling. Holes smaller than this are drilled. Zero to disable milldrilling.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Minimum diameter for milldrilling</string>
-             </property>
-             <property name="buddy">
-              <cstring>milldrillholediameterDoubleSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QDoubleSpinBox" name="milldrillholediameterDoubleSpinBox">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--min-milldrill-hole-diameter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;minimum hole width for milldrilling. Holes smaller than this are drilled. Zero to disable milldrilling.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="suffix">
-              <string> mm</string>
-             </property>
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>0</double>
-             </property>
+           <item row="4" column="0" colspan="3">
+            <widget class="QGroupBox" name="milldrillGroupBox">
+              <property name="title">
+                <string>Milldrill (hole milling)</string>
+              </property>
+              <layout class="QGridLayout" name="milldrillGridLayout">
+                <property name="horizontalSpacing">
+                  <number>12</number>
+                </property>
+                <property name="verticalSpacing">
+                  <number>3</number>
+                </property>
+                <item row="0" column="0">
+                  <widget class="QLabel" name="milldrillEnableLabel">
+                  <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--min-milldrill-hole-diameter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;minimum hole width for milldrilling. Holes smaller than this are drilled. Zero to disable milldrilling.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="text">
+                    <string>Minimum diameter</string>
+                  </property>
+                  <property name="buddy">
+                    <cstring>milldrillholediameterDoubleSpinBox</cstring>
+                  </property>
+                  </widget>
+                </item>
+                <item row="0" column="1" colspan="2">
+                  <widget class="QDoubleSpinBox" name="milldrillholediameterDoubleSpinBox">
+                  <property name="enabled">
+                    <bool>true</bool>
+                  </property>
+                  <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--min-milldrill-hole-diameter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;minimum hole width for milldrilling. Holes smaller than this are drilled. Zero to disable milldrilling.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="suffix">
+                    <string> mm</string>
+                  </property>
+                  <property name="decimals">
+                    <number>3</number>
+                  </property>
+                  <property name="maximum">
+                    <double>100.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                    <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                    <double>0</double>
+                  </property>
+                  </widget>
+                </item>
+                <item row="1" column="0">
+                  <widget class="QLabel" name="milldrillLabel">
+                  <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--milldrill-diameter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;diameter of milling head which is used with --milldrill; the default value is same as --cutter-diameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="text">
+                    <string>Tool diameter</string>
+                  </property>
+                  <property name="buddy">
+                    <cstring>milldrilldiameterDoubleSpinBox</cstring>
+                  </property>
+                  </widget>
+                </item>
+                <item row="1" column="1" colspan="2">
+                  <widget class="QDoubleSpinBox" name="milldrilldiameterDoubleSpinBox">
+                  <property name="enabled">
+                    <bool>false</bool>
+                  </property>
+                  <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--milldrill-diameter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;diameter of milling head which is used with --milldrill; the default value is same as --cutter-diameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="suffix">
+                    <string> mm</string>
+                  </property>
+                  <property name="decimals">
+                    <number>3</number>
+                  </property>
+                  <property name="maximum">
+                    <double>100.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                    <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                    <double>3.000000000000000</double>
+                  </property>
+                  </widget>
+                </item>
+                <item row="2" column="0">
+                  <widget class="QLabel" name="zmilldrillLabel">
+                  <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zmilldrill&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Z value down to which will be milldrilled&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="text">
+                    <string>Depth</string>
+                  </property>
+                  <property name="buddy">
+                    <cstring>zdrillDoubleSpinBox</cstring>
+                  </property>
+                  </widget>
+                </item>
+                <item row="2" column="1" colspan="2">
+                  <widget class="QDoubleSpinBox" name="zmilldrillDoubleSpinBox">
+                  <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zmilldrill&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Z value down to which will be milldrilled&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="enabled">
+                    <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                    <string> mm</string>
+                  </property>
+                  <property name="decimals">
+                    <number>3</number>
+                  </property>
+                  <property name="minimum">
+                    <double>-1000.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                    <double>0.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                    <double>0.050000000000000</double>
+                  </property>
+                  <property name="value">
+                    <double>-2.500000000000000</double>
+                  </property>
+                  </widget>
+                </item>
+              </layout>
             </widget>
            </item>
            <item row="5" column="0">
-            <widget class="QLabel" name="milldrillLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--milldrill-diameter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;diameter of milling head which is used with --milldrill; the default value is same as --cutter-diameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Tool diameter for hole milling</string>
-             </property>
-             <property name="buddy">
-              <cstring>milldrilldiameterDoubleSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QDoubleSpinBox" name="milldrilldiameterDoubleSpinBox">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--milldrill-diameter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;diameter of milling head which is used with --milldrill; the default value is same as --cutter-diameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="suffix">
-              <string> mm</string>
-             </property>
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>3.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="zmilldrillLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zmilldrill&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Z value down to which will be milldrilled&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Milldrilling depth</string>
-             </property>
-             <property name="buddy">
-              <cstring>zdrillDoubleSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1">
-            <widget class="QDoubleSpinBox" name="zmilldrillDoubleSpinBox">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zmilldrill&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Z value down to which will be milldrilled&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="suffix">
-              <string> mm</string>
-             </property>
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="minimum">
-              <double>-1000.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>0.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.050000000000000</double>
-             </property>
-             <property name="value">
-              <double>-2.500000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="0">
             <widget class="QCheckBox" name="onedrillCheckBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;--onedrill&lt;/p&gt;&lt;p&gt;Use only one drill bit size&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1559,7 +1574,7 @@
              </property>
             </widget>
            </item>
-           <item row="8" column="0">
+           <item row="6" column="0">
             <widget class="QLabel" name="drillsAvailableLabel">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drills-available&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Comma-separated list of available drills. Each entry must consist of a numeric value followed by a unit(inch,mm,m)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1572,7 +1587,7 @@
              </property>
             </widget>
            </item>
-           <item row="8" column="1">
+           <item row="6" column="1">
             <widget class="QLineEdit" name="drillsAvailableLineEdit">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drills-available&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Comma-separated list of available drills. Each entry must consist of a numeric value followed by a unit(inch,mm,m)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1582,7 +1597,7 @@
              </property>
             </widget>
            </item>
-           <item row="9" column="0">
+           <item row="7" column="0">
             <widget class="QCheckBox" name="nom6CheckBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--nom6&lt;/span&gt;&lt;/p&gt;&lt;p&gt;do not emit M6 on tool changes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1595,7 +1610,7 @@
              </property>
             </widget>
            </item>
-           <item row="10" column="0">
+           <item row="8" column="0">
             <widget class="QCheckBox" name="nog81CheckBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--nog81&lt;/span&gt;&lt;/p&gt;&lt;p&gt;replace G81 with G0+G1. This option makes the gcode compatible with low-end cnc controllers (like grbl), but also makes it bigger and less clean&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1605,7 +1620,7 @@
              </property>
             </widget>
            </item>
-           <item row="11" column="0">
+           <item row="9" column="0">
             <widget class="QCheckBox" name="nog911CheckBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--nog91-1&lt;/span&gt;&lt;/p&gt;&lt;p&gt;do not explicitly set G91.1 (incremental arc mode distance) in drill headers. Some controllers (like Roland's) does not support G91.1 and they can wrongly interpret it as G91 (relative distance). Since the default mode is usually &amp;quot;incremental&amp;quot;, you can safely remove G91.1 in most of the cases&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1615,7 +1630,7 @@
              </property>
             </widget>
            </item>
-           <item row="12" column="0" colspan="2">
+           <item row="10" column="0" colspan="2">
             <spacer name="verticalSpacer_4">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
