@@ -77,6 +77,8 @@ private slots:
     void getPostambleFile();
     void getOutputDirectory();
 
+    void enableMilldrill(double value);
+
     void menu_showCommandLineArguments();
     void menu_aboutpcb2gcode();
     void menu_aboutpcb2gcodeGUI();

@@ -103,8 +103,9 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ DRILLARGS ].insert("zdrill", ui->zdrillDoubleSpinBox);
     args[ DRILLARGS ].insert("drill-feed", ui->drillfeedSpinBox);
     args[ DRILLARGS ].insert("drill-speed", ui->drillspeedSpinBox);
-    args[ DRILLARGS ].insert("milldrill", ui->milldrillCheckBox);
+    args[ DRILLARGS ].insert("min-milldrill-hole-diameter", ui->milldrillholediameterDoubleSpinBox, "0.0000");
     args[ DRILLARGS ].insert("milldrill-diameter", ui->milldrilldiameterDoubleSpinBox);
+    args[ DRILLARGS ].insert("zmilldrill", ui->zmilldrillDoubleSpinBox);
     args[ DRILLARGS ].insert("drill-side", ui->drillsideComboBox, "auto");
     args[ DRILLARGS ].insert("onedrill", ui->onedrillCheckBox, "false");
     args[ DRILLARGS ].insert("nog81", ui->nog81CheckBox, "false");
@@ -164,7 +165,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->outputDirPushButton, SIGNAL(clicked()), this, SLOT(getOutputDirectory()));
 
     connect(ui->voronoiCheckBox, SIGNAL(toggled(bool)), this, SLOT(voronoiEnable(bool)));
-    connect(ui->milldrillCheckBox, SIGNAL(toggled(bool)), ui->milldrilldiameterDoubleSpinBox, SLOT(setEnabled(bool)));
+    connect(ui->milldrillholediameterDoubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(enableMilldrill(double)));
     connect(ui->softwareComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateAlCustomEnableState(QString)));
 
     connect(ui->startPushButton, SIGNAL(clicked()), this, SLOT(startPcb2gcode()));
@@ -506,7 +507,8 @@ void MainWindow::changeMetricInputUnits(bool metric)
                                                   ui->bridgesDoubleSpinBox, ui->zbridgesDoubleSpinBox, ui->alxDoubleSpinBox,
                                                   ui->alyDoubleSpinBox, ui->toleranceDoubleSpinBox, ui->optimiseDoubleSpinBox,
                                                   ui->mirroraxisDoubleSpinBox, ui->isolationwidthDoubleSpinBox, ui->offsetXDoubleSpinBox,
-                                                  ui->offsetYDoubleSpinBox };
+                                                  ui->offsetYDoubleSpinBox, ui->milldrillholediameterDoubleSpinBox, ui->milldrilldiameterDoubleSpinBox,
+                                                  ui->zmilldrillDoubleSpinBox };
 
     QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->cutvertfeedSpinBox, ui->alprobefeedSpinBox,
                                 ui->g0verticalspeedSpinBox, ui->g0horizontalspeedSpinBox, ui->backtrackSpinBox };
@@ -582,7 +584,7 @@ QStringList MainWindow::getCmdLineArguments()
     if( !ui->drillLineEdit->text().isEmpty() )
         arguments += args[ DRILLARGS ].getAllArgs();
 
-    if( !ui->outlineLineEdit->text().isEmpty() || ui->milldrillCheckBox->isChecked() )
+    if( !ui->outlineLineEdit->text().isEmpty() || ui->milldrillholediameterDoubleSpinBox->value() > 0 )
         arguments += args[ OUTLINEARGS ].getAllArgs();
 
     if ( (ui->alfrontCheckBox->isChecked() || ui->albackCheckBox->isChecked()) &&
@@ -987,4 +989,9 @@ void MainWindow::closeEvent(QCloseEvent *)
 
     settings->setValue("Window/width", this->width());
     settings->setValue("Window/height", this->height());
+}
+
+void MainWindow::enableMilldrill(double value) {
+    ui->milldrilldiameterDoubleSpinBox->setEnabled(value > 0.0);
+    ui->zmilldrillDoubleSpinBox->setEnabled(value > 0.0);
 }
