@@ -1279,7 +1279,53 @@
              </property>
             </widget>
            </item>
-           <item row="7" column="0" colspan="2">
+           <item row="8" column="0">
+            <widget class="QLabel" name="premillingcodeLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--pre-milling-gcode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;custom gcode inserted before the start of milling each trace (used to activate pump or fan or laser connected to fan).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Milling start custom command</string>
+             </property>
+             <property name="buddy">
+              <cstring>premillingcodeLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLineEdit" name="premillingcodeLineEdit">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--pre-milling-gcode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;custom gcode inserted before the start of milling each trace (used to activate pump or fan or laser connected to fan).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="placeholderText">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="postmillingcodeLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--post-milling-gcode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;custom gcode inserted after the end of milling each trace (used to deactivate pump or fan or laser connected to fan).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Milling end custom command</string>
+             </property>
+             <property name="buddy">
+              <cstring>postmillingcodeLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLineEdit" name="postmillingcodeLineEdit">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--post-milling-gcode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;custom gcode inserted after the end of milling each trace (used to deactivate pump or fan or laser connected to fan).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="placeholderText">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="15" column="0" colspan="2">
             <spacer name="verticalSpacer_3">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -2895,6 +2941,8 @@
   <tabstop>offsetDoubleSpinBox</tabstop>
   <tabstop>isolationwidthDoubleSpinBox</tabstop>
   <tabstop>milldiametersLineEdit</tabstop>
+  <tabstop>premillingcodeLineEdit</tabstop>
+  <tabstop>postmillingcodeLineEdit</tabstop>
   <tabstop>zdrillDoubleSpinBox</tabstop>
   <tabstop>drillfeedSpinBox</tabstop>
   <tabstop>drillspeedSpinBox</tabstop>
