@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>907</width>
+    <width>1007</width>
     <height>709</height>
    </rect>
   </property>
@@ -42,7 +42,7 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>545</width>
+          <width>645</width>
           <height>600</height>
          </size>
         </property>
@@ -1256,7 +1256,30 @@
              </property>
             </widget>
            </item>
-           <item row="6" column="0" colspan="2">
+           <item row="6" column="0">
+            <widget class="QLabel" name="milldiametersLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mill-diameters&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Comma-separated list of available mill bits. Each entry must consist of a numeric value followed by a unit(inch,mm,m). Used in the order that they are provided&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Available mill diameters</string>
+             </property>
+             <property name="buddy">
+              <cstring>milldiametersLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="milldiametersLineEdit">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mill-diameters&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Comma-separated list of available mill bits. Each entry must consist of a numeric value followed by a unit(inch,mm,m). Used in the order that they are provided&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="placeholderText">
+              <string>0mm,0.001inch,0.4mm</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0" colspan="2">
             <spacer name="verticalSpacer_3">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -2716,7 +2739,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>907</width>
+     <width>1007</width>
      <height>43</height>
     </rect>
    </property>
@@ -2871,6 +2894,7 @@
   <tabstop>preserveThermalRelievesCheckBox</tabstop>
   <tabstop>offsetDoubleSpinBox</tabstop>
   <tabstop>isolationwidthDoubleSpinBox</tabstop>
+  <tabstop>milldiametersLineEdit</tabstop>
   <tabstop>zdrillDoubleSpinBox</tabstop>
   <tabstop>drillfeedSpinBox</tabstop>
   <tabstop>drillspeedSpinBox</tabstop>

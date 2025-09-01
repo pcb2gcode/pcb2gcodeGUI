@@ -99,6 +99,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ MILLARGS ].insert("voronoi", ui->voronoiCheckBox, "false");
     args[ MILLARGS ].insert("preserve-thermal-reliefs", ui->preserveThermalRelievesCheckBox, "true");
     args[ MILLARGS ].insert("isolation-width", ui->isolationwidthDoubleSpinBox, "0.0000");
+    args[ MILLARGS ].insert("mill-diameters", ui->milldiametersLineEdit, "0mm", "0inch");
 
     args[ DRILLARGS ].insert("zdrill", ui->zdrillDoubleSpinBox);
     args[ DRILLARGS ].insert("drill-feed", ui->drillfeedSpinBox);
