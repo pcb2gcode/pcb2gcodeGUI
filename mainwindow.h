@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2015-2016 Nicola Corna (nicola@corna.info)
+ * Copyright (c) 2025 Enrique Condes (kosmerebel@gmail.com)
  *
  * This file is part of pcb2gcodeGUI.
  *
