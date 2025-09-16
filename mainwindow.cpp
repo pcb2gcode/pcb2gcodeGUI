@@ -100,6 +100,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ MILLARGS ].insert("preserve-thermal-reliefs", ui->preserveThermalRelievesCheckBox, "true");
     args[ MILLARGS ].insert("isolation-width", ui->isolationwidthDoubleSpinBox, "0.0000");
     args[ MILLARGS ].insert("mill-diameters", ui->milldiametersLineEdit, "0mm", "0inch");
+    args[ MILLARGS ].insert("milling-overlap", ui->milloverlapLineEdit, "50%");
     args[ MILLARGS ].insert("pre-milling-gcode", ui->premillingcodeLineEdit);
     args[ MILLARGS ].insert("post-milling-gcode", ui->postmillingcodeLineEdit);
 
