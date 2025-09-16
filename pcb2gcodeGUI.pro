@@ -1,6 +1,7 @@
-QT       += core gui svg
+QT       += core gui svg 
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+equals(QT_MAJOR_VERSION, 5): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 5): QT += svgwidgets
 
 isEmpty(PREFIX) {
     PREFIX = /usr/local
@@ -14,7 +15,7 @@ INSTALLS += target
 TEMPLATE = app
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
+    mainwindow.cpp \
     outputwindow.cpp \
     argaction.cpp \
     graphics_view_zoom.cpp \

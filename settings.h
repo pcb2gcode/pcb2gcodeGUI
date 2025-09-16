@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2015-2016 Nicola Corna (nicola@corna.info)
+ * Copyright (c) 2025 Enrique Condes (kosmerebel@gmail.com)
  *
  * This file is part of pcb2gcodeGUI.
  *
@@ -25,18 +26,18 @@
 
 #ifdef Q_OS_WIN
 #define PCB2GCODE_COMMAND_NAME "pcb2gcode.exe"
-#define PCB2GCODE_EXECUTABLE PCB2GCODE_COMMAND_NAME
 #else
 #define PCB2GCODE_COMMAND_NAME "pcb2gcode"
-#define PCB2GCODE_EXECUTABLE PCB2GCODE_COMMAND_NAME
 #endif
+#define PCB2GCODE_EXECUTABLE PCB2GCODE_COMMAND_NAME
 
-#define PCB2GCODE_GUI_VERSION "1.3.2-1"
+#define PCB2GCODE_GUI_VERSION "2.5.0"
 
 static const char *about_pcb2gcode_str = "pcb2gcode v%1<br>"
                                          "<a href='https://github.com/pcb2gcode/pcb2gcode'>https://github.com/pcb2gcode/pcb2gcode</a><br>";
 static const char *about_pcb2gcodegui_str = "pcb2gcodeGUI v%1<br>"
                                             "Created by Nicola Corna (nicola@corna.info)<br>"
+                                            "Supported by Enrique Condes (kosmerebel@gmail.com)<br>"
                                             "<a href='https://github.com/pcb2gcode/pcb2gcodeGUI'>https://github.com/pcb2gcode/pcb2gcodeGUI</a>";
 static const char *manual_link = "https://github.com/pcb2gcode/pcb2gcode/wiki/Manual";
 
@@ -51,6 +52,6 @@ static const QString excellon_file_filter = "Excellon files (*.drl *.drd *.dri *
 static const QString gcode_file_filter = "G-Code files (*.nc *.cnc *.ncc *.ecs *.ngc *.fan *.hnc);;All types (*.*)";
 static const QString text_file_filter = "Text files (*.*)";
 
-static const QVector<int> targetVersion(QVector<int>() << 1 << 3 << 2);
+static const QVector<int> targetVersion(QVector<int>() << 2 << 5 << 0);
 
 #endif // SETTINGS

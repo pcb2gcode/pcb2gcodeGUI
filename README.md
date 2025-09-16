@@ -8,12 +8,22 @@ A GUI for [pcb2gcode](https://github.com/pcb2gcode/pcb2gcode).
     
     sudo apt-get install build-essential git qt5-default libqt5svg5-dev
     git clone https://github.com/pcb2gcode/pcb2gcodeGUI.git
+
+Then follow the common steps
+
+### Build on Ubuntu Jammy Jellyfish or newer
+    sudo apt install build-essential git qmake6 qt6-base-dev qt6-svg-dev
+    git clone https://github.com/pcb2gcode/pcb2gcodeGUI.git
+
+Then follow the common steps
+
+### Common steps
     cd pcb2gcodeGUI/
     qmake
     make
     sudo make install
 
-Now follow the installations in the pcb2gcode's [README](https://github.com/pcb2gcode/pcb2gcode/blob/master/README.md)
+Now follow the installations in pcb2gcode's [README](https://github.com/pcb2gcode/pcb2gcode/blob/master/README.md)
 and install pcb2gcode.
 Now you can run pcb2gcodeGUI with
 

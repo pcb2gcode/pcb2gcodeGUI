@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2015-2016 Nicola Corna (nicola@corna.info)
+ * Copyright (c) 2025 Enrique Condes (kosmerebel@gmail.com)
  *
  * This file is part of pcb2gcodeGUI.
  *
@@ -32,7 +33,7 @@
 
 #include "settings.h"
 
-const QString MainWindow::names[] = { "File", "Common", "Mill", "Drill", "Outline", "Autoleveller" };
+const QString MainWindow::names[] = { "File", "Common", "Mill", "Drill", "Outline", "Autoleveller", "Optimisations" };
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -70,38 +71,57 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ FILEARGS ].insert("preamble", ui->preambleLineEdit);
     args[ FILEARGS ].insert("preamble-text", ui->preambletextLineEdit);
     args[ FILEARGS ].insert("postamble", ui->postambleLineEdit);
+    args[ FILEARGS ].insert("basename", ui->basenameLineEdit);
     args[ FILEARGS ].insert("output-dir", ui->outputDirLineEdit);
+    args[ FILEARGS ].insert("no-export", ui->noExportCheckBox, "false");
 
-    args[ COMMONARGS ].insert("metric", &inputUnits);
-    args[ COMMONARGS ].insert("metricoutput", &outputUnits);
+    args[ COMMONARGS ].insert("metric", &inputUnits, "false");
+    args[ COMMONARGS ].insert("metricoutput", &outputUnits, "false");
     args[ COMMONARGS ].insert("zsafe", ui->zsafeDoubleSpinBox);
     args[ COMMONARGS ].insert("zchange", ui->zchangeDoubleSpinBox);
-    args[ COMMONARGS ].insert("zchange-absolute", ui->zchangeAbsoluteCheckBox);
-    args[ COMMONARGS ].insert("nog64", ui->nog64CheckBox);
+    args[ COMMONARGS ].insert("zchange-absolute", ui->zchangeAbsoluteCheckBox, "false");
+    args[ COMMONARGS ].insert("nog64", ui->nog64CheckBox, "false");
     args[ COMMONARGS ].insert("tolerance", ui->toleranceDoubleSpinBox);
-    args[ COMMONARGS ].insert("optimise", ui->optimiseDoubleSpinBox);
-    args[ COMMONARGS ].insert("zero-start", ui->zerostartCheckBox);
-    args[ COMMONARGS ].insert("mirror-axis", ui->mirroraxisDoubleSpinBox);
-    args[ COMMONARGS ].insert("mirror-yaxis", ui->mirroryaxisCheckBox);
-    args[ COMMONARGS ].insert("tile-x", ui->tilexSpinBox);
-    args[ COMMONARGS ].insert("tile-y", ui->tileySpinBox);
+    args[ COMMONARGS ].insert("optimise", ui->optimiseDoubleSpinBox, "0.0025", "0.0001");
+    args[ COMMONARGS ].insert("zero-start", ui->zerostartCheckBox, "false");
+    args[ COMMONARGS ].insert("mirror-axis", ui->mirroraxisDoubleSpinBox, "0.0000");
+    args[ COMMONARGS ].insert("mirror-yaxis", ui->mirroryaxisCheckBox, "false");
+    args[ COMMONARGS ].insert("tile-x", ui->tilexSpinBox, "1");
+    args[ COMMONARGS ].insert("tile-y", ui->tileySpinBox, "1");
+    args[ COMMONARGS ].insert("x-offset", ui->offsetXDoubleSpinBox, "0.0000");
+    args[ COMMONARGS ].insert("y-offset", ui->offsetYDoubleSpinBox, "0.0000");
+    args[ COMMONARGS ].insert("spinup-time", ui->spinupDoubleSpinBox, "0.0010");
+    args[ COMMONARGS ].insert("spindown-time", ui->spindownDoubleSpinBox);
 
     args[ MILLARGS ].insert("zwork", ui->zworkDoubleSpinBox);
     args[ MILLARGS ].insert("mill-feed", ui->millfeedSpinBox);
     args[ MILLARGS ].insert("mill-speed", ui->millspeedSpinBox);
-    args[ MILLARGS ].insert("offset", ui->offsetDoubleSpinBox);
-    args[ MILLARGS ].insert("voronoi", ui->voronoiCheckBox);
-    args[ MILLARGS ].insert("extra-passes", ui->extrapassesSpinBox);
+    args[ MILLARGS ].insert("offset", ui->offsetDoubleSpinBox, "0.0000");
+    args[ MILLARGS ].insert("voronoi", ui->voronoiCheckBox, "false");
+    args[ MILLARGS ].insert("preserve-thermal-reliefs", ui->preserveThermalRelievesCheckBox, "true");
+    args[ MILLARGS ].insert("isolation-width", ui->isolationwidthDoubleSpinBox, "0.0000");
+    args[ MILLARGS ].insert("mill-diameters", ui->milldiametersLineEdit, "0mm", "0inch");
+    args[ MILLARGS ].insert("milling-overlap", ui->milloverlapLineEdit, "50%");
+    args[ MILLARGS ].insert("pre-milling-gcode", ui->premillingcodeLineEdit);
+    args[ MILLARGS ].insert("post-milling-gcode", ui->postmillingcodeLineEdit);
+    args[ MILLARGS ].insert("mill-vertfeed", ui->millvertfeedSpinBox, "0");
+    args[ MILLARGS ].insert("mill-infeed", ui->millinfeedDoubleSpinBox, "0.0000");
+    args[ MILLARGS ].insert("mill-feed-direction", ui->millingdirectionComboBox, "any");
+    args[ MILLARGS ].insert("invert-gerbers", ui->invertgerbersCheckBox, "false");
+    args[ MILLARGS ].insert("draw-gerber-lines", ui->drawgerberlinesCheckBox, "false");
 
     args[ DRILLARGS ].insert("zdrill", ui->zdrillDoubleSpinBox);
     args[ DRILLARGS ].insert("drill-feed", ui->drillfeedSpinBox);
     args[ DRILLARGS ].insert("drill-speed", ui->drillspeedSpinBox);
-    args[ DRILLARGS ].insert("milldrill", ui->milldrillCheckBox);
+    args[ DRILLARGS ].insert("min-milldrill-hole-diameter", ui->milldrillholediameterDoubleSpinBox, "0.0000");
     args[ DRILLARGS ].insert("milldrill-diameter", ui->milldrilldiameterDoubleSpinBox);
-    args[ DRILLARGS ].insert("drill-side", ui->drillsideComboBox);
-    args[ DRILLARGS ].insert("onedrill", ui->onedrillCheckBox);
-    args[ DRILLARGS ].insert("nog81", ui->nog81CheckBox);
-    args[ DRILLARGS ].insert("nog91-1", ui->nog911CheckBox);
+    args[ DRILLARGS ].insert("zmilldrill", ui->zmilldrillDoubleSpinBox);
+    args[ DRILLARGS ].insert("drill-side", ui->drillsideComboBox, "auto");
+    args[ DRILLARGS ].insert("onedrill", ui->onedrillCheckBox, "false");
+    args[ DRILLARGS ].insert("drills-available", ui->drillsAvailableLineEdit);
+    args[ DRILLARGS ].insert("nom6", ui->nom6CheckBox, "false");
+    args[ DRILLARGS ].insert("nog81", ui->nog81CheckBox, "false");
+    args[ DRILLARGS ].insert("nog91-1", ui->nog911CheckBox, "false");
 
     args[ OUTLINEARGS ].insert("cutter-diameter", ui->cutterdiameterDoubleSpinBox);
     args[ OUTLINEARGS ].insert("zcut", ui->zcutDoubleSpinBox);
@@ -109,11 +129,11 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ OUTLINEARGS ].insert("cut-speed", ui->cutspeedSpinBox);
     args[ OUTLINEARGS ].insert("cut-infeed", ui->cutinfeedDoubleSpinBox);
     args[ OUTLINEARGS ].insert("cut-vertfeed", ui->cutvertfeedSpinBox);
-    args[ OUTLINEARGS ].insert("bridges", ui->bridgesDoubleSpinBox);
+    args[ OUTLINEARGS ].insert("bridges", ui->bridgesDoubleSpinBox, "0.0000");
     args[ OUTLINEARGS ].insert("zbridges", ui->zbridgesDoubleSpinBox);
-    args[ OUTLINEARGS ].insert("bridgesnum", ui->bridgesnumSpinBox);
-    args[ OUTLINEARGS ].insert("cut-side", ui->cutsideComboBox);
-    args[ OUTLINEARGS ].insert("fill-outline", ui->filloutlineCheckBox);
+    args[ OUTLINEARGS ].insert("bridgesnum", ui->bridgesnumSpinBox, "2");
+    args[ OUTLINEARGS ].insert("cut-side", ui->cutsideComboBox, "auto");
+    args[ OUTLINEARGS ].insert("fill-outline", ui->filloutlineCheckBox, "true");
 
     args[ AUTOLEVELLERARGS ].insert("al-front", ui->alfrontCheckBox);
     args[ AUTOLEVELLERARGS ].insert("al-back", ui->albackCheckBox);
@@ -123,9 +143,17 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ AUTOLEVELLERARGS ].insert("al-probefeed", ui->alprobefeedSpinBox);
     args[ AUTOLEVELLERARGS ].insert("al-probe-on", ui->alprobeonLineEdit);
     args[ AUTOLEVELLERARGS ].insert("al-probe-off", ui->alprobeoffLineEdit);
-    args[ AUTOLEVELLERARGS ].insert("al-probecode", ui->alprobecodeLineEdit);
-    args[ AUTOLEVELLERARGS ].insert("al-probevar", ui->alprobevarSpinBox);
-    args[ AUTOLEVELLERARGS ].insert("al-setzzero", ui->alsetzzeroLineEdit);
+    args[ AUTOLEVELLERARGS ].insert("al-probecode", ui->alprobecodeLineEdit, "G31");
+    args[ AUTOLEVELLERARGS ].insert("al-probevar", ui->alprobevarSpinBox, "2002");
+    args[ AUTOLEVELLERARGS ].insert("al-setzzero", ui->alsetzzeroLineEdit, "G92 Z0");
+
+    args[ OPTIMISEARGS ].insert("eulerian-paths", ui->eulerianCheckBox, "true");
+    args[ OPTIMISEARGS ].insert("vectorial", ui->vectorialCheckBox, "true");
+    args[ OPTIMISEARGS ].insert("tsp-2opt", ui->tsp2optCheckBox, "true");
+    args[ OPTIMISEARGS ].insert("path-finding-limit", ui->pathfindinglimitSpinBox, "1");
+    args[ OPTIMISEARGS ].insert("g0-vertical-speed", ui->g0verticalspeedSpinBox, "1270", "50");
+    args[ OPTIMISEARGS ].insert("g0-horizontal-speed", ui->g0horizontalspeedSpinBox, "2540", "100");
+    args[ OPTIMISEARGS ].insert("backtrack", ui->backtrackSpinBox, "0");
 
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui->actionShow_command_line_arguments, SIGNAL(triggered(bool)), this, SLOT(menu_showCommandLineArguments()));
@@ -149,14 +177,22 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->outputDirPushButton, SIGNAL(clicked()), this, SLOT(getOutputDirectory()));
 
     connect(ui->voronoiCheckBox, SIGNAL(toggled(bool)), this, SLOT(voronoiEnable(bool)));
-    connect(ui->milldrillCheckBox, SIGNAL(toggled(bool)), ui->milldrilldiameterDoubleSpinBox, SLOT(setEnabled(bool)));
+    connect(ui->tsp2optCheckBox, SIGNAL(toggled(bool)), this, SLOT(milldirectionEnable(bool)));
+    connect(ui->milldrillholediameterDoubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(enableMilldrill(double)));
+    connect(ui->onedrillCheckBox, SIGNAL(toggled(bool)), this, SLOT(drillListDisable(bool)));
+    connect(ui->drillsAvailableLineEdit, SIGNAL(textChanged(QString)), this, SLOT(enableNoM6(QString)));
     connect(ui->softwareComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(updateAlCustomEnableState(QString)));
 
     connect(ui->startPushButton, SIGNAL(clicked()), this, SLOT(startPcb2gcode()));
     connect(ui->inputMetricRadioButton, SIGNAL(toggled(bool)), this, SLOT(changeMetricInputUnits(bool)));
 
     connect(&pcb2gcodeProcess, SIGNAL(finished(int)), this, SLOT(pcb2gcodeStopped()));
+    // Keep compatibility with Qt 5
+	#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     connect(&pcb2gcodeProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(pcb2gcodeError(QProcess::ProcessError)));
+    #else
+    connect(&pcb2gcodeProcess, SIGNAL(errorOccurred(QProcess::ProcessError)), this, SLOT(pcb2gcodeError(QProcess::ProcessError)));
+    #endif
     connect(&pcb2gcodeProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(printOutput()));
     connect(&pcb2gcodeProcess, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(changeKillCloseButtonText(QProcess::ProcessState)));
 
@@ -165,7 +201,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&pcb2gcodeProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(imagesGenerated(int,QProcess::ExitStatus)));
     connect(ui->imageComboBox, SIGNAL(activated(int)), this, SLOT(imageSelected(int)));
 
-    appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    appDataLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     if (appDataLocation.isEmpty())
         QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
     else
@@ -233,19 +269,43 @@ void MainWindow::checkPcb2gcodeVersion()
                                               " v%1.%2.%3, but v%4.%5.%6 has been detected.\n"
                                               "Some features may not work.");
 
-            warningBox->warning(this, tr("Old " PCB2GCODE_COMMAND_NAME " detected"),
-                                      warningMessage.arg(targetVersion[0]).arg(targetVersion[1]).arg(targetVersion[2])
-                                      .arg(versionNumbers[0]).arg(versionNumbers[1]).arg(versionNumbers[2]),
-                                      tr("Got it, let's try anyways"));
+            warningBox->setIcon(QMessageBox::Warning);
+            warningBox->setWindowTitle(tr("Old " PCB2GCODE_COMMAND_NAME " detected"));
+            warningBox->setText(warningMessage.arg(targetVersion[0]).arg(targetVersion[1]).arg(targetVersion[2])
+                .arg(versionNumbers[0]).arg(versionNumbers[1]).arg(versionNumbers[2]));
+            warningBox->addButton(tr("Got it, let's try anyways"), QMessageBox::AcceptRole);
             warningBox->setFixedSize(600,200);
+            warningBox->exec();
         }
     }
 }
 
-void MainWindow::voronoiEnable(bool enable)
-{
-    ui->extrapassesSpinBox->setEnabled(!enable);
+void MainWindow::voronoiEnable(bool enable) {
+    ui->isolationwidthDoubleSpinBox->setEnabled(!enable);
     ui->offsetDoubleSpinBox->setEnabled(!enable);
+    ui->preserveThermalRelievesCheckBox->setEnabled(enable);
+    if(!enable) {
+        ui->preserveThermalRelievesCheckBox->setChecked(true);
+    }
+}
+
+void MainWindow::milldirectionEnable(bool enable) {
+    ui->millingdirectionComboBox->setEnabled(!enable);
+}
+
+void MainWindow::enableMilldrill(double value) {
+    ui->milldrilldiameterDoubleSpinBox->setEnabled(value > 0.0);
+    ui->zmilldrillDoubleSpinBox->setEnabled(value > 0.0);
+}
+
+void MainWindow::drillListDisable(bool disable) {
+    ui->drillsAvailableLabel->setVisible(!disable);
+    ui->drillsAvailableLineEdit->setVisible(!disable);
+    ui->nom6CheckBox->setVisible(!disable);
+}
+
+void MainWindow::enableNoM6(QString text) {
+    ui->nom6CheckBox->setEnabled(text.trimmed().length()>0);
 }
 
 void MainWindow::bridgesAvailable()
@@ -484,21 +544,23 @@ void MainWindow::changeMetricInputUnits(bool metric)
                                                   ui->zcutDoubleSpinBox, ui->cutinfeedDoubleSpinBox,
                                                   ui->bridgesDoubleSpinBox, ui->zbridgesDoubleSpinBox, ui->alxDoubleSpinBox,
                                                   ui->alyDoubleSpinBox, ui->toleranceDoubleSpinBox, ui->optimiseDoubleSpinBox,
-                                                  ui->mirroraxisDoubleSpinBox };
+                                                  ui->mirroraxisDoubleSpinBox, ui->isolationwidthDoubleSpinBox, ui->offsetXDoubleSpinBox,
+                                                  ui->offsetYDoubleSpinBox, ui->milldrillholediameterDoubleSpinBox, ui->milldrilldiameterDoubleSpinBox,
+                                                  ui->zmilldrillDoubleSpinBox, ui->millinfeedDoubleSpinBox };
 
-    QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->cutvertfeedSpinBox, ui->alprobefeedSpinBox };
+    QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->cutvertfeedSpinBox, ui->alprobefeedSpinBox,
+                                ui->g0verticalspeedSpinBox, ui->g0horizontalspeedSpinBox, ui->backtrackSpinBox, ui->millvertfeedSpinBox };
 
     const unsigned int doubleSpinBoxesLen =  sizeof(doubleSpinBoxes) / sizeof(doubleSpinBoxes[0]);
     const unsigned int spinBoxesLen =  sizeof(spinBoxes) / sizeof(spinBoxes[0]);
     const double cfactor = metric ? 25.4 : 1/25.4;
-    const char *distance = metric ? " mm" : " in" ;
-    const char *speed = metric ? " mm/min" : " in/min" ;
+    const char *unit = metric ? " mm" : " in" ;
 
     for( unsigned int i = 0; i < doubleSpinBoxesLen; i++ )
-        adjustMetricImperial( doubleSpinBoxes[i], cfactor, distance );
+        adjustMetricImperial( doubleSpinBoxes[i], cfactor, unit );
 
     for( unsigned int i = 0; i < spinBoxesLen; i++ )
-        adjustMetricImperial( spinBoxes[i], cfactor, speed );
+        adjustMetricImperial( spinBoxes[i], cfactor, unit );
 }
 
 void MainWindow::adjustMetricImperial(QSpinBox *spinBox, const double cfactor, const QString suffix)
@@ -518,7 +580,7 @@ void MainWindow::adjustMetricImperial(QSpinBox *spinBox, const double cfactor, c
         spinBox->setValue( round( value * cfactor ) );
     }
 
-    spinBox->setSuffix(suffix);
+    spinBox->setSuffix(suffix + (spinBox->suffix().contains("/min",Qt::CaseInsensitive) ? "/min" : "/s"));
 }
 
 void MainWindow::adjustMetricImperial(QDoubleSpinBox *doubleSpinBox, const double cfactor, const QString suffix)
@@ -544,28 +606,30 @@ void MainWindow::adjustMetricImperial(QDoubleSpinBox *doubleSpinBox, const doubl
             doubleSpinBox->setDecimals(doubleSpinBox->decimals() - 1);
     }
 
-    doubleSpinBox->setSuffix(suffix);
+    doubleSpinBox->setSuffix(suffix + (doubleSpinBox->suffix().contains("/min",Qt::CaseInsensitive) ? "/min" : ""));
 }
 
 QStringList MainWindow::getCmdLineArguments()
 {
     QStringList arguments;
 
-    arguments += args[ FILEARGS ].getAllArgs("--", false);
-    arguments += args[ COMMONARGS ].getAllArgs("--", false);
+    arguments += args[ FILEARGS ].getAllArgs();
+    arguments += args[ COMMONARGS ].getAllArgs();
 
     if( !ui->frontLineEdit->text().isEmpty() || !ui->backLineEdit->text().isEmpty() )
-        arguments += args[ MILLARGS ].getAllArgs("--", false);
+        arguments += args[ MILLARGS ].getAllArgs();
 
     if( !ui->drillLineEdit->text().isEmpty() )
-        arguments += args[ DRILLARGS ].getAllArgs("--", false);
+        arguments += args[ DRILLARGS ].getAllArgs();
 
-    if( !ui->outlineLineEdit->text().isEmpty() || ui->milldrillCheckBox->isChecked() )
-        arguments += args[ OUTLINEARGS ].getAllArgs("--", false);
+    if( !ui->outlineLineEdit->text().isEmpty() || ui->milldrillholediameterDoubleSpinBox->value() > 0 )
+        arguments += args[ OUTLINEARGS ].getAllArgs();
 
     if ( (ui->alfrontCheckBox->isChecked() || ui->albackCheckBox->isChecked()) &&
          (!ui->frontLineEdit->text().isEmpty() || !ui->backLineEdit->text().isEmpty()) )
-        arguments += args[ AUTOLEVELLERARGS ].getAllArgs("--", false);
+        arguments += args[ AUTOLEVELLERARGS ].getAllArgs();
+    
+    arguments += args[ OPTIMISEARGS ].getAllArgs();
 
     return arguments;
 }
@@ -646,7 +710,7 @@ void MainWindow::pcb2gcodeError(QProcess::ProcessError error)
 
             case QProcess::ReadError:
                 outputTextEdit->appendHtml(tr("<font color=\"Red\">"
-                                              "An error occured while reading from pcb2gcode."
+                                              "An error occurred while reading from pcb2gcode."
                                               "Please report this error to the project manager."
                                               "</font>"));
                 break;
@@ -867,7 +931,7 @@ void MainWindow::saveConfFile(const QString filename)
 
         for( int i = COMMONARGS; i <= AUTOLEVELLERARGS; i++ )
         {
-            arguments = args[i].getAllArgs("", true);
+            arguments = args[i].getAllArgs(true);
             confFile.write( QString("# " + names[i] + " options\n").toLatin1() );
 
             for( QStringList::const_iterator j = arguments.begin(); j != arguments.constEnd(); j++ )
@@ -884,7 +948,7 @@ void MainWindow::saveConfFile(const QString filename)
 
 void MainWindow::saveDefaultConfFile()
 {
-    QString appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QString appDataLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
 
     if( appDataLocation.isEmpty() )
         QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
@@ -897,7 +961,7 @@ void MainWindow::saveDefaultConfFile()
 
 void MainWindow::loadDefaultConfFile()
 {
-    QString appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QString appDataLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     if( appDataLocation.isEmpty() )
         QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
     else
@@ -915,7 +979,7 @@ void MainWindow::resetDefaultConfFile()
                           tr("Are you sure you want to reset the default configuration?"),
                           QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes )
     {
-        appDataLocation = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+        appDataLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
         if( appDataLocation.isEmpty() )
             QMessageBox::information(this, tr("Error"), tr("Can't retrieve standard folder location"));
         else

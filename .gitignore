@@ -18,10 +18,12 @@
 *.pro.user.*
 *.moc
 moc_*.cpp
+moc_*.h
 qrc_*.cpp
 ui_*.h
 Makefile*
 *-build-*
+pcb2gcodegui_plugin_import.cpp
 
 # QtCreator
 
@@ -30,3 +32,8 @@ Makefile*
 #QtCtreator Qml
 *.qmlproject.user
 *.qmlproject.user.*
+
+# Output files and executables
+release/
+pcb2gcodeGUI
+pcb2gcode

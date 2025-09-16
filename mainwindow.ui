@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>907</width>
+    <width>1007</width>
     <height>709</height>
    </rect>
   </property>
@@ -42,7 +42,7 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>545</width>
+          <width>645</width>
           <height>600</height>
          </size>
         </property>
@@ -59,12 +59,12 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>1</number> <!-- Initially selected tab -->
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
         </property>
-        <widget class="QWidget" name="tab_3">
+        <widget class="QWidget" name="inOutTab">
          <attribute name="title">
           <string>Input/output</string>
          </attribute>
@@ -78,30 +78,19 @@
            </rect>
           </property>
           <layout class="QGridLayout" name="inputFilesGridLayout">
-           <item row="5" column="1">
-            <widget class="QLineEdit" name="preambletextLineEdit">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gcode text preamble file, inserted at the very beginning (before the preamble) as a comment. All the rounded parenthesis will be converted to angled parenthesis (due to gcode's comments limitations). You can use this to include the license header at the top of the gcode output files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="2">
-            <widget class="QPushButton" name="preambletextPushButton">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gcode text preamble file, inserted at the very beginning (before the preamble) as a comment. All the rounded parenthesis will be converted to angled parenthesis (due to gcode's comments limitations). You can use this to include the license header at the top of the gcode output files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Select file...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QPushButton" name="backPushButton">
+           <item row="0" column="0">
+            <widget class="QLabel" name="frontLabel">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Engrave the front side according to the given file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Select file...</string>
+              <string>Front:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="buddy">
+              <cstring>frontLineEdit</cstring>
              </property>
             </widget>
            </item>
@@ -122,37 +111,33 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="1">
-            <widget class="QLineEdit" name="drillLineEdit">
+           <item row="1" column="0">
+            <widget class="QLabel" name="backLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Convert the given file (containing drill sizes and positions) to G-code&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QPushButton" name="drillPushButton">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Convert the given file (containing drill sizes and positions) to G-code&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Engrave the front side according to the given file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Select file...</string>
+              <string>Back:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="buddy">
+              <cstring>backLineEdit</cstring>
              </property>
             </widget>
            </item>
-           <item row="4" column="2">
-            <widget class="QPushButton" name="preamblePushButton">
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="backLineEdit">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gcode preamble file, inserted at the very beginning&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Select file...</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Engrave the front side according to the given file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="2">
-            <widget class="QPushButton" name="outlinePushButton">
+           <item row="1" column="2">
+            <widget class="QPushButton" name="backPushButton">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cut out the board to the shape exposed in the given file. Typically, there is only a polygon in this gerber file. Alternatively, this file can contain a closed line chain (see outline -&amp;gt; fill-outline)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Engrave the front side according to the given file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>Select file...</string>
@@ -175,61 +160,53 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="backLabel">
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="outlineLineEdit">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Engrave the front side according to the given file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Back:</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="buddy">
-              <cstring>backLineEdit</cstring>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cut out the board to the shape exposed in the given file. Typically, there is only a polygon in this gerber file. Alternatively, this file can contain a closed line chain (see outline -&amp;gt; fill-outline)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
             </widget>
            </item>
-           <item row="6" column="2">
-            <widget class="QPushButton" name="postamblePushButton">
+           <item row="2" column="2">
+            <widget class="QPushButton" name="outlinePushButton">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gcode postamble file, inserted before M9 and M2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cut out the board to the shape exposed in the given file. Typically, there is only a polygon in this gerber file. Alternatively, this file can contain a closed line chain (see outline -&amp;gt; fill-outline)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>Select file...</string>
              </property>
             </widget>
            </item>
-           <item row="8" column="0">
-            <widget class="QLabel" name="outputDirLabel">
+           <item row="3" column="0">
+            <widget class="QLabel" name="drillLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output folder where the output files will be created&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Convert the given file (containing drill sizes and positions) to G-code&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Output folder:</string>
+              <string>Drill:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
              </property>
              <property name="buddy">
-              <cstring>outputDirLineEdit</cstring>
+              <cstring>drillLineEdit</cstring>
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="frontLabel">
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="drillLineEdit">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Engrave the front side according to the given file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Convert the given file (containing drill sizes and positions) to G-code&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QPushButton" name="drillPushButton">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Convert the given file (containing drill sizes and positions) to G-code&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Front:</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="buddy">
-              <cstring>frontLineEdit</cstring>
+              <string>Select file...</string>
              </property>
             </widget>
            </item>
@@ -256,13 +233,46 @@
              </property>
             </widget>
            </item>
-           <item row="8" column="2">
-            <widget class="QPushButton" name="outputDirPushButton">
+           <item row="4" column="2">
+            <widget class="QPushButton" name="preamblePushButton">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output folder where the output files will be created&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gcode preamble file, inserted at the very beginning&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Select folder...</string>
+              <string>Select file...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="preambletextLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gcode text preamble file, inserted at the very beginning (before the preamble) as a comment. All the rounded parenthesis will be converted to angled parenthesis (due to gcode's comments limitations). You can use this to include the license header at the top of the gcode output files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Preamble text:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="buddy">
+              <cstring>preambletextLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="preambletextLineEdit">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gcode text preamble file, inserted at the very beginning (before the preamble) as a comment. All the rounded parenthesis will be converted to angled parenthesis (due to gcode's comments limitations). You can use this to include the license header at the top of the gcode output files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="2">
+            <widget class="QPushButton" name="preambletextPushButton">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gcode text preamble file, inserted at the very beginning (before the preamble) as a comment. All the rounded parenthesis will be converted to angled parenthesis (due to gcode's comments limitations). You can use this to include the license header at the top of the gcode output files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Select file...</string>
              </property>
             </widget>
            </item>
@@ -289,56 +299,13 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
-            <widget class="QLineEdit" name="outlineLineEdit">
+           <item row="6" column="2">
+            <widget class="QPushButton" name="postamblePushButton">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cut out the board to the shape exposed in the given file. Typically, there is only a polygon in this gerber file. Alternatively, this file can contain a closed line chain (see outline -&amp;gt; fill-outline)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="preambletextLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gcode text preamble file, inserted at the very beginning (before the preamble) as a comment. All the rounded parenthesis will be converted to angled parenthesis (due to gcode's comments limitations). You can use this to include the license header at the top of the gcode output files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gcode postamble file, inserted before M9 and M2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Preamble text:</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="buddy">
-              <cstring>preambletextLineEdit</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLineEdit" name="backLineEdit">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Engrave the front side according to the given file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="1">
-            <widget class="QLineEdit" name="outputDirLineEdit">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output folder where the output files will be created&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="drillLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Convert the given file (containing drill sizes and positions) to G-code&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Drill:</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="buddy">
-              <cstring>drillLineEdit</cstring>
+              <string>Select file...</string>
              </property>
             </widget>
            </item>
@@ -349,7 +316,73 @@
              </property>
             </widget>
            </item>
-           <item row="9" column="0" colspan="3">
+           <item row="8" column="0">
+            <widget class="QLabel" name="basenameLabel">
+            <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prefix for default output file names&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Basename:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="buddy">
+              <cstring>basenameLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLineEdit" name="basenameLineEdit">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prefix for default output file names&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="outputDirLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output folder where the output files will be created&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Output folder:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="buddy">
+              <cstring>outputDirLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLineEdit" name="outputDirLineEdit">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output folder where the output files will be created&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="2">
+            <widget class="QPushButton" name="outputDirPushButton">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output folder where the output files will be created&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Select folder...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0" colspan="2">
+            <widget class="QCheckBox" name="noExportCheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--no-export&lt;/span&gt;&lt;/p&gt;&lt;p&gt;skip the exporting process&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Skip gcode export</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0" colspan="3">
             <spacer name="verticalSpacer_2">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -654,14 +687,14 @@
               <double>0.000010000000000</double>
              </property>
              <property name="value">
-              <double>0.000010000000000</double>
+              <double>0.00254000000000</double>
              </property>
             </widget>
            </item>
            <item row="8" column="0" colspan="2">
             <widget class="QCheckBox" name="zerostartCheckBox">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zero-start&lt;/span&gt;&lt;/p&gt;&lt;p&gt;set the starting point of the project at (0,0). With this option the projet will be between (0,0) and (max_x_value, max_y_value) (positive values)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zero-start&lt;/span&gt;&lt;/p&gt;&lt;p&gt;set the starting point of the project at (0,0). With this option the project will be between (0,0) and (max_x_value, max_y_value) (positive values)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>Start at (0,0)</string>
@@ -674,7 +707,7 @@
            <item row="9" column="0">
             <widget class="QLabel" name="mirroraxisLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-axis&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Distance from zero axis to flip the bcb around&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-axis&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Distance from zero axis to flip the PCB around&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>Axis mirror offset</string>
@@ -690,7 +723,7 @@
               <bool>true</bool>
              </property>
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-axis&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Distance from zero axis to flip the bcb around&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mirror-axis&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Distance from zero axis to flip the PCB around&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="suffix">
               <string> mm </string>
@@ -788,7 +821,199 @@
              </item>
             </layout>
            </item>
-           <item row="12" column="0" colspan="2">
+           <item row="12" column="0">
+            <widget class="QLabel" name="axisoffsetLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--x-offset&lt;/span&gt;, &lt;span style=&quot; font-style:italic;&quot;&gt;--y-offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Offset from the origin in the X/Y axis&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Offset from origin</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="1">
+            <layout class="QHBoxLayout" name="axisoffsetHorizontalLayout">
+             <item>
+              <widget class="QLabel" name="axisoffsetxLabel">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--x-offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;offset the origin on the x-axis this distance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>x</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="buddy">
+                <cstring>offsetXDoubleSpinBox</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="offsetXDoubleSpinBox">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--x-offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;offset the origin on the x-axis this distance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> mm </string>
+               </property>
+               <property name="decimals">
+                 <number>3</number>
+               </property>
+               <property name="minimum">
+                 <double>-10000.000000000000000</double>
+               </property>
+               <property name="maximum">
+                 <double>10000.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                 <double>1.000000000000000</double>
+               </property>
+               <property name="value">
+                 <double>0.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="axisoffsetyLabel">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--y-offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;offset the origin on the y-axis this distance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>y</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="buddy">
+                <cstring>offsetYDoubleSpinBox</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="offsetYDoubleSpinBox">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--y-offset&lt;/span&gt;&lt;/p&gt;&lt;p&gt;offset the origin on the y-axis this distance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> mm </string>
+               </property>
+               <property name="decimals">
+                 <number>3</number>
+               </property>
+               <property name="minimum">
+                 <double>-10000.000000000000000</double>
+               </property>
+               <property name="maximum">
+                 <double>10000.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                 <double>1.000000000000000</double>
+               </property>
+               <property name="value">
+                 <double>0.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="13" column="0">
+            <widget class="QLabel" name="spindleTimesLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--spinup-time&lt;/span&gt;, &lt;span style=&quot; font-style:italic;&quot;&gt;--spindown-time&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Time required for the spindle to reach speed/stop completely&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Spindle times</string>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="1">
+            <layout class="QHBoxLayout" name="spindletimesHorizontalLayout">
+             <item>
+              <widget class="QLabel" name="spinupLabel">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--spinup-time&lt;/span&gt;&lt;/p&gt;&lt;p&gt;time required to the spindle to reach the correct speed&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>spinup</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="buddy">
+                <cstring>spinupDoubleSpinBox</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="spinupDoubleSpinBox">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--spinup-time&lt;/span&gt;&lt;/p&gt;&lt;p&gt;time required to the spindle to reach the correct speed&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> s </string>
+               </property>
+               <property name="decimals">
+                 <number>3</number>
+               </property>
+               <property name="minimum">
+                 <double>0.001</double>
+               </property>
+               <property name="maximum">
+                 <double>20.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                 <double>0.01</double>
+               </property>
+               <property name="value">
+                 <double>0.001</double>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="spindownLabel">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--spindown-time&lt;/span&gt;&lt;/p&gt;&lt;p&gt;time required for the spindle to return to 0 rpm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>spindown</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="buddy">
+                <cstring>spindownDoubleSpinBox</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="spindownDoubleSpinBox">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--spindown-time&lt;/span&gt;&lt;/p&gt;&lt;p&gt;time required for the spindle to return to 0 rpm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="suffix">
+                <string> s </string>
+               </property>
+               <property name="decimals">
+                 <number>3</number>
+               </property>
+               <property name="minimum">
+                 <double>0.001</double>
+               </property>
+               <property name="maximum">
+                 <double>20.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                 <double>0.01</double>
+               </property>
+               <property name="value">
+                 <double>0.001</double>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="14" column="0" colspan="2">
             <spacer name="verticalSpacer_7">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -824,35 +1049,16 @@
            <property name="verticalSpacing">
             <number>6</number>
            </property>
-           <item row="5" column="1">
-            <widget class="QSpinBox" name="extrapassesSpinBox">
+           <item row="0" column="0">
+            <widget class="QLabel" name="zworkLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--extra-passes&lt;/span&gt;&lt;/p&gt;&lt;p&gt;number of additional isolation passes For each extra pass, engraving is repeated with the offset width increased by half its original value, creating wider isolation areas. This option is ignored when --voronoi is in use.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zwork&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Z-coordinate at which engraving happens&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QDoubleSpinBox" name="offsetDoubleSpinBox">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--offset * 2&lt;/span&gt;&lt;/p&gt;&lt;p&gt;distance by which the tool movement will be outset from the contours in the gerber file to be engraved. If you want to obtain a PCB as similar as possible to the original file, you should set this value to half of the tool diameter. If this distance can't be satisfied because copper areas are too close, a warning will be printed and the line will be drawn between the areas. This behavior can be used to get voronoi-style (flood-filling) areas; sim‐ply set the offset to a large value (like 1 inch). When the vectorial mode is in use, --voronoi is preferred.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <property name="text">
+              <string>Milling depth</string>
              </property>
-             <property name="suffix">
-              <string> mm</string>
-             </property>
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="minimum">
-              <double>0.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.050000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.100000000000000</double>
+             <property name="buddy">
+              <cstring>zworkDoubleSpinBox</cstring>
              </property>
             </widget>
            </item>
@@ -881,6 +1087,19 @@
              </property>
             </widget>
            </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="millfeedLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mill-feed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Feed rate at which engraving takes place (horizontal speed)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Horizontal mill speed</string>
+             </property>
+             <property name="buddy">
+              <cstring>millfeedSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
            <item row="1" column="1">
             <widget class="QSpinBox" name="millfeedSpinBox">
              <property name="toolTip">
@@ -900,45 +1119,6 @@
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="offsetLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--offset * 2&lt;/span&gt;&lt;/p&gt;&lt;p&gt;distance by which the tool movement will be outset from the contours in the gerber file to be engraved. If you want to obtain a PCB as similar as possible to the original file, you should set this value to half of the tool diameter. If this distance can't be satisfied because copper areas are too close, a warning will be printed and the line will be drawn between the areas. This behavior can be used to get voronoi-style (flood-filling) areas; sim‐ply set the offset to a large value (like 1 inch). When the vectorial mode is in use, --voronoi is preferred.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Toolpath offset</string>
-             </property>
-             <property name="buddy">
-              <cstring>offsetDoubleSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="millfeedLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mill-feed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Feed rate at which engraving takes place (horizontal speed)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Horizontal mill speed</string>
-             </property>
-             <property name="buddy">
-              <cstring>millfeedSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="zworkLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zwork&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Z-coordinate at which engraving happens&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Milling depth</string>
-             </property>
-             <property name="buddy">
-              <cstring>zworkDoubleSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
            <item row="2" column="0">
             <widget class="QLabel" name="millspeedLabel">
              <property name="toolTip">
@@ -949,19 +1129,6 @@
              </property>
              <property name="buddy">
               <cstring>millspeedSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="extrapassesLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--extra-passes&lt;/span&gt;&lt;/p&gt;&lt;p&gt;number of additional isolation passes For each extra pass, engraving is repeated with the offset width increased by half its original value, creating wider isolation areas. This option is ignored when --voronoi is in use.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Extra passes</string>
-             </property>
-             <property name="buddy">
-              <cstring>extrapassesSpinBox</cstring>
              </property>
             </widget>
            </item>
@@ -997,7 +1164,325 @@
              </property>
             </widget>
            </item>
-           <item row="6" column="0" colspan="2">
+           <item row="3" column="1">
+            <widget class="QCheckBox" name="preserveThermalRelievesCheckBox">
+              <property name="enabled">
+                <bool>false</bool>
+              </property>
+              <property name="checked">
+                <bool>true</bool>
+             </property>
+              <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--preserve-thermal-reliefs&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Generate mill paths for thermal reliefs in voronoi mode.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+                <string>Preserve thermal reliefs</string>
+              </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="offsetLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--offset * 2&lt;/span&gt;&lt;/p&gt;&lt;p&gt;distance by which the tool movement will be outset from the contours in the gerber file to be engraved. If you want to obtain a PCB as similar as possible to the original file, you should set this value to half of the tool diameter. If this distance can't be satisfied because copper areas are too close, a warning will be printed and the line will be drawn between the areas. This behavior can be used to get voronoi-style (flood-filling) areas; sim‐ply set the offset to a large value (like 1 inch). When the vectorial mode is in use, --voronoi is preferred.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Toolpath offset</string>
+             </property>
+             <property name="buddy">
+              <cstring>offsetDoubleSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QDoubleSpinBox" name="offsetDoubleSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--offset * 2&lt;/span&gt;&lt;/p&gt;&lt;p&gt;distance by which the tool movement will be outset from the contours in the gerber file to be engraved. If you want to obtain a PCB as similar as possible to the original file, you should set this value to half of the tool diameter. If this distance can't be satisfied because copper areas are too close, a warning will be printed and the line will be drawn between the areas. This behavior can be used to get voronoi-style (flood-filling) areas; sim‐ply set the offset to a large value (like 1 inch). When the vectorial mode is in use, --voronoi is preferred.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm</string>
+             </property>
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="minimum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.050000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="isolationwidthLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--isolation-width&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Minimum isolating separation between copper surfaces. This option is ignored when &lt;em&gt;voronoi&lt;/em&gt; is in use.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Isolation width</string>
+             </property>
+             <property name="buddy">
+              <cstring>isolationwidthDoubleSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QDoubleSpinBox" name="isolationwidthDoubleSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--isolation-width&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Minimum isolating separation between copper surfaces. This option is ignored when &lt;em&gt;voronoi&lt;/em&gt; is in use.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm</string>
+             </property>
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="minimum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.050000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="milldiametersLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mill-diameters&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Comma-separated list of available mill bits. Each entry must consist of a numeric value followed by a unit(inch,mm,m). Used in the order that they are provided&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Available mill diameters</string>
+             </property>
+             <property name="buddy">
+              <cstring>milldiametersLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="milldiametersLineEdit">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mill-diameters&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Comma-separated list of available mill bits. Each entry must consist of a numeric value followed by a unit(inch,mm,m). Used in the order that they are provided&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="placeholderText">
+              <string>0mm,0.001inch,0.4mm</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="milloverlapLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--milling-overlap&lt;/span&gt;&lt;/p&gt;&lt;p&gt;How much to overlap milling passes, from 0% to 100% or an absolute length&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Milling overlap</string>
+             </property>
+             <property name="buddy">
+              <cstring>milloverlapLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLineEdit" name="milloverlapLineEdit">
+              <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--milling-overlap&lt;/span&gt;&lt;/p&gt;&lt;p&gt;How much to overlap milling passes, from 0% to 100% or an absolute length&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="placeholderText">
+              <string>50%/12mm/0.3in</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="premillingcodeLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--pre-milling-gcode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;custom gcode inserted before the start of milling each trace (used to activate pump or fan or laser connected to fan).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Milling start custom command</string>
+             </property>
+             <property name="buddy">
+              <cstring>premillingcodeLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLineEdit" name="premillingcodeLineEdit">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--pre-milling-gcode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;custom gcode inserted before the start of milling each trace (used to activate pump or fan or laser connected to fan).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="placeholderText">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="postmillingcodeLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--post-milling-gcode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;custom gcode inserted after the end of milling each trace (used to deactivate pump or fan or laser connected to fan).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Milling end custom command</string>
+             </property>
+             <property name="buddy">
+              <cstring>postmillingcodeLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLineEdit" name="postmillingcodeLineEdit">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--post-milling-gcode&lt;/span&gt;&lt;/p&gt;&lt;p&gt;custom gcode inserted after the end of milling each trace (used to deactivate pump or fan or laser connected to fan).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="placeholderText">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="millvertfeedLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mill-vertfeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;vertical feed while isolating in [in/min] or [mm/min].&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Milling vertical feed</string>
+             </property>
+             <property name="buddy">
+              <cstring>millvertfeedSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="1">
+            <widget class="QSpinBox" name="millvertfeedSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mill-vertfeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;vertical feed while isolating in [in/min] or [mm/min].&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm/min</string>
+             </property>
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+             <property name="singleStep">
+              <number>10</number>
+             </property>
+             <property name="value">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <widget class="QLabel" name="millinfeedLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mill-infeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Maximum milling depth per pass. PCB may be cut in multiple passes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Milling depth per pass</string>
+             </property>
+             <property name="buddy">
+              <cstring>millinfeedDoubleSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="1">
+            <widget class="QDoubleSpinBox" name="millinfeedDoubleSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mill-infeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Maximum milling depth per pass. PCB may be cut in multiple passes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm</string>
+             </property>
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="minimum">
+              <double>-1000.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.001000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.0000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="0">
+            <widget class="QLabel" name="millingdirectionLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mill-feed-direction&lt;/span&gt;&lt;/p&gt;&lt;p&gt;In which direction should all milling occur. Can't use it together with tsp-2opt optimization&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Milling direction</string>
+             </property>
+             <property name="buddy">
+              <cstring>millingdirectionComboBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="1" colspan="2">
+            <widget class="QComboBox" name="millingdirectionComboBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mill-feed-direction&lt;/span&gt;&lt;/p&gt;&lt;p&gt;In which direction should all milling occur. Can't use it together with tsp-2opt optimization&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <item>
+              <property name="text">
+               <string>any</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>clockwise</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>anticlockwise</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="13" column="0">
+            <widget class="QCheckBox" name="invertgerbersCheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;--invert-gerbers&lt;/p&gt;&lt;p&gt;Invert polarity of front and back gerbers, causing the milling to occur inside the shapes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Invert gerbers</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="0">
+            <widget class="QCheckBox" name="drawgerberlinesCheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;--draw-gerber-lines&lt;/p&gt;&lt;p&gt;Draw lines in the gerber file as just lines and not as filled in shapes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Draw gerbers lines</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="15" column="0" colspan="2">
             <spacer name="verticalSpacer_3">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -1033,16 +1518,6 @@
            <property name="verticalSpacing">
             <number>6</number>
            </property>
-           <item row="7" column="0">
-            <widget class="QCheckBox" name="nog81CheckBox">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--nog81&lt;/span&gt;&lt;/p&gt;&lt;p&gt;replace G81 with G0+G1. This option makes the gcode compatible with low-end cnc controllers (like grbl), but also makes it bigger and less clean&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Remove G81 from G-code</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="zdrillLabel">
              <property name="toolTip">
@@ -1056,49 +1531,7 @@
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
-            <widget class="QCheckBox" name="milldrillCheckBox">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--milldrill&lt;/span&gt;&lt;/p&gt;&lt;p&gt;If milldrill is given, the milling head will be used to drill the holes in the PCB. Holes up to the size of the milling head will be drilled regularly (possibly creating a bigger hole than intended), the other holes are created by moving the head in circles using the feed and infeed parameters used in cutting&lt;/p&gt;&lt;p&gt;Remember that you have to set also &amp;quot;outline&amp;quot; parameters if you set this option&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="text">
-              <string>Mill holes</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="drillspeedLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drill-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Spindle speed during drilling&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Spindle speed</string>
-             </property>
-             <property name="buddy">
-              <cstring>drillspeedSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="drillfeedLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drill-feed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Feed rate for drilling (vertical speed)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Vertical drill speed</string>
-             </property>
-             <property name="buddy">
-              <cstring>drillfeedSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
+           <item row="0" column="1" colspan="2">
             <widget class="QDoubleSpinBox" name="zdrillDoubleSpinBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zdrill&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Z value down to which will be drilled&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1123,20 +1556,20 @@
              </property>
             </widget>
            </item>
-           <item row="6" column="0">
-            <widget class="QCheckBox" name="onedrillCheckBox">
+           <item row="1" column="0">
+            <widget class="QLabel" name="drillfeedLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;--onedrill&lt;/p&gt;&lt;p&gt;Use only one drill bit size&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drill-feed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Feed rate for drilling (vertical speed)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Use a single drill bit size</string>
+              <string>Vertical drill speed</string>
              </property>
-             <property name="checked">
-              <bool>false</bool>
+             <property name="buddy">
+              <cstring>drillfeedSpinBox</cstring>
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
+           <item row="1" column="1" colspan="2">
             <widget class="QSpinBox" name="drillfeedSpinBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drill-feed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Feed rate for drilling (vertical speed)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1155,7 +1588,20 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
+           <item row="2" column="0">
+            <widget class="QLabel" name="drillspeedLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drill-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Spindle speed during drilling&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Spindle speed</string>
+             </property>
+             <property name="buddy">
+              <cstring>drillspeedSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
             <widget class="QSpinBox" name="drillspeedSpinBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drill-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Spindle speed during drilling&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1174,7 +1620,20 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="1">
+           <item row="3" column="0">
+            <widget class="QLabel" name="drillsideLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drill-side&lt;/span&gt;&lt;/p&gt;&lt;p&gt;choose the drill side. Valid choices are front, back or auto (default). In auto mode the drill side is automatically chosen (always front unless only the back side is specified)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Board side for drilling</string>
+             </property>
+             <property name="buddy">
+              <cstring>drillsideComboBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1" colspan="2">
             <widget class="QComboBox" name="drillsideComboBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drill-side&lt;/span&gt;&lt;/p&gt;&lt;p&gt;choose the drill side. Valid choices are front, back or auto (default). In auto mode the drill side is automatically chosen (always front unless only the back side is specified)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1196,20 +1655,198 @@
              </item>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="drillsideLabel">
+           <item row="4" column="0" colspan="3">
+            <widget class="QGroupBox" name="milldrillGroupBox">
+              <property name="title">
+                <string>Milldrill (hole milling)</string>
+              </property>
+              <layout class="QGridLayout" name="milldrillGridLayout">
+                <property name="horizontalSpacing">
+                  <number>12</number>
+                </property>
+                <property name="verticalSpacing">
+                  <number>3</number>
+                </property>
+                <item row="0" column="0">
+                  <widget class="QLabel" name="milldrillEnableLabel">
+                  <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--min-milldrill-hole-diameter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;minimum hole width for milldrilling. Holes smaller than this are drilled. Zero to disable milldrilling.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="text">
+                    <string>Minimum diameter</string>
+                  </property>
+                  <property name="buddy">
+                    <cstring>milldrillholediameterDoubleSpinBox</cstring>
+                  </property>
+                  </widget>
+                </item>
+                <item row="0" column="1" colspan="2">
+                  <widget class="QDoubleSpinBox" name="milldrillholediameterDoubleSpinBox">
+                  <property name="enabled">
+                    <bool>true</bool>
+                  </property>
+                  <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--min-milldrill-hole-diameter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;minimum hole width for milldrilling. Holes smaller than this are drilled. Zero to disable milldrilling.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="suffix">
+                    <string> mm</string>
+                  </property>
+                  <property name="decimals">
+                    <number>3</number>
+                  </property>
+                  <property name="maximum">
+                    <double>100.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                    <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                    <double>0</double>
+                  </property>
+                  </widget>
+                </item>
+                <item row="1" column="0">
+                  <widget class="QLabel" name="milldrillLabel">
+                  <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--milldrill-diameter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;diameter of milling head which is used with --milldrill; the default value is same as --cutter-diameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="text">
+                    <string>Tool diameter</string>
+                  </property>
+                  <property name="buddy">
+                    <cstring>milldrilldiameterDoubleSpinBox</cstring>
+                  </property>
+                  </widget>
+                </item>
+                <item row="1" column="1" colspan="2">
+                  <widget class="QDoubleSpinBox" name="milldrilldiameterDoubleSpinBox">
+                  <property name="enabled">
+                    <bool>false</bool>
+                  </property>
+                  <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--milldrill-diameter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;diameter of milling head which is used with --milldrill; the default value is same as --cutter-diameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="suffix">
+                    <string> mm</string>
+                  </property>
+                  <property name="decimals">
+                    <number>3</number>
+                  </property>
+                  <property name="maximum">
+                    <double>100.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                    <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                    <double>3.000000000000000</double>
+                  </property>
+                  </widget>
+                </item>
+                <item row="2" column="0">
+                  <widget class="QLabel" name="zmilldrillLabel">
+                  <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zmilldrill&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Z value down to which will be milldrilled&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="text">
+                    <string>Depth</string>
+                  </property>
+                  <property name="buddy">
+                    <cstring>zdrillDoubleSpinBox</cstring>
+                  </property>
+                  </widget>
+                </item>
+                <item row="2" column="1" colspan="2">
+                  <widget class="QDoubleSpinBox" name="zmilldrillDoubleSpinBox">
+                  <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--zmilldrill&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Z value down to which will be milldrilled&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="enabled">
+                    <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                    <string> mm</string>
+                  </property>
+                  <property name="decimals">
+                    <number>3</number>
+                  </property>
+                  <property name="minimum">
+                    <double>-1000.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                    <double>0.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                    <double>0.050000000000000</double>
+                  </property>
+                  <property name="value">
+                    <double>-2.500000000000000</double>
+                  </property>
+                  </widget>
+                </item>
+              </layout>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QCheckBox" name="onedrillCheckBox">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drill-side&lt;/span&gt;&lt;/p&gt;&lt;p&gt;choose the drill side. Valid choices are front, back or auto (default). In auto mode the drill side is automatically chosen (always front unless only the back side is specified)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;--onedrill&lt;/p&gt;&lt;p&gt;Use only one drill bit size&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Board side for drilling</string>
+              <string>Use a single drill bit size</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="drillsAvailableLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drills-available&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Comma-separated list of available drills. Each entry must consist of a numeric value followed by a unit(inch,mm,m)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Available drills list</string>
              </property>
              <property name="buddy">
-              <cstring>drillsideComboBox</cstring>
+              <cstring>drillsAvailableLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="drillsAvailableLineEdit">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--drills-available&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Comma-separated list of available drills. Each entry must consist of a numeric value followed by a unit(inch,mm,m)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="placeholderText">
+              <string>0.5mm,1.75mm,0.125inch,0.004m</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QCheckBox" name="nom6CheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--nom6&lt;/span&gt;&lt;/p&gt;&lt;p&gt;do not emit M6 on tool changes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Remove M6 from G-code</string>
              </property>
             </widget>
            </item>
            <item row="8" column="0">
+            <widget class="QCheckBox" name="nog81CheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--nog81&lt;/span&gt;&lt;/p&gt;&lt;p&gt;replace G81 with G0+G1. This option makes the gcode compatible with low-end cnc controllers (like grbl), but also makes it bigger and less clean&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Remove G81 from G-code</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
             <widget class="QCheckBox" name="nog911CheckBox">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--nog91-1&lt;/span&gt;&lt;/p&gt;&lt;p&gt;do not explicitly set G91.1 (incremental arc mode distance) in drill headers. Some controllers (like Roland's) does not support G91.1 and they can wrongly interpret it as G91 (relative distance). Since the default mode is usually &amp;quot;incremental&amp;quot;, you can safely remove G91.1 in most of the cases&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1219,45 +1856,7 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="milldrillLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--milldrill-diameter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;diameter of milling head which is used with --milldrill; the default value is same as --cutter-diameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Tool diameter for hole milling</string>
-             </property>
-             <property name="buddy">
-              <cstring>milldrilldiameterDoubleSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QDoubleSpinBox" name="milldrilldiameterDoubleSpinBox">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--milldrill-diameter&lt;/span&gt;&lt;/p&gt;&lt;p&gt;diameter of milling head which is used with --milldrill; the default value is same as --cutter-diameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="suffix">
-              <string> mm</string>
-             </property>
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.100000000000000</double>
-             </property>
-             <property name="value">
-              <double>3.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="0" colspan="2">
+           <item row="10" column="0" colspan="2">
             <spacer name="verticalSpacer_4">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -1500,7 +2099,7 @@
            <item row="6" column="0">
             <widget class="QLabel" name="bridgesnumLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridgesnum&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sets the numer of bridges to be created (--bridgesnum bridges for each closed line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridgesnum&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sets the number of bridges to be created (--bridgesnum bridges for each closed line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string>Number of bridges</string>
@@ -1510,7 +2109,7 @@
            <item row="6" column="1">
             <widget class="QSpinBox" name="bridgesnumSpinBox">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridgesnum&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sets the numer of bridges to be created (--bridgesnum bridges for each closed line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--bridgesnum&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sets the number of bridges to be created (--bridgesnum bridges for each closed line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="minimum">
               <number>0</number>
@@ -1683,6 +2282,19 @@
            <property name="verticalSpacing">
             <number>6</number>
            </property>
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="alfrontCheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-front&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Enable the autoleveller for the front side&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Enable autoleveller (front)</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
            <item row="1" column="0">
             <widget class="QCheckBox" name="albackCheckBox">
              <property name="toolTip">
@@ -1696,10 +2308,23 @@
              </property>
             </widget>
            </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="softwareLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--software&lt;/span&gt;&lt;/p&gt;&lt;p&gt;the height probing commands are different from software to software. Use this option to select the used software; currently supported programs are LinuxCNC, Mach3, Mach4 and custom. With custom you can specify al-probecode, al-probevar and al-setzzero, in order to generate gcode for an unsupported software. For compatibility reasons, the custom gcode is much bigger (3-4 times) than the gcode for a supported software.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Control software</string>
+             </property>
+             <property name="buddy">
+              <cstring>softwareComboBox</cstring>
+             </property>
+            </widget>
+           </item>
            <item row="2" column="1">
             <widget class="QComboBox" name="softwareComboBox">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--software&lt;/span&gt;&lt;/p&gt;&lt;p&gt;the height probing commands are different from software to software. Use this option to select the used software; currently supported softwares are LinuxCNC, Mach3, Mach4 and custom. With custom you can specify al-probecode, al-probevar and al-setzzero, in order to generate gcode for an unsupported software. For compatibility reasons, the custom gcode is much bigger (3-4 times) than the gcode for a supported software.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--software&lt;/span&gt;&lt;/p&gt;&lt;p&gt;the height probing commands are different from software to software. Use this option to select the used software; currently supported programs are LinuxCNC, Mach3, Mach4 and custom. With custom you can specify al-probecode, al-probevar and al-setzzero, in order to generate gcode for an unsupported software. For compatibility reasons, the custom gcode is much bigger (3-4 times) than the gcode for a supported software.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <item>
               <property name="text">
@@ -1723,19 +2348,16 @@
              </item>
             </widget>
            </item>
-           <item row="10" column="0">
-            <widget class="QLabel" name="alsetzzeroLabel">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
+           <item row="3" column="0">
+            <widget class="QLabel" name="alxLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-setzzero&lt;/span&gt;&lt;/p&gt;&lt;p&gt;custom gcode for setting the actual height as the zero of the Z axis. For example, LinuxCNC uses G10 L20 P0 Z0 while Mach3, Mach4 and TurboCNC use G92 Z0. If unspecified, G92 Z0 will be used. This option is relevant only when --software=custom&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-x&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Width of the probing on the X axis. Higher values increase the levelling precision but also increases the probing time (but not the milling time)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>G-code for zero setting (Z axis)</string>
+              <string>Probe grid pitch (X)</string>
              </property>
              <property name="buddy">
-              <cstring>alsetzzeroLineEdit</cstring>
+              <cstring>alxDoubleSpinBox</cstring>
              </property>
             </widget>
            </item>
@@ -1761,41 +2383,106 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="alxLabel">
+           <item row="4" column="0">
+            <widget class="QLabel" name="alyLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-x&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Width of the probing on the X axis. Higher values increase the levelling precision but also increases the probing time (but not the milling time)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-y&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Width of the probing on the Y axis. Higher values increase the levelling precision but also increases the probing time (but not the milling time)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Probe grid pitch (X)</string>
+              <string>Probe grid pitch (Y)</string>
              </property>
              <property name="buddy">
-              <cstring>alxDoubleSpinBox</cstring>
+              <cstring>alyDoubleSpinBox</cstring>
              </property>
             </widget>
            </item>
-           <item row="9" column="1">
-            <widget class="QSpinBox" name="alprobevarSpinBox">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
+           <item row="4" column="1">
+            <widget class="QDoubleSpinBox" name="alyDoubleSpinBox">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-probevar&lt;/span&gt;&lt;/p&gt;&lt;p&gt;custom Z probe result variable. For example, LinuxCNC uses 5063 while Mach3, Mach4 and TurboCNC use 2002. If unspecified, 2002 will be used. This option is relevant only when --software=custom&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-y&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Width of the probing on the Y axis. Higher values increase the levelling precision but also increases the probing time (but not the milling time)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="suffix">
-              <string/>
+              <string> mm</string>
              </property>
-             <property name="prefix">
-              <string/>
+             <property name="decimals">
+              <number>3</number>
              </property>
              <property name="minimum">
-              <number>1</number>
+              <double>1.000000000000000</double>
              </property>
              <property name="maximum">
-              <number>100000</number>
+              <double>1000.000000000000000</double>
              </property>
              <property name="value">
-              <number>2002</number>
+              <double>15.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="alprobefeedLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-probefeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Probe speed on the Z axis. Higher values decrease the probing time but also increase the wear of the probing tool&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Vertical probe speed</string>
+             </property>
+             <property name="buddy">
+              <cstring>alprobefeedSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QSpinBox" name="alprobefeedSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-probefeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Probe speed on the Z axis. Higher values decrease the probing time but also increase the wear of the probing tool&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm/min</string>
+             </property>
+             <property name="maximum">
+              <number>5000</number>
+             </property>
+             <property name="singleStep">
+              <number>10</number>
+             </property>
+             <property name="value">
+              <number>100</number>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="alprobeonLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-probe-on&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Insert these commands at the start of the probing sequence. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically enable the probe tool. Use a at sign (@) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Probing start custom commands</string>
+             </property>
+             <property name="buddy">
+              <cstring>alprobeonLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="alprobeonLineEdit">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-probe-on&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Insert these commands at the start of the probing sequence. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically enable the probe tool. Use a at sign (@) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="placeholderText">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="alprobeoffLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-probe-off&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Insert these commands at the end of the probing sequence, replacing the standard M0 command. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically disable the probe tool. Use a at sign (@) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Probing stop custom commands</string>
+             </property>
+             <property name="buddy">
+              <cstring>alprobeoffLineEdit</cstring>
              </property>
             </widget>
            </item>
@@ -1835,25 +2522,6 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="1">
-            <widget class="QSpinBox" name="alprobefeedSpinBox">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-probefeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Probe speed on the Z axis. Higher values decrease the probing time but also increase the wear of the probing tool&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="suffix">
-              <string> mm/min</string>
-             </property>
-             <property name="maximum">
-              <number>5000</number>
-             </property>
-             <property name="singleStep">
-              <number>10</number>
-             </property>
-             <property name="value">
-              <number>100</number>
-             </property>
-            </widget>
-           </item>
            <item row="9" column="0">
             <widget class="QLabel" name="alprobevarLabel">
              <property name="enabled">
@@ -1870,113 +2538,38 @@
              </property>
             </widget>
            </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="alprobeonLabel">
+           <item row="9" column="1">
+            <widget class="QSpinBox" name="alprobevarSpinBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-probe-on&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Insert these commands at the start of the probing sequence. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically enable the probe tool. Use a at sign (@) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Probing start custom commands</string>
-             </property>
-             <property name="buddy">
-              <cstring>alprobeonLineEdit</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="alyLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-y&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Width of the probing on the Y axis. Higher values increase the levelling precision but also increases the probing time (but not the milling time)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Probe grid pitch (Y)</string>
-             </property>
-             <property name="buddy">
-              <cstring>alyDoubleSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QDoubleSpinBox" name="alyDoubleSpinBox">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-y&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Width of the probing on the Y axis. Higher values increase the levelling precision but also increases the probing time (but not the milling time)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="suffix">
-              <string> mm</string>
-             </property>
-             <property name="decimals">
-              <number>3</number>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-probevar&lt;/span&gt;&lt;/p&gt;&lt;p&gt;custom Z probe result variable. For example, LinuxCNC uses 5063 while Mach3, Mach4 and TurboCNC use 2002. If unspecified, 2002 will be used. This option is relevant only when --software=custom&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="minimum">
-              <double>1.000000000000000</double>
+              <number>1</number>
              </property>
              <property name="maximum">
-              <double>1000.000000000000000</double>
+              <number>100000</number>
              </property>
              <property name="value">
-              <double>15.000000000000000</double>
+              <number>2002</number>
              </property>
             </widget>
            </item>
-           <item row="6" column="1">
-            <widget class="QLineEdit" name="alprobeonLineEdit">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-probe-on&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Insert these commands at the start of the probing sequence. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically enable the probe tool. Use a at sign (@) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <item row="10" column="0">
+            <widget class="QLabel" name="alsetzzeroLabel">
+             <property name="enabled">
+              <bool>true</bool>
              </property>
-             <property name="placeholderText">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="alprobefeedLabel">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-probefeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Probe speed on the Z axis. Higher values decrease the probing time but also increase the wear of the probing tool&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-setzzero&lt;/span&gt;&lt;/p&gt;&lt;p&gt;custom gcode for setting the actual height as the zero of the Z axis. For example, LinuxCNC uses G10 L20 P0 Z0 while Mach3, Mach4 and TurboCNC use G92 Z0. If unspecified, G92 Z0 will be used. This option is relevant only when --software=custom&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Vertical probe speed</string>
+              <string>G-code for zero setting (Z axis)</string>
              </property>
              <property name="buddy">
-              <cstring>alprobefeedSpinBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="alprobeoffLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-probe-off&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Insert these commands at the end of the probing sequence, replacing the standard M0 command. You can use this argument to add a M64/M65 command (LinuxCNC) to automatically disable the probe tool. Use a at sign (@) to insert a newline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Probing stop custom commands</string>
-             </property>
-             <property name="buddy">
-              <cstring>alprobeoffLineEdit</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="softwareLabel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--software&lt;/span&gt;&lt;/p&gt;&lt;p&gt;the height probing commands are different from software to software. Use this option to select the used software; currently supported softwares are LinuxCNC, Mach3, Mach4 and custom. With custom you can specify al-probecode, al-probevar and al-setzzero, in order to generate gcode for an unsupported software. For compatibility reasons, the custom gcode is much bigger (3-4 times) than the gcode for a supported software.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Control software</string>
-             </property>
-             <property name="buddy">
-              <cstring>softwareComboBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="alfrontCheckBox">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--al-front&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Enable the autoleveller for the front side&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Enable autoleveller (front)</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
+              <cstring>alsetzzeroLineEdit</cstring>
              </property>
             </widget>
            </item>
@@ -1995,6 +2588,218 @@
            </item>
            <item row="11" column="0" colspan="2">
             <spacer name="verticalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="optimizationTab">
+         <attribute name="title">
+          <string>Optimizations</string>
+         </attribute>
+         <widget class="QWidget" name="formLayoutWidget_6">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>504</width>
+            <height>553</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="outlineGridLayout_1">
+           <property name="horizontalSpacing">
+            <number>12</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>6</number>
+           </property>
+           <item row="0" column="0" colspan="2">
+            <widget class="QCheckBox" name="eulerianCheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-style:italic&quot;&gt;--eulerian-paths&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Don't mill the same path twice if milling loops overlap. Can save up to 50% of milling time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Eulerian paths</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="QCheckBox" name="vectorialCheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-style:italic&quot;&gt;--vectorial&lt;/span&gt;&lt;/p&gt;&lt;p&gt;enable or disable the vectorial rendering engine.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Vectorial engine</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QCheckBox" name="tsp2optCheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-style:italic&quot;&gt;--tsp-2opt&lt;/span&gt;&lt;/p&gt;&lt;p&gt;use TSP 2OPT to find a faster toolpath (but slows down gcode generation).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>TSP 2OPT optimization</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="pathfindinglimitLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--path-finding-limit&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Use path finding for up to this many steps in the search (more is slower but makes a faster gcode path)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Path finding limit</string>
+             </property>
+             <property name="buddy">
+              <cstring>pathfindinglimitSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="pathfindinglimitSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--path-finding-limit&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Use path finding for up to this many steps in the search (more is slower but makes a faster gcode path)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> steps</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>100000</number>
+             </property>
+             <property name="value">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="g0verticalspeedLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--g0-vertical-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;speed of vertical G0 movements, for use in path-finding&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Path finding vertical speed</string>
+             </property>
+             <property name="buddy">
+              <cstring>g0verticalspeedSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QSpinBox" name="g0verticalspeedSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--g0-vertical-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;speed of vertical G0 movements, for use in path-finding&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm/min</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+             <property name="singleStep">
+              <number>50</number>
+             </property>
+             <property name="value">
+              <double>1270</double>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="g0horizontalspeedLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--g0-horizontal-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;speed of horizontal G0 movements, for use in path-finding&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Path finding horizontal speed</string>
+             </property>
+             <property name="buddy">
+              <cstring>g0horizontalspeedSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QSpinBox" name="g0horizontalspeedSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--g0-horizontal-speed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;speed of horizontal G0 movements, for use in path-finding&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm/min</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+             <property name="singleStep">
+              <number>50</number>
+             </property>
+             <property name="value">
+              <double>2540</double>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="backtrackLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--backtrack&lt;/span&gt;&lt;/p&gt;&lt;p&gt;allow retracing a milled path if it's faster than retract-move-lower.  For example, set to 5in/s if you are willing to remill 5 inches of trace in order to save 1 second of milling time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Backtrack distance</string>
+             </property>
+             <property name="buddy">
+              <cstring>backtrackSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QSpinBox" name="backtrackSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--backtrack&lt;/span&gt;&lt;/p&gt;&lt;p&gt;allow retracing a milled path if it's faster than retract-move-lower.  For example, set to 5in/s if you are willing to remill 5 inches of trace in order to save 1 second of milling time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm/s</string>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <double>0</double>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0" colspan="2">
+            <spacer name="verticalSpacer_8">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -2137,7 +2942,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>907</width>
+     <width>1007</width>
      <height>43</height>
     </rect>
    </property>
@@ -2261,6 +3066,10 @@
   <tabstop>outlinePushButton</tabstop>
   <tabstop>drillLineEdit</tabstop>
   <tabstop>drillPushButton</tabstop>
+  <tabstop>basenameLineEdit</tabstop>
+  <tabstop>outputDirLineEdit</tabstop>
+  <tabstop>outputDirPushButton</tabstop>
+  <tabstop>noExportCheckBox</tabstop>
   <tabstop>optionsTab</tabstop>
   <tabstop>inputMetricRadioButton</tabstop>
   <tabstop>inputImperialRadioButton</tabstop>
@@ -2268,7 +3077,7 @@
   <tabstop>outputImperialRadioButton</tabstop>
   <tabstop>zsafeDoubleSpinBox</tabstop>
   <tabstop>zchangeDoubleSpinBox</tabstop>
-  <tabstop>vectorialCheckBox</tabstop>
+  <tabstop>zchangeAbsoluteCheckBox</tabstop>
   <tabstop>nog64CheckBox</tabstop>
   <tabstop>toleranceDoubleSpinBox</tabstop>
   <tabstop>optimiseDoubleSpinBox</tabstop>
@@ -2277,17 +3086,31 @@
   <tabstop>mirroryaxisCheckBox</tabstop>
   <tabstop>tilexSpinBox</tabstop>
   <tabstop>tileySpinBox</tabstop>
+  <tabstop>offsetXDoubleSpinBox</tabstop>
+  <tabstop>offsetYDoubleSpinBox</tabstop>
+  <tabstop>spinupDoubleSpinBox</tabstop>
+  <tabstop>spindownDoubleSpinBox</tabstop>
   <tabstop>zworkDoubleSpinBox</tabstop>
   <tabstop>millfeedSpinBox</tabstop>
   <tabstop>millspeedSpinBox</tabstop>
   <tabstop>voronoiCheckBox</tabstop>
+  <tabstop>preserveThermalRelievesCheckBox</tabstop>
   <tabstop>offsetDoubleSpinBox</tabstop>
-  <tabstop>extrapassesSpinBox</tabstop>
+  <tabstop>isolationwidthDoubleSpinBox</tabstop>
+  <tabstop>milldiametersLineEdit</tabstop>
+  <tabstop>milloverlapLineEdit</tabstop>
+  <tabstop>premillingcodeLineEdit</tabstop>
+  <tabstop>postmillingcodeLineEdit</tabstop>
+  <tabstop>millvertfeedSpinBox</tabstop>
+  <tabstop>millinfeedDoubleSpinBox</tabstop>
+  <tabstop>millingdirectionComboBox</tabstop>
+  <tabstop>invertgerbersCheckBox</tabstop>
+  <tabstop>drawgerberlinesCheckBox</tabstop>
   <tabstop>zdrillDoubleSpinBox</tabstop>
   <tabstop>drillfeedSpinBox</tabstop>
   <tabstop>drillspeedSpinBox</tabstop>
   <tabstop>drillsideComboBox</tabstop>
-  <tabstop>milldrillCheckBox</tabstop>
+  <tabstop>milldrillholediameterDoubleSpinBox</tabstop>
   <tabstop>milldrilldiameterDoubleSpinBox</tabstop>
   <tabstop>onedrillCheckBox</tabstop>
   <tabstop>nog81CheckBox</tabstop>
@@ -2295,8 +3118,10 @@
   <tabstop>cutterdiameterDoubleSpinBox</tabstop>
   <tabstop>zcutDoubleSpinBox</tabstop>
   <tabstop>cutfeedSpinBox</tabstop>
+  <tabstop>cutvertfeedSpinBox</tabstop>
   <tabstop>cutspeedSpinBox</tabstop>
   <tabstop>cutinfeedDoubleSpinBox</tabstop>
+  <tabstop>bridgesnumSpinBox</tabstop>
   <tabstop>bridgesDoubleSpinBox</tabstop>
   <tabstop>zbridgesDoubleSpinBox</tabstop>
   <tabstop>cutsideComboBox</tabstop>
@@ -2312,6 +3137,13 @@
   <tabstop>alprobecodeLineEdit</tabstop>
   <tabstop>alprobevarSpinBox</tabstop>
   <tabstop>alsetzzeroLineEdit</tabstop>
+  <tabstop>eulerianCheckBox</tabstop>
+  <tabstop>vectorialCheckBox</tabstop>
+  <tabstop>tsp2optCheckBox</tabstop>
+  <tabstop>pathfindinglimitSpinBox</tabstop>
+  <tabstop>g0verticalspeedSpinBox</tabstop>
+  <tabstop>g0horizontalspeedSpinBox</tabstop>
+  <tabstop>backtrackSpinBox</tabstop>
   <tabstop>imageComboBox</tabstop>
   <tabstop>gview</tabstop>
  </tabstops>

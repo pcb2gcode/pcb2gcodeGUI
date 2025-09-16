@@ -85,7 +85,7 @@ template <> bool argBase<QButtonGroup>::getEnabled();
 
 class argAction {
 public:
-    QStringList getAllArgs(const QString prepend, bool getCommentedOptions);
+    QStringList getAllArgs(bool getCommentedOptions=false);
 
     inline bool setValue(const QString key, const QString value)
     {
@@ -103,13 +103,26 @@ public:
     }
 
     template <typename T>
-    inline void insert(const QString argName, T *object)
+    inline void insert(const QString argName, T *object, QString defaultValue1="", QString defaultValue2="")
     {
         objects.insert(argName, new argBase<T>(object));
+        if(defaultValue1.length() > 0) 
+        {
+            defaultValues1.insert(argName, defaultValue1);
+            if(defaultValue2.length() > 0)
+                defaultValues2.insert(argName, defaultValue2);
+        }
+    }
+
+    inline bool isDefault(const QString key)
+    {
+        return objects.value(key)->getValue() == defaultValues1.value(key) || objects.value(key)->getValue() == defaultValues2.value(key);
     }
 
 protected:
     QMap<QString, argBaseVirtual *> objects;
+    QMap<QString, QString> defaultValues1;
+    QMap<QString, QString> defaultValues2;
 };
 
 #endif // ARGACTION_H
