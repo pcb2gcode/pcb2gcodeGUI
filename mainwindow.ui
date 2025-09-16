@@ -1380,6 +1380,44 @@
              </property>
             </widget>
            </item>
+           <item row="11" column="0">
+            <widget class="QLabel" name="millinfeedLabel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mill-infeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Maximum milling depth per pass. PCB may be cut in multiple passes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Milling depth per pass</string>
+             </property>
+             <property name="buddy">
+              <cstring>millinfeedDoubleSpinBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="1">
+            <widget class="QDoubleSpinBox" name="millinfeedDoubleSpinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;--mill-infeed&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Maximum milling depth per pass. PCB may be cut in multiple passes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="suffix">
+              <string> mm</string>
+             </property>
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="minimum">
+              <double>-1000.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.001000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.0000</double>
+             </property>
+            </widget>
+           </item>
            <item row="15" column="0" colspan="2">
             <spacer name="verticalSpacer_3">
              <property name="orientation">
@@ -3000,6 +3038,7 @@
   <tabstop>premillingcodeLineEdit</tabstop>
   <tabstop>postmillingcodeLineEdit</tabstop>
   <tabstop>millvertfeedSpinBox</tabstop>
+  <tabstop>millinfeedDoubleSpinBox</tabstop>
   <tabstop>zdrillDoubleSpinBox</tabstop>
   <tabstop>drillfeedSpinBox</tabstop>
   <tabstop>drillspeedSpinBox</tabstop>

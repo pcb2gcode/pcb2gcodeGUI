@@ -104,6 +104,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ MILLARGS ].insert("pre-milling-gcode", ui->premillingcodeLineEdit);
     args[ MILLARGS ].insert("post-milling-gcode", ui->postmillingcodeLineEdit);
     args[ MILLARGS ].insert("mill-vertfeed", ui->millvertfeedSpinBox, "0");
+    args[ MILLARGS ].insert("mill-infeed", ui->millinfeedDoubleSpinBox, "0.0000");
 
     args[ DRILLARGS ].insert("zdrill", ui->zdrillDoubleSpinBox);
     args[ DRILLARGS ].insert("drill-feed", ui->drillfeedSpinBox);
@@ -532,7 +533,7 @@ void MainWindow::changeMetricInputUnits(bool metric)
                                                   ui->alyDoubleSpinBox, ui->toleranceDoubleSpinBox, ui->optimiseDoubleSpinBox,
                                                   ui->mirroraxisDoubleSpinBox, ui->isolationwidthDoubleSpinBox, ui->offsetXDoubleSpinBox,
                                                   ui->offsetYDoubleSpinBox, ui->milldrillholediameterDoubleSpinBox, ui->milldrilldiameterDoubleSpinBox,
-                                                  ui->zmilldrillDoubleSpinBox };
+                                                  ui->zmilldrillDoubleSpinBox, ui->millinfeedDoubleSpinBox };
 
     QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->cutvertfeedSpinBox, ui->alprobefeedSpinBox,
                                 ui->g0verticalspeedSpinBox, ui->g0horizontalspeedSpinBox, ui->backtrackSpinBox, ui->millvertfeedSpinBox };
