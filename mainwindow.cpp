@@ -105,6 +105,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ MILLARGS ].insert("post-milling-gcode", ui->postmillingcodeLineEdit);
     args[ MILLARGS ].insert("mill-vertfeed", ui->millvertfeedSpinBox, "0");
     args[ MILLARGS ].insert("mill-infeed", ui->millinfeedDoubleSpinBox, "0.0000");
+    args[ MILLARGS ].insert("mill-feed-direction", ui->millingdirectionComboBox, "any");
 
     args[ DRILLARGS ].insert("zdrill", ui->zdrillDoubleSpinBox);
     args[ DRILLARGS ].insert("drill-feed", ui->drillfeedSpinBox);
@@ -173,6 +174,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->outputDirPushButton, SIGNAL(clicked()), this, SLOT(getOutputDirectory()));
 
     connect(ui->voronoiCheckBox, SIGNAL(toggled(bool)), this, SLOT(voronoiEnable(bool)));
+    connect(ui->tsp2optCheckBox, SIGNAL(toggled(bool)), this, SLOT(milldirectionEnable(bool)));
     connect(ui->milldrillholediameterDoubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(enableMilldrill(double)));
     connect(ui->onedrillCheckBox, SIGNAL(toggled(bool)), this, SLOT(drillListDisable(bool)));
     connect(ui->drillsAvailableLineEdit, SIGNAL(textChanged(QString)), this, SLOT(enableNoM6(QString)));
@@ -278,6 +280,10 @@ void MainWindow::voronoiEnable(bool enable)
     ui->isolationwidthDoubleSpinBox->setEnabled(!enable);
     ui->offsetDoubleSpinBox->setEnabled(!enable);
     ui->preserveThermalRelievesCheckBox->setEnabled(enable);
+}
+
+void MainWindow::milldirectionEnable(bool enable) {
+    ui->millingdirectionComboBox->setEnabled(!enable);
 }
 
 void MainWindow::enableMilldrill(double value) {

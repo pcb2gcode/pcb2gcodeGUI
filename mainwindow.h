@@ -53,6 +53,7 @@ public:
 
 private slots:
     void voronoiEnable(bool disable);
+    void milldirectionEnable(bool enable);
     void bridgesAvailable();
     void changeMetricInputUnits(bool metric);
     void startPcb2gcode();
