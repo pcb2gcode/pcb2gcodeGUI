@@ -268,20 +268,24 @@ void MainWindow::checkPcb2gcodeVersion()
                                               " v%1.%2.%3, but v%4.%5.%6 has been detected.\n"
                                               "Some features may not work.");
 
-            warningBox->warning(this, tr("Old " PCB2GCODE_COMMAND_NAME " detected"),
-                                      warningMessage.arg(targetVersion[0]).arg(targetVersion[1]).arg(targetVersion[2])
-                                      .arg(versionNumbers[0]).arg(versionNumbers[1]).arg(versionNumbers[2]),
-                                      tr("Got it, let's try anyways"));
+            warningBox->setIcon(QMessageBox::Warning);
+            warningBox->setWindowTitle(tr("Old " PCB2GCODE_COMMAND_NAME " detected"));
+            warningBox->setText(warningMessage.arg(targetVersion[0]).arg(targetVersion[1]).arg(targetVersion[2])
+                .arg(versionNumbers[0]).arg(versionNumbers[1]).arg(versionNumbers[2]));
+            warningBox->addButton(tr("Got it, let's try anyways"), QMessageBox::AcceptRole);
             warningBox->setFixedSize(600,200);
+            warningBox->exec();
         }
     }
 }
 
-void MainWindow::voronoiEnable(bool enable)
-{
+void MainWindow::voronoiEnable(bool enable) {
     ui->isolationwidthDoubleSpinBox->setEnabled(!enable);
     ui->offsetDoubleSpinBox->setEnabled(!enable);
     ui->preserveThermalRelievesCheckBox->setEnabled(enable);
+    if(!enable) {
+        ui->preserveThermalRelievesCheckBox->setChecked(true);
+    }
 }
 
 void MainWindow::milldirectionEnable(bool enable) {
