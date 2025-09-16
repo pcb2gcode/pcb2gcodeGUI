@@ -103,6 +103,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ MILLARGS ].insert("milling-overlap", ui->milloverlapLineEdit, "50%");
     args[ MILLARGS ].insert("pre-milling-gcode", ui->premillingcodeLineEdit);
     args[ MILLARGS ].insert("post-milling-gcode", ui->postmillingcodeLineEdit);
+    args[ MILLARGS ].insert("mill-vertfeed", ui->millvertfeedSpinBox, "0");
 
     args[ DRILLARGS ].insert("zdrill", ui->zdrillDoubleSpinBox);
     args[ DRILLARGS ].insert("drill-feed", ui->drillfeedSpinBox);
@@ -534,7 +535,7 @@ void MainWindow::changeMetricInputUnits(bool metric)
                                                   ui->zmilldrillDoubleSpinBox };
 
     QSpinBox *spinBoxes[] = { ui->millfeedSpinBox, ui->drillfeedSpinBox, ui->cutfeedSpinBox, ui->cutvertfeedSpinBox, ui->alprobefeedSpinBox,
-                                ui->g0verticalspeedSpinBox, ui->g0horizontalspeedSpinBox, ui->backtrackSpinBox };
+                                ui->g0verticalspeedSpinBox, ui->g0horizontalspeedSpinBox, ui->backtrackSpinBox, ui->millvertfeedSpinBox };
 
     const unsigned int doubleSpinBoxesLen =  sizeof(doubleSpinBoxes) / sizeof(doubleSpinBoxes[0]);
     const unsigned int spinBoxesLen =  sizeof(spinBoxes) / sizeof(spinBoxes[0]);
