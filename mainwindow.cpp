@@ -106,6 +106,7 @@ MainWindow::MainWindow(QWidget *parent) :
     args[ MILLARGS ].insert("mill-vertfeed", ui->millvertfeedSpinBox, "0");
     args[ MILLARGS ].insert("mill-infeed", ui->millinfeedDoubleSpinBox, "0.0000");
     args[ MILLARGS ].insert("mill-feed-direction", ui->millingdirectionComboBox, "any");
+    args[ MILLARGS ].insert("invert-gerbers", ui->invertgerbersCheckBox, "false");
 
     args[ DRILLARGS ].insert("zdrill", ui->zdrillDoubleSpinBox);
     args[ DRILLARGS ].insert("drill-feed", ui->drillfeedSpinBox);

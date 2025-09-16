@@ -1456,6 +1456,19 @@
              </item>
             </widget>
            </item>
+           <item row="13" column="0">
+            <widget class="QCheckBox" name="invertgerbersCheckBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;--invert-gerbers&lt;/p&gt;&lt;p&gt;Invert polarity of front and back gerbers, causing the milling to occur inside the shapes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Invert gerbers</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
            <item row="15" column="0" colspan="2">
             <spacer name="verticalSpacer_3">
              <property name="orientation">
@@ -3078,6 +3091,7 @@
   <tabstop>millvertfeedSpinBox</tabstop>
   <tabstop>millinfeedDoubleSpinBox</tabstop>
   <tabstop>millingdirectionComboBox</tabstop>
+  <tabstop>invertgerbersCheckBox</tabstop>
   <tabstop>zdrillDoubleSpinBox</tabstop>
   <tabstop>drillfeedSpinBox</tabstop>
   <tabstop>drillspeedSpinBox</tabstop>
