@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2015-2016 Nicola Corna (nicola@corna.info)
+ * Copyright (c) 2026 pcb2gcodeGUI contributors
  *
  * This file is part of pcb2gcodeGUI.
  *
@@ -21,26 +22,38 @@
 #define OUTPUTWINDOW_H
 
 #include <QDialog>
-#include <QPushButton>
-#include <QPlainTextEdit>
+#include <QProcess>
 
-namespace Ui {
-class outputWindow;
-}
+class QLabel;
+class QPlainTextEdit;
+class QPushButton;
 
-class outputWindow : public QDialog
+// Runs pcb2gcode and shows its output.
+class OutputWindow : public QDialog
 {
     Q_OBJECT
-
 public:
-    explicit outputWindow(QWidget *parent = 0);
-    ~outputWindow();
+    explicit OutputWindow(QWidget *parent = nullptr);
 
-    QPushButton *getPushButton();
-    QPlainTextEdit *getOutputPlainTextEdit();
+    void start(const QString &program, const QStringList &arguments, const QString &workingDirectory);
+    bool isRunning() const { return m_process.state() != QProcess::NotRunning; }
+    QString output() const;
+
+signals:
+    void finished(bool success);
+
+protected:
+    void reject() override;
 
 private:
-    Ui::outputWindow *ui;
+    void append(const QString &text, const QColor &color = QColor());
+    void processFinished(int exitCode, QProcess::ExitStatus status);
+
+    QPlainTextEdit *m_text;
+    QLabel *m_status;
+    QPushButton *m_button;
+    QProcess m_process;
+    bool m_killed = false;
 };
 
-#endif // OUTPUTWINDOW_H
+#endif  // OUTPUTWINDOW_H

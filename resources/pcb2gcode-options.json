@@ -1,0 +1,1107 @@
+{
+  "format": "pcb2gcode-options",
+  "format_version": 1,
+  "pcb2gcode_version": "3.2.0",
+  "pcb2gcode_commit": "ee9980be830095e54364867b516d9cb5b276999c",
+  "note": "Used when the installed pcb2gcode cannot describe its own options. Regenerate with tools/update-option-snapshot.sh.",
+  "groups": [
+    {
+      "id": "cli",
+      "title": "command line only options"
+    },
+    {
+      "id": "generic",
+      "title": "Generic options (CLI and config files)"
+    },
+    {
+      "id": "drilling",
+      "title": "Drilling options, for making holes in the PCB"
+    },
+    {
+      "id": "milling",
+      "title": "Milling options, for milling traces into the PCB"
+    },
+    {
+      "id": "outline",
+      "title": "Outline options, for cutting the PCB out of the FR4"
+    },
+    {
+      "id": "optimization",
+      "title": "Optimization options, for faster PCB creation, smaller output files, and different algorithms."
+    },
+    {
+      "id": "autolevelling",
+      "title": "Autolevelling options, for generating gcode to automatically probe the board and adjust milling depth to the actual board height"
+    },
+    {
+      "id": "alignment",
+      "title": "Alignment options, useful for aligning the milling on opposite sides of the PCB"
+    },
+    {
+      "id": "cnc",
+      "title": "CNC options, common to all the milling, drilling, and cutting"
+    }
+  ],
+  "options": [
+    {
+      "name": "noconfigfile",
+      "group": "cli",
+      "description": "ignore any configuration file",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true",
+      "cli_only": true
+    },
+    {
+      "name": "config",
+      "group": "cli",
+      "description": "list of comma-separated config files",
+      "type": "string",
+      "multiple": "comma",
+      "default": "millproject",
+      "cli_only": true
+    },
+    {
+      "name": "help",
+      "short_name": "?",
+      "group": "cli",
+      "description": "produce help message",
+      "type": "none",
+      "default": null,
+      "cli_only": true
+    },
+    {
+      "name": "version",
+      "short_name": "V",
+      "group": "cli",
+      "description": "show the current software version",
+      "type": "none",
+      "default": null,
+      "cli_only": true
+    },
+    {
+      "name": "mcp",
+      "group": "cli",
+      "description": "run as a Model Context Protocol (MCP) server over stdio",
+      "type": "none",
+      "default": null,
+      "cli_only": true
+    },
+    {
+      "name": "drill",
+      "group": "drilling",
+      "description": "Excellon drill file",
+      "type": "string",
+      "default": null,
+      "path": "input-excellon"
+    },
+    {
+      "name": "milldrill",
+      "group": "drilling",
+      "description": "[DEPRECATED] Use min-milldrill-hole-diameter=0 instead",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true",
+      "deprecated": true,
+      "replaced_by": "min-milldrill-hole-diameter"
+    },
+    {
+      "name": "milldrill-diameter",
+      "group": "drilling",
+      "description": "diameter of the end mill used for drilling with --milldrill",
+      "type": "length",
+      "default": null,
+      "used_when": "drill && min-milldrill-hole-diameter < inf",
+      "min": "0",
+      "min_exclusive": true,
+      "default_note": "same as --cutter-diameter"
+    },
+    {
+      "name": "min-milldrill-hole-diameter",
+      "group": "drilling",
+      "description": "minimum hole width for milldrilling. Holes smaller than this are drilled. This implies milldrill",
+      "type": "length",
+      "default": "inf",
+      "used_when": "drill",
+      "min": "0",
+      "default_note": "inf: milldrilling is off"
+    },
+    {
+      "name": "min-milldrill-entry-diameter",
+      "group": "drilling",
+      "description": "minimum initial hole width for milldrilling when multiple steps are used, as a fraction of milldrill-diameter",
+      "type": "percent",
+      "default": "150%",
+      "used_when": "drill && min-milldrill-hole-diameter < inf",
+      "min": "100%",
+      "min_exclusive": true
+    },
+    {
+      "name": "max-milldrill-entry-diameter",
+      "group": "drilling",
+      "description": "maximum initial hole width for milldrilling in a single step, and the minimum size of the initial hole when multiple steps are used, as a fraction of milldrill-diameter",
+      "type": "percent",
+      "default": "190%",
+      "used_when": "drill && min-milldrill-hole-diameter < inf",
+      "min": "100%",
+      "min_exclusive": true
+    },
+    {
+      "name": "milldrill-stepover",
+      "group": "drilling",
+      "description": "maximum hole radius increase when milldrilling in multiple steps, as a fraction of milldrill-diameter",
+      "type": "percent",
+      "default": "50%",
+      "used_when": "drill && min-milldrill-hole-diameter < inf",
+      "min": "0%",
+      "min_exclusive": true,
+      "max": "100%"
+    },
+    {
+      "name": "zdrill",
+      "group": "drilling",
+      "description": "drilling depth",
+      "type": "length",
+      "default": null,
+      "used_when": "drill",
+      "required_when": "drill",
+      "example": "-2.5mm"
+    },
+    {
+      "name": "zmilldrill",
+      "group": "drilling",
+      "description": "milldrilling depth",
+      "type": "length",
+      "default": null,
+      "used_when": "drill && min-milldrill-hole-diameter < inf",
+      "default_note": "same as --zdrill"
+    },
+    {
+      "name": "drill-feed",
+      "group": "drilling",
+      "description": "drill feed in [i/m] or [mm/m]",
+      "type": "velocity",
+      "default": null,
+      "used_when": "drill",
+      "required_when": "drill",
+      "example": "500mm/min",
+      "min": "0",
+      "min_exclusive": true
+    },
+    {
+      "name": "drill-speed",
+      "group": "drilling",
+      "description": "spindle rpm when drilling",
+      "type": "rpm",
+      "default": null,
+      "used_when": "drill",
+      "required_when": "drill",
+      "example": "10000rpm",
+      "min": "0"
+    },
+    {
+      "name": "drill-front",
+      "group": "drilling",
+      "description": "[DEPRECATED, use drill-side instead] drill through the front side of board",
+      "type": "bool",
+      "default": null,
+      "implicit": "true",
+      "deprecated": true,
+      "replaced_by": "drill-side",
+      "used_when": "drill"
+    },
+    {
+      "name": "drill-side",
+      "group": "drilling",
+      "description": "drill side; valid choices are front, back or auto (default)",
+      "type": "enum",
+      "choices": [
+        {
+          "value": "auto"
+        },
+        {
+          "value": "front"
+        },
+        {
+          "value": "back"
+        }
+      ],
+      "default": "auto",
+      "used_when": "drill"
+    },
+    {
+      "name": "drills-available",
+      "group": "drilling",
+      "description": "list of drills available",
+      "type": "drill",
+      "multiple": "comma",
+      "default": "",
+      "used_when": "drill",
+      "default_note": "use the sizes in the drill file"
+    },
+    {
+      "name": "onedrill",
+      "group": "drilling",
+      "description": "use only one drill bit size",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true",
+      "used_when": "drill"
+    },
+    {
+      "name": "drill-output",
+      "group": "drilling",
+      "description": "output file for drilling",
+      "type": "string",
+      "default": "drill.ngc",
+      "used_when": "drill",
+      "path": "output-file"
+    },
+    {
+      "name": "nog91-1",
+      "group": "drilling",
+      "description": "do not explicitly set G91.1 in drill headers",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true",
+      "used_when": "drill"
+    },
+    {
+      "name": "nog81",
+      "group": "drilling",
+      "description": "replace G81 with G0+G1",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true",
+      "used_when": "drill"
+    },
+    {
+      "name": "nom6",
+      "group": "drilling",
+      "description": "do not emit M6 on tool changes",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true",
+      "used_when": "drill"
+    },
+    {
+      "name": "milldrill-output",
+      "group": "drilling",
+      "description": "output file for milldrilling",
+      "type": "string",
+      "default": "milldrill.ngc",
+      "used_when": "drill && min-milldrill-hole-diameter < inf",
+      "path": "output-file"
+    },
+    {
+      "name": "front",
+      "group": "milling",
+      "description": "front side RS274-X .gbr",
+      "type": "string",
+      "default": null,
+      "path": "input-gerber"
+    },
+    {
+      "name": "back",
+      "group": "milling",
+      "description": "back side RS274-X .gbr",
+      "type": "string",
+      "default": null,
+      "path": "input-gerber"
+    },
+    {
+      "name": "voronoi",
+      "group": "milling",
+      "description": "generate voronoi regions",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true",
+      "used_when": "front || back"
+    },
+    {
+      "name": "offset",
+      "group": "milling",
+      "description": "Note: Prefer to use --mill-diameters and --milling-overlap if you just that's what you mean. An optional offset to add to all traces, useful if the bit has a little slop that you want to keep out of the trace.",
+      "type": "length",
+      "default": "0",
+      "used_when": "front || back"
+    },
+    {
+      "name": "mill-diameters",
+      "group": "milling",
+      "description": "Diameters of mill bits, used in the order that they are provided.",
+      "type": "length",
+      "multiple": "comma",
+      "default": "0",
+      "used_when": "front || back",
+      "example": "0.2mm",
+      "min": "0"
+    },
+    {
+      "name": "milling-overlap",
+      "group": "milling",
+      "description": "How much to overlap milling passes, from 0% to 100% or an absolute length",
+      "type": "length_or_percent",
+      "default": "50%",
+      "used_when": "front || back"
+    },
+    {
+      "name": "isolation-width",
+      "group": "milling",
+      "description": "Minimum isolation width between copper surfaces",
+      "type": "length",
+      "default": "0",
+      "used_when": "front || back",
+      "min": "0"
+    },
+    {
+      "name": "extra-passes",
+      "group": "milling",
+      "description": "[DEPRECATED] use --isolation-width instead. Specify the the number of extra isolation passes, increasing the isolation width half the tool diameter with each pass",
+      "type": "int",
+      "default": "0",
+      "deprecated": true,
+      "replaced_by": "isolation-width",
+      "used_when": "front || back"
+    },
+    {
+      "name": "pre-milling-gcode",
+      "group": "milling",
+      "description": "custom gcode inserted before the start of milling each trace (used to activate pump or fan or laser connected to fan)",
+      "type": "string",
+      "multiple": "repeat",
+      "default": "",
+      "used_when": "front || back"
+    },
+    {
+      "name": "post-milling-gcode",
+      "group": "milling",
+      "description": "custom gcode inserted after the end of milling each trace (used to deactivate pump or fan or laser connected to fan)",
+      "type": "string",
+      "multiple": "repeat",
+      "default": "",
+      "used_when": "front || back"
+    },
+    {
+      "name": "zwork",
+      "group": "milling",
+      "description": "milling depth in inches (Z-coordinate while engraving)",
+      "type": "length",
+      "default": null,
+      "used_when": "front || back",
+      "required_when": "front || back",
+      "example": "-0.05mm"
+    },
+    {
+      "name": "mill-feed",
+      "group": "milling",
+      "description": "feed while isolating in [i/m] or [mm/m]",
+      "type": "velocity",
+      "default": null,
+      "used_when": "front || back",
+      "required_when": "front || back",
+      "example": "600mm/min",
+      "min": "0",
+      "min_exclusive": true
+    },
+    {
+      "name": "mill-vertfeed",
+      "group": "milling",
+      "description": "vertical feed while isolating in [i/m] or [mm/m]",
+      "type": "velocity",
+      "default": null,
+      "used_when": "front || back",
+      "min": "0",
+      "min_exclusive": true,
+      "default_note": "half of --mill-feed"
+    },
+    {
+      "name": "mill-infeed",
+      "group": "milling",
+      "description": "maximum milling depth; PCB may be cut in multiple passes",
+      "type": "length",
+      "default": null,
+      "used_when": "front || back",
+      "min": "0",
+      "min_exclusive": true,
+      "default_note": "full depth in one pass"
+    },
+    {
+      "name": "mill-speed",
+      "group": "milling",
+      "description": "spindle rpm when milling",
+      "type": "rpm",
+      "default": null,
+      "used_when": "front || back",
+      "required_when": "front || back",
+      "example": "10000rpm",
+      "min": "0"
+    },
+    {
+      "name": "mill-feed-direction",
+      "group": "milling",
+      "description": "In which direction should all milling occur",
+      "type": "enum",
+      "choices": [
+        {
+          "value": "any"
+        },
+        {
+          "value": "climb",
+          "aliases": [
+            "clockwise"
+          ]
+        },
+        {
+          "value": "conventional",
+          "aliases": [
+            "anticlockwise",
+            "counterclockwise"
+          ]
+        }
+      ],
+      "default": "any",
+      "used_when": "front || back"
+    },
+    {
+      "name": "invert-gerbers",
+      "group": "milling",
+      "description": "Invert polarity of front and back gerbers, causing the milling to occur inside the shapes",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true",
+      "used_when": "front || back"
+    },
+    {
+      "name": "draw-gerber-lines",
+      "group": "milling",
+      "description": "Draw lines in the gerber file as just lines and not as filled in shapes",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true",
+      "used_when": "front || back || outline"
+    },
+    {
+      "name": "preserve-thermal-reliefs",
+      "group": "milling",
+      "description": "generate mill paths for thermal reliefs in voronoi mode",
+      "type": "bool",
+      "default": "true",
+      "implicit": "true",
+      "used_when": "(front || back) && voronoi"
+    },
+    {
+      "name": "front-output",
+      "group": "milling",
+      "description": "output file for front layer",
+      "type": "string",
+      "default": "front.ngc",
+      "used_when": "front",
+      "path": "output-file"
+    },
+    {
+      "name": "back-output",
+      "group": "milling",
+      "description": "output file for back layer",
+      "type": "string",
+      "default": "back.ngc",
+      "used_when": "back",
+      "path": "output-file"
+    },
+    {
+      "name": "outline",
+      "group": "outline",
+      "description": "pcb outline polygon RS274-X .gbr",
+      "type": "string",
+      "default": null,
+      "path": "input-gerber"
+    },
+    {
+      "name": "fill-outline",
+      "group": "outline",
+      "description": "accept a contour instead of a polygon as outline (enabled by default)",
+      "type": "bool",
+      "default": "true",
+      "implicit": "true",
+      "used_when": "outline"
+    },
+    {
+      "name": "cutter-diameter",
+      "group": "outline",
+      "description": "diameter of the end mill used for cutting out the PCB",
+      "type": "length",
+      "default": null,
+      "used_when": "outline || (drill && min-milldrill-hole-diameter < inf)",
+      "required_when": "outline || (drill && min-milldrill-hole-diameter < inf)",
+      "example": "3mm",
+      "min": "0",
+      "min_exclusive": true
+    },
+    {
+      "name": "zcut",
+      "group": "outline",
+      "description": "PCB cutting depth in inches",
+      "type": "length",
+      "default": null,
+      "used_when": "outline || (drill && min-milldrill-hole-diameter < inf)",
+      "required_when": "outline || (drill && min-milldrill-hole-diameter < inf)",
+      "example": "-2.5mm",
+      "max": "0"
+    },
+    {
+      "name": "cut-feed",
+      "group": "outline",
+      "description": "PCB cutting feed in [i/m] or [mm/m]",
+      "type": "velocity",
+      "default": null,
+      "used_when": "outline || (drill && min-milldrill-hole-diameter < inf)",
+      "required_when": "outline || (drill && min-milldrill-hole-diameter < inf)",
+      "example": "600mm/min",
+      "min": "0",
+      "min_exclusive": true
+    },
+    {
+      "name": "cut-vertfeed",
+      "group": "outline",
+      "description": "PCB vertical cutting feed in [i/m] or [mm/m]",
+      "type": "velocity",
+      "default": null,
+      "used_when": "outline || (drill && min-milldrill-hole-diameter < inf)",
+      "min": "0",
+      "min_exclusive": true,
+      "default_note": "half of --cut-feed"
+    },
+    {
+      "name": "cut-speed",
+      "group": "outline",
+      "description": "spindle rpm when cutting",
+      "type": "rpm",
+      "default": null,
+      "used_when": "outline || (drill && min-milldrill-hole-diameter < inf)",
+      "required_when": "outline || (drill && min-milldrill-hole-diameter < inf)",
+      "example": "10000rpm",
+      "min": "0"
+    },
+    {
+      "name": "cut-infeed",
+      "group": "outline",
+      "description": "maximum cutting depth; PCB may be cut in multiple passes",
+      "type": "length",
+      "default": null,
+      "used_when": "outline || (drill && min-milldrill-hole-diameter < inf)",
+      "required_when": "outline || (drill && min-milldrill-hole-diameter < inf)",
+      "example": "1mm",
+      "min": "0.001in"
+    },
+    {
+      "name": "cut-front",
+      "group": "outline",
+      "description": "[DEPRECATED, use cut-side instead] cut from front side.",
+      "type": "bool",
+      "default": null,
+      "implicit": "true",
+      "deprecated": true,
+      "replaced_by": "cut-side",
+      "used_when": "outline"
+    },
+    {
+      "name": "cut-side",
+      "group": "outline",
+      "description": "cut side; valid choices are front, back or auto (default)",
+      "type": "enum",
+      "choices": [
+        {
+          "value": "auto"
+        },
+        {
+          "value": "front"
+        },
+        {
+          "value": "back"
+        }
+      ],
+      "default": "auto",
+      "used_when": "outline"
+    },
+    {
+      "name": "bridges",
+      "group": "outline",
+      "description": "add bridges with the given width to the outline cut",
+      "type": "length",
+      "default": "0",
+      "used_when": "outline",
+      "min": "0"
+    },
+    {
+      "name": "bridgesnum",
+      "group": "outline",
+      "description": "specify how many bridges should be created",
+      "type": "uint",
+      "default": "2",
+      "used_when": "outline"
+    },
+    {
+      "name": "zbridges",
+      "group": "outline",
+      "description": "bridges height (Z-coordinates while engraving bridges, default to zsafe)",
+      "type": "length",
+      "default": null,
+      "used_when": "outline",
+      "default_note": "same as --zsafe"
+    },
+    {
+      "name": "outline-output",
+      "group": "outline",
+      "description": "output file for outline",
+      "type": "string",
+      "default": "outline.ngc",
+      "used_when": "outline",
+      "path": "output-file"
+    },
+    {
+      "name": "optimise",
+      "group": "optimization",
+      "description": "Reduce output file size by up to 40% while accepting a little loss of precision. Larger values reduce file sizes and processing time even further. Set to 0 to disable.",
+      "type": "length",
+      "default": "0.0001in",
+      "implicit": "0.0001in",
+      "min": "0"
+    },
+    {
+      "name": "eulerian-paths",
+      "group": "optimization",
+      "description": "Don't mill the same path twice if milling loops overlap. This can save up to 50% of milling time. Enabled by default.",
+      "type": "bool",
+      "default": "true",
+      "implicit": "true"
+    },
+    {
+      "name": "vectorial",
+      "group": "optimization",
+      "description": "enable or disable the vectorial rendering engine",
+      "type": "bool",
+      "default": "true",
+      "implicit": "true"
+    },
+    {
+      "name": "tsp-2opt",
+      "group": "optimization",
+      "description": "use TSP 2OPT to find a faster toolpath (but slows down gcode generation)",
+      "type": "bool",
+      "default": "true",
+      "implicit": "true"
+    },
+    {
+      "name": "path-finding-limit",
+      "group": "optimization",
+      "description": "Use path finding for up to this many steps in the search (more is slower but makes a faster gcode path)",
+      "type": "size",
+      "default": "1"
+    },
+    {
+      "name": "g0-vertical-speed",
+      "group": "optimization",
+      "description": "speed of vertical G0 movements, for use in path-finding",
+      "type": "velocity",
+      "default": "50in/min",
+      "min": "0",
+      "min_exclusive": true
+    },
+    {
+      "name": "g0-horizontal-speed",
+      "group": "optimization",
+      "description": "speed of horizontal G0 movements, for use in path-finding",
+      "type": "velocity",
+      "default": "100in/min",
+      "min": "0",
+      "min_exclusive": true
+    },
+    {
+      "name": "backtrack",
+      "group": "optimization",
+      "description": "allow retracing a milled path if it's faster than retract-move-lower. For example, set to 5in/s if you are willing to remill 5 inches of trace in order to save 1 second of milling time.",
+      "type": "velocity",
+      "default": "inf",
+      "min": "0",
+      "default_note": "inf: no limit"
+    },
+    {
+      "name": "al-front",
+      "group": "autolevelling",
+      "description": "enable the z autoleveller for the front layer",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true",
+      "used_when": "front"
+    },
+    {
+      "name": "al-back",
+      "group": "autolevelling",
+      "description": "enable the z autoleveller for the back layer",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true",
+      "used_when": "back"
+    },
+    {
+      "name": "software",
+      "group": "autolevelling",
+      "description": "choose the destination software (useful only with the autoleveller). Supported programs are linuxcnc, mach3, mach4 and custom",
+      "type": "enum",
+      "choices": [
+        {
+          "value": "linuxcnc"
+        },
+        {
+          "value": "mach3"
+        },
+        {
+          "value": "mach4"
+        },
+        {
+          "value": "custom"
+        }
+      ],
+      "default": null,
+      "used_when": "al-front || al-back",
+      "required_when": "al-front || al-back",
+      "example": "linuxcnc"
+    },
+    {
+      "name": "al-x",
+      "group": "autolevelling",
+      "description": "max x distance between probes",
+      "type": "length",
+      "default": null,
+      "used_when": "al-front || al-back",
+      "required_when": "al-front || al-back",
+      "example": "15mm",
+      "min": "0",
+      "min_exclusive": true
+    },
+    {
+      "name": "al-y",
+      "group": "autolevelling",
+      "description": "max y distance bewteen probes",
+      "type": "length",
+      "default": null,
+      "used_when": "al-front || al-back",
+      "required_when": "al-front || al-back",
+      "example": "15mm",
+      "min": "0",
+      "min_exclusive": true
+    },
+    {
+      "name": "al-probefeed",
+      "group": "autolevelling",
+      "description": "speed during the probing",
+      "type": "velocity",
+      "default": null,
+      "used_when": "al-front || al-back",
+      "required_when": "al-front || al-back",
+      "example": "100mm/min",
+      "min": "0",
+      "min_exclusive": true
+    },
+    {
+      "name": "al-probe-on",
+      "group": "autolevelling",
+      "description": "execute this commands to enable the probe tool (default is M0)",
+      "type": "string",
+      "default": "(MSG, Attach the probe tool)@M0 ( Temporary machine stop. )",
+      "used_when": "al-front || al-back"
+    },
+    {
+      "name": "al-probe-off",
+      "group": "autolevelling",
+      "description": "execute this commands to disable the probe tool (default is M0)",
+      "type": "string",
+      "default": "(MSG, Detach the probe tool)@M0 ( Temporary machine stop. )",
+      "used_when": "al-front || al-back"
+    },
+    {
+      "name": "al-probecode",
+      "group": "autolevelling",
+      "description": "custom probe code (default is G31)",
+      "type": "string",
+      "default": "G31",
+      "used_when": "al-front || al-back"
+    },
+    {
+      "name": "al-probevar",
+      "group": "autolevelling",
+      "description": "number of the variable where the result of the probing is saved (default is 2002)",
+      "type": "uint",
+      "default": "2002",
+      "used_when": "al-front || al-back"
+    },
+    {
+      "name": "al-setzzero",
+      "group": "autolevelling",
+      "description": "gcode for setting the actual position as zero (default is G92 Z0)",
+      "type": "string",
+      "default": "G92 Z0",
+      "used_when": "al-front || al-back"
+    },
+    {
+      "name": "x-offset",
+      "group": "alignment",
+      "description": "offset the origin in the x-axis by this length",
+      "type": "length",
+      "default": "0"
+    },
+    {
+      "name": "y-offset",
+      "group": "alignment",
+      "description": "offset the origin in the y-axis by this length",
+      "type": "length",
+      "default": "0"
+    },
+    {
+      "name": "zero-start",
+      "group": "alignment",
+      "description": "set the starting point of the project at (0,0)",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true"
+    },
+    {
+      "name": "mirror-absolute",
+      "group": "alignment",
+      "description": "[DEPRECATED, must always be true] mirror back side along absolute zero instead of board center",
+      "type": "bool",
+      "default": "true",
+      "implicit": "true",
+      "deprecated": true
+    },
+    {
+      "name": "mirror-axis",
+      "group": "alignment",
+      "description": "For two-sided boards, the PCB needs to be flipped along the axis x=VALUE",
+      "type": "length",
+      "default": "0"
+    },
+    {
+      "name": "mirror-yaxis",
+      "group": "alignment",
+      "description": "For two-sided boards, the PCB needs to be flipped along the y axis instead",
+      "type": "bool",
+      "default": "false"
+    },
+    {
+      "name": "zsafe",
+      "group": "cnc",
+      "description": "safety height (Z-coordinate during rapid moves)",
+      "type": "length",
+      "default": null,
+      "required_when": "true",
+      "example": "5mm"
+    },
+    {
+      "name": "spinup-time",
+      "group": "cnc",
+      "description": "time required to the spindle to reach the correct speed",
+      "type": "time",
+      "default": "1ms",
+      "min": "0"
+    },
+    {
+      "name": "spindown-time",
+      "group": "cnc",
+      "description": "time required to the spindle to return to 0 rpm",
+      "type": "time",
+      "default": null,
+      "min": "0",
+      "default_note": "same as --spinup-time"
+    },
+    {
+      "name": "zchange",
+      "group": "cnc",
+      "description": "tool changing height",
+      "type": "length",
+      "default": null,
+      "required_when": "true",
+      "example": "10mm"
+    },
+    {
+      "name": "zchange-absolute",
+      "group": "cnc",
+      "description": "use zchange as a machine coordinates height (G53)",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true"
+    },
+    {
+      "name": "tile-x",
+      "group": "cnc",
+      "description": "number of tiling columns. Default value is 1",
+      "type": "int",
+      "default": "1",
+      "min": "1"
+    },
+    {
+      "name": "tile-y",
+      "group": "cnc",
+      "description": "number of tiling rows. Default value is 1",
+      "type": "int",
+      "default": "1",
+      "min": "1"
+    },
+    {
+      "name": "ignore-warnings",
+      "group": "generic",
+      "description": "Ignore warnings",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true"
+    },
+    {
+      "name": "svg",
+      "group": "generic",
+      "description": "[DEPRECATED] use --vectorial, SVGs will be generated automatically; this option has no effect",
+      "type": "string",
+      "default": null,
+      "deprecated": true
+    },
+    {
+      "name": "metric",
+      "group": "generic",
+      "description": "use metric units for parameters. does not affect gcode output",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true"
+    },
+    {
+      "name": "metricoutput",
+      "group": "generic",
+      "description": "use metric units for output",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true"
+    },
+    {
+      "name": "g64",
+      "group": "generic",
+      "description": "[DEPRECATED, use tolerance instead] maximum deviation from toolpath, overrides internal calculation",
+      "type": "double",
+      "default": null,
+      "deprecated": true,
+      "replaced_by": "tolerance"
+    },
+    {
+      "name": "tolerance",
+      "group": "generic",
+      "description": "maximum toolpath tolerance",
+      "type": "double",
+      "default": null,
+      "bare_unit": "length",
+      "min": "0",
+      "default_note": "0.0004in"
+    },
+    {
+      "name": "nog64",
+      "group": "generic",
+      "description": "do not set an explicit g64",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true"
+    },
+    {
+      "name": "output-dir",
+      "group": "generic",
+      "description": "output directory",
+      "type": "string",
+      "default": "",
+      "path": "directory",
+      "default_note": "current directory"
+    },
+    {
+      "name": "basename",
+      "group": "generic",
+      "description": "prefix for default output file names",
+      "type": "string",
+      "default": null,
+      "default_note": "no prefix"
+    },
+    {
+      "name": "preamble-text",
+      "group": "generic",
+      "description": "preamble text file, inserted at the very beginning as a comment.",
+      "type": "string",
+      "default": null,
+      "path": "input-text"
+    },
+    {
+      "name": "preamble",
+      "group": "generic",
+      "description": "gcode preamble file, inserted at the very beginning.",
+      "type": "string",
+      "default": null,
+      "path": "input-gcode"
+    },
+    {
+      "name": "postamble",
+      "group": "generic",
+      "description": "gcode postamble file, inserted before M9 and M2.",
+      "type": "string",
+      "default": null,
+      "path": "input-gcode"
+    },
+    {
+      "name": "no-export",
+      "group": "generic",
+      "description": "skip the exporting process",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true"
+    },
+    {
+      "name": "sanity-checks",
+      "group": "generic",
+      "description": "run sanity checks",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true"
+    },
+    {
+      "name": "single-thread",
+      "group": "generic",
+      "description": "disable multi-threading",
+      "type": "bool",
+      "default": "false",
+      "implicit": "true"
+    }
+  ],
+  "constraints": [
+    {
+      "when": "front || back",
+      "require": "zsafe > zwork",
+      "message": "--zsafe must be higher than --zwork."
+    },
+    {
+      "when": "drill",
+      "require": "zsafe > zdrill",
+      "message": "--zsafe must be higher than --zdrill."
+    },
+    {
+      "when": "drill && !zchange-absolute",
+      "require": "zchange > zdrill",
+      "message": "--zchange must be higher than --zdrill. If --zchange is a machine coordinate, add --zchange-absolute."
+    },
+    {
+      "when": "outline || (drill && min-milldrill-hole-diameter < inf)",
+      "require": "zsafe > zcut",
+      "message": "--zsafe must be higher than --zcut."
+    },
+    {
+      "when": "drill && min-milldrill-hole-diameter < inf",
+      "require": "max-milldrill-entry-diameter >= min-milldrill-entry-diameter",
+      "message": "--max-milldrill-entry-diameter can't be less than --min-milldrill-entry-diameter."
+    },
+    {
+      "when": "mill-feed-direction != any",
+      "require": "!tsp-2opt",
+      "message": "--mill-feed-direction doesn't work with --tsp-2opt, which is on by default. Add --tsp-2opt=false."
+    }
+  ]
+}

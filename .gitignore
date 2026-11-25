@@ -1,39 +1,22 @@
-# C++ objects and libs
+# Build trees
+/build*/
+/out/
+CMakeLists.txt.user*
+CMakeUserPresets.json
+compile_commands.json
+.cache/
 
-*.slo
-*.lo
+# C++ objects and libs
 *.o
 *.a
-*.la
-*.lai
 *.so
 *.dll
 *.dylib
 
-# Qt-es
-
-/.qmake.cache
-/.qmake.stash
-*.pro.user
-*.pro.user.*
-*.moc
-moc_*.cpp
-moc_*.h
-qrc_*.cpp
-ui_*.h
-Makefile*
-*-build-*
-pcb2gcodegui_plugin_import.cpp
-
-# QtCreator
-
+# Qt Creator
 *.autosave
 
-#QtCtreator Qml
-*.qmlproject.user
-*.qmlproject.user.*
-
-# Output files and executables
-release/
-pcb2gcodeGUI
-pcb2gcode
+# Executables copied next to the sources
+/pcb2gcodeGUI
+/pcb2gcode
+/pcb2gcode.exe
