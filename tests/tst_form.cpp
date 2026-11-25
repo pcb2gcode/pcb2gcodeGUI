@@ -117,7 +117,7 @@ void TestForm::unitSystem()
 {
     QVERIFY(form->setOptionValues("zsafe", {"5mm"}));
     QVERIFY(form->setOptionValues("metric", {"false"}));
-    QVERIFY(!form->metric());
+    QVERIFY(!form->isMetric());
     QStringList args = form->arguments();
     QVERIFY2(args.contains("--zsafe=0.19685in"), qPrintable(args.join(' ')));
     QVERIFY(!hasArgWithPrefix(args, "--metric="));

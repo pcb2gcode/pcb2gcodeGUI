@@ -65,7 +65,7 @@ public:
     void resetAll(bool usePresets);
     bool setOptionValues(const QString &name, const QStringList &values, QString *error = nullptr);
 
-    bool metric() const override;
+    bool isMetric() const override;
     QString browseDirectory(PathKind kind) const override;
     void rememberDirectory(PathKind kind, const QString &directory) override;
 

@@ -38,7 +38,7 @@ class EditorContext
 {
 public:
     virtual ~EditorContext() = default;
-    virtual bool metric() const = 0;
+    virtual bool isMetric() const = 0;
     virtual QString browseDirectory(PathKind kind) const = 0;
     virtual void rememberDirectory(PathKind kind, const QString &directory) = 0;
 };
@@ -92,7 +92,8 @@ public:
 
     void setRuleEnabled(bool enabled);
     bool ruleEnabled() const { return m_ruleEnabled; }
-    void setUsed(bool used, const QString &reason);
+    // `usedWhen` describes when pcb2gcode uses the option, e.g. "front or back is set".
+    void setUsed(bool used, const QString &usedWhen);
     bool isUsed() const { return m_used; }
     void setHighlighted(bool changed);
 
@@ -115,7 +116,7 @@ protected:
     void moveLabelOnto(QAbstractButton *button);
     void emitChanged();
     QString startValue(bool usePreset) const;
-    bool metric() const { return m_context->metric(); }
+    bool isMetric() const { return m_context->isMetric(); }
 
     OptionSpec m_spec;
     OptionHint m_hint;
@@ -136,6 +137,7 @@ private:
     QLabel *m_note = nullptr;
     bool m_ruleEnabled = true;
     bool m_used = true;
+    QString m_usedWhen;
 };
 
 // The label shown for an option without a layout hint, e.g. "mill-feed" -> "Mill feed".

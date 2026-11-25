@@ -213,7 +213,7 @@ bool OptionForm::supports(const QString &option) const
     return spec && !spec->unsupported;
 }
 
-bool OptionForm::metric() const
+bool OptionForm::isMetric() const
 {
     OptionEditor *e = m_editors.value(QStringLiteral("metric"));
     if (!e)
@@ -275,7 +275,7 @@ condition::Context OptionForm::conditionContext() const
         const OptionSpec *spec = m_schema.find(name);
         return spec ? spec->dimension() : units::Dimension::None;
     };
-    ctx.metric = metric();
+    ctx.metric = isMetric();
     return ctx;
 }
 
@@ -462,14 +462,14 @@ bool OptionForm::setOptionValues(const QString &name, const QStringList &values,
             *error = tr("%1 isn't shown").arg(name);
         return false;
     }
-    const bool ok = e->setValues(values, metric(), error);
+    const bool ok = e->setValues(values, isMetric(), error);
     onEditorChanged(e);
     return ok;
 }
 
 void OptionForm::applyUnitSystem()
 {
-    const bool m = metric();
+    const bool m = isMetric();
     for (OptionEditor *e : m_order)
         e->unitSystemChanged(m);
 }

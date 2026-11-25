@@ -359,7 +359,7 @@ public:
             emitChanged();
         });
         setEditor(m_spin);
-        m_metric = metric();
+        m_metric = isMetric();
         configure();
     }
 
@@ -489,7 +489,7 @@ public:
             emitChanged();
         });
         setEditor(box);
-        m_metric = metric();
+        m_metric = isMetric();
         configure();
     }
 
@@ -582,7 +582,7 @@ public:
         connect(m_edit, &QLineEdit::textChanged, this, [this] { emitChanged(); });
         connect(m_edit, &QLineEdit::editingFinished, this, [this] { normalizeText(m_metric); });
         setEditor(m_edit);
-        m_metric = metric();
+        m_metric = isMetric();
     }
 
 protected:
@@ -994,7 +994,9 @@ void OptionEditor::updateTooltips()
     if (!m_spec.requiredWhen.isEmpty())
         tip += QStringLiteral("<p>%1</p>").arg(tr("Required"));
     if (!m_used)
-        tip += QStringLiteral("<p><i>%1</i></p>").arg(tr("Not used with the current files and settings."));
+        tip += QStringLiteral("<p><i>%1</i></p>")
+                   .arg(m_usedWhen.isEmpty() ? tr("Not used with the current files and settings.")
+                                             : tr("Only used when %1.").arg(m_usedWhen.toHtmlEscaped()));
     m_label->setToolTip(tip);
     m_textWidget->setToolTip(tip);
     if (m_editor)
@@ -1095,8 +1097,8 @@ void OptionEditor::reset(bool usePreset)
 {
     m_loading = true;
     const QString start = startValue(usePreset);
-    if (start.isEmpty() || !loadValues({start}, metric(), nullptr))
-        loadValues({}, metric(), nullptr);
+    if (start.isEmpty() || !loadValues({start}, isMetric(), nullptr))
+        loadValues({}, isMetric(), nullptr);
     if (m_override)
         m_override->setChecked(false);
     m_loading = false;
@@ -1129,11 +1131,12 @@ void OptionEditor::setRuleEnabled(bool enabled)
     updateEnabled();
 }
 
-void OptionEditor::setUsed(bool used, const QString &)
+void OptionEditor::setUsed(bool used, const QString &usedWhen)
 {
-    if (m_used == used)
+    if (m_used == used && m_usedWhen == usedWhen)
         return;
     m_used = used;
+    m_usedWhen = usedWhen;
     updateTooltips();
 }
 
