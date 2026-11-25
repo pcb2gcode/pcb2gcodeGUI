@@ -20,22 +20,26 @@
 #ifndef OPTIONSCHEMA_H
 #define OPTIONSCHEMA_H
 
+#include "condition.h"
 #include "units.h"
 
 #include <QByteArray>
+#include <QHash>
+#include <QJsonValue>
 #include <QList>
+#include <QMap>
 #include <QString>
 #include <QStringList>
+#include <optional>
 
-// pcb2gcode's options as described by pcb2gcode itself (its option dump), or by the
-// snapshot of that dump bundled with the GUI.
+// pcb2gcode's options as described by `pcb2gcode --dump-options`, or by the copy of that
+// description bundled with the GUI.
 
 enum class OptionType {
     None,  // a switch without a value, such as --help
     Bool,
     Int,
     UInt,
-    Size,
     Double,
     String,
     Enum,
@@ -48,9 +52,13 @@ enum class OptionType {
     Drill,  // diameter[:negative tolerance[:+positive tolerance]]
 };
 
-enum class Multiplicity { Single, CommaList, Repeat };
+enum class Multiplicity {
+    Single,
+    CommaList,  // comma-separated items, possibly given several times
+    Repeat,     // one item per occurrence
+};
 
-enum class PathKind { None, InputGerber, InputExcellon, InputGcode, InputText, OutputFile, Directory };
+enum class PathKind { None, InputGerber, InputExcellon, InputGcode, InputText, InputFile, OutputFile, Directory };
 
 struct OptionChoice {
     QString value;
@@ -72,16 +80,17 @@ struct OptionSpec {
     QList<OptionChoice> choices;
     QString minimum, maximum;
     bool minimumExclusive = false, maximumExclusive = false;
-    QString usedWhen;      // condition; empty means always
-    QString requiredWhen;  // condition; empty means never
+    QString usedWhen = QStringLiteral("always");  // condition name
+    QString requiredWhen;                         // condition name; empty means never
     QString example;
     bool deprecated = false;
     QString replacedBy;
+    QMap<QString, QString> valueMap;  // old value -> value of replacedBy
     bool cliOnly = false;
     PathKind path = PathKind::None;
-    bool bareLength = false;  // a plain number in --metric units, e.g. --tolerance
-    bool fromHelp = false;    // only known from --help, nothing but the name is reliable
-    bool unsupported = false; // in the snapshot but not in the installed pcb2gcode
+    bool bareLength = false;   // a plain number in --metric units, e.g. --tolerance
+    bool fromHelp = false;     // only known from --help: nothing but the name is reliable
+    bool unsupported = false;  // described, but the installed pcb2gcode doesn't have it
 
     units::Dimension dimension() const;
     bool isNumeric() const;
@@ -95,10 +104,22 @@ struct OptionGroup {
     QString title;
 };
 
-struct OptionConstraint {
-    QString when;
-    QString require;
+struct OptionCondition {
+    QString description;
+    QJsonValue expression;
+};
+
+// A check pcb2gcode makes before processing.
+struct OptionRule {
+    QString kind;  // required, range, greater, greater_or_equal, forbidden
+    QStringList options;
+    QString when;  // condition name
+    int code = 0;
     QString message;
+    QString minimum, maximum;
+    bool minimumExclusive = false, maximumExclusive = false;
+    QJsonValue unless;     // greater: no error while this holds
+    QJsonValue condition;  // forbidden: an error while this holds
 };
 
 // One option as printed by `pcb2gcode --help`.
@@ -129,16 +150,24 @@ public:
 
     const OptionSpec *find(const QString &name) const;
     OptionSpec *find(const QString &name);
-
     bool isValid() const { return !options.isEmpty(); }
+
+    // Whether a named condition holds; unknown names and expressions count as true.
+    bool holds(const QString &conditionName, const condition::Context &context) const;
+    QString conditionDescription(const QString &conditionName) const;
+    QString exitCodeName(int code) const { return exitCodes.value(code); }
 
     Source source = Source::None;
     int formatVersion = 0;
     QString pcb2gcodeVersion;
-    QString pcb2gcodeCommit;
+    QString gitCommit;
+    QString sourceCommit;
     QList<OptionGroup> groups;
     QList<OptionSpec> options;
-    QList<OptionConstraint> constraints;
+    QHash<QString, OptionCondition> conditions;
+    QList<OptionRule> rules;
+    QMap<int, QString> exitCodes;
+    std::optional<units::Grammar> grammar;
     QStringList addedFromHelp;  // names added by restrictTo()
     QStringList missingFromBinary;
 };

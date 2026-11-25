@@ -20,7 +20,9 @@
 #ifndef UNITS_H
 #define UNITS_H
 
+#include <QHash>
 #include <QString>
+#include <QStringList>
 #include <optional>
 
 // The unit grammar of pcb2gcode's units.hpp: a number, optional whitespace and an
@@ -35,6 +37,18 @@ struct Quantity {
     QString unit;          // the unit as written, empty for a bare number
     double canonical = 0;  // the value in the dimension's canonical unit
 };
+
+// The unit words pcb2gcode accepts. pcb2gcode's option dump lists them; without it the
+// GUI uses those of pcb2gcode 3.2.0.
+struct Grammar {
+    QHash<QString, double> lengthMm;     // unit word -> millimetres
+    QHash<QString, double> timeMinutes;  // unit word -> minutes
+    QStringList revolutions;             // words for one revolution
+    QStringList rpm;                     // words for revolutions per minute
+};
+
+Grammar builtInGrammar();
+void setGrammar(const Grammar &grammar);
 
 // Parses `text` the way pcb2gcode does. A bare number is read like pcb2gcode reads it:
 // inches (or mm with --metric) for lengths, in/min (or mm/min) for velocities,

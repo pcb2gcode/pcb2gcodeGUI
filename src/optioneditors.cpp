@@ -336,15 +336,6 @@ protected:
         return true;
     }
 
-    QString editorProblem() const override
-    {
-        bool ok = false;
-        const int min = m_spec.minimum.toInt(&ok);
-        if (ok && m_spec.minimumExclusive && m_spin->value() <= min)
-            return tr("must be greater than %1").arg(min);
-        return QString();
-    }
-
     bool sameAsDefault(const QStringList &values) const override
     {
         return values.last().trimmed().toLongLong() == m_spec.defaultValue.trimmed().toLongLong();
@@ -385,6 +376,13 @@ protected:
         return q->canonical;
     }
 
+    double minimum() const
+    {
+        if (const auto b = bound(m_spec.minimum))
+            return *b;
+        return bound(m_hint.minimum).value_or(defaultMinimum(m_dim));
+    }
+
     void configure()
     {
         const QSignalBlocker blocker(m_spin);
@@ -392,7 +390,7 @@ protected:
         m_spin->setSuffix(u.isEmpty() ? QString() : " " + u);
         m_spin->setDecimals(decimalsFor(m_dim, m_metric, m_hint.perSecond, m_hint.fine));
         m_spin->setSingleStep(stepFor(m_dim, m_metric, m_hint.perSecond, m_hint.fine));
-        const double min = bound(m_spec.minimum).value_or(defaultMinimum(m_dim));
+        const double min = minimum();
         const double max = bound(m_spec.maximum).value_or(defaultMaximum(m_dim));
         m_spin->setRange(units::toDisplay(min, m_dim, m_metric, m_hint.perSecond),
                          units::toDisplay(max, m_dim, m_metric, m_hint.perSecond));
@@ -408,8 +406,7 @@ protected:
     bool loadValues(const QStringList &values, bool sourceMetric, QString *error) override
     {
         if (values.isEmpty()) {
-            m_canonical = std::clamp(0.0, bound(m_spec.minimum).value_or(defaultMinimum(m_dim)),
-                                     bound(m_spec.maximum).value_or(defaultMaximum(m_dim)));
+            m_canonical = std::clamp(0.0, minimum(), bound(m_spec.maximum).value_or(defaultMaximum(m_dim)));
             configure();
             return true;
         }
@@ -420,7 +417,7 @@ protected:
                 *error = q ? tr("\"%1\" can't be set explicitly").arg(values.last()) : why;
             return false;
         }
-        const double min = bound(m_spec.minimum).value_or(defaultMinimum(m_dim));
+        const double min = minimum();
         const double max = bound(m_spec.maximum).value_or(defaultMaximum(m_dim));
         m_canonical = std::clamp(q->canonical, min, max);
         configure();
@@ -439,20 +436,6 @@ protected:
             return;
         m_metric = metric;
         configure();
-    }
-
-    QString editorProblem() const override
-    {
-        const double v = units::fromDisplay(m_spin->value(), m_dim, m_metric, m_hint.perSecond);
-        const auto min = bound(m_spec.minimum);
-        if (min && m_spec.minimumExclusive && v <= *min + 1e-12)
-            return tr("must be greater than %1%2")
-                .arg(units::formatNumber(units::toDisplay(*min, m_dim, m_metric, m_hint.perSecond)), unit());
-        const auto max = bound(m_spec.maximum);
-        if (max && m_spec.maximumExclusive && v >= *max - 1e-12)
-            return tr("must be less than %1%2")
-                .arg(units::formatNumber(units::toDisplay(*max, m_dim, m_metric, m_hint.perSecond)), unit());
-        return QString();
     }
 
     bool sameAsDefault(const QStringList &values) const override
@@ -893,7 +876,6 @@ OptionEditor *OptionEditor::create(const OptionSpec &spec, const OptionHint &hin
         break;
     case OptionType::Int:
     case OptionType::UInt:
-    case OptionType::Size:
         if (spec.multiplicity == Multiplicity::Single)
             editor = new IntegerEditor(spec, hint, context, parent);
         else

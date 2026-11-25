@@ -22,6 +22,7 @@
 #define OUTPUTWINDOW_H
 
 #include <QDialog>
+#include <QMap>
 #include <QProcess>
 
 class QLabel;
@@ -36,6 +37,8 @@ public:
     explicit OutputWindow(QWidget *parent = nullptr);
 
     void start(const QString &program, const QStringList &arguments, const QString &workingDirectory);
+    // pcb2gcode's names for its exit codes, from its option dump.
+    void setExitCodeNames(const QMap<int, QString> &names) { m_exitCodeNames = names; }
     bool isRunning() const { return m_process.state() != QProcess::NotRunning; }
     QString output() const;
 
@@ -53,6 +56,7 @@ private:
     QLabel *m_status;
     QPushButton *m_button;
     QProcess m_process;
+    QMap<int, QString> m_exitCodeNames;
     bool m_killed = false;
 };
 

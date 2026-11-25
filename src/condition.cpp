@@ -19,7 +19,10 @@
 
 #include "condition.h"
 
+#include <QJsonArray>
+#include <QJsonObject>
 #include <QList>
+#include <QVariant>
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -319,6 +322,118 @@ bool evaluate(const QString &expression, const Context &context, bool fallback, 
             *error = QString::fromStdString(e.what());
         return fallback;
     }
+}
+
+namespace {
+
+std::optional<bool> boolText(const QString &v)
+{
+    const QString s = v.trimmed().toLower();
+    if (s == "true" || s == "1" || s == "yes" || s == "on")
+        return true;
+    if (s == "false" || s == "0" || s == "no" || s == "off")
+        return false;
+    return std::nullopt;
+}
+
+bool isInfinite(const QString &v)
+{
+    const QString s = v.trimmed().toLower();
+    return s == "inf" || s == "+inf" || s == "-inf";
+}
+
+}  // namespace
+
+bool evaluate(const QJsonValue &expression, const Context &ctx, bool unknownValue, bool *sawUnknown)
+{
+    auto unknown = [&]() {
+        if (sawUnknown)
+            *sawUnknown = true;
+        return unknownValue;
+    };
+    if (expression.isBool())
+        return expression.toBool();
+    if (!expression.isObject() || expression.toObject().size() != 1)
+        return unknown();
+    const QJsonObject node = expression.toObject();
+    const QString op = node.begin().key();
+    const QJsonValue arg = node.begin().value();
+
+    if (op == "set") {
+        const auto v = ctx.value(arg.toString());
+        return v && !v->isEmpty();
+    }
+    if (op == "given")
+        return ctx.given ? ctx.given(arg.toString()) : false;
+    if (op == "finite") {
+        const auto v = ctx.value(arg.toString());
+        return v && !v->isEmpty() && !isInfinite(*v);
+    }
+    if (op == "equal") {
+        const QJsonArray pair = arg.toArray();
+        if (pair.size() != 2)
+            return unknown();
+        const QString name = pair.at(0).toString();
+        const QString literal = pair.at(1).isString() ? pair.at(1).toString()
+                                                      : pair.at(1).toVariant().toString();
+        const auto v = ctx.value(name);
+        if (!v)
+            return false;
+        if (ctx.kind && ctx.kind(name) == Kind::Bool)
+            return boolText(*v) == boolText(literal);
+        return v->trimmed().compare(literal, Qt::CaseInsensitive) == 0;
+    }
+    if (op == "not")
+        return !evaluate(arg, ctx, !unknownValue, sawUnknown);
+    if (op == "any" || op == "all") {
+        const bool any = op == "any";
+        for (const QJsonValue &e : arg.toArray()) {
+            if (evaluate(e, ctx, unknownValue, sawUnknown) == any)
+                return any;
+        }
+        return !any;
+    }
+    return unknown();
+}
+
+QStringList options(const QJsonValue &expression)
+{
+    QStringList out;
+    if (!expression.isObject())
+        return out;
+    const QJsonObject node = expression.toObject();
+    for (auto it = node.begin(); it != node.end(); ++it) {
+        if (it.key() == "set" || it.key() == "given" || it.key() == "finite")
+            out.append(it.value().toString());
+        else if (it.key() == "equal")
+            out.append(it.value().toArray().at(0).toString());
+        else if (it.key() == "not")
+            out += options(it.value());
+        else if (it.key() == "any" || it.key() == "all")
+            for (const QJsonValue &e : it.value().toArray())
+                out += options(e);
+    }
+    out.removeDuplicates();
+    return out;
+}
+
+std::optional<int> compareQuantities(const QString &a, const QString &b, units::Dimension dimension, bool metric)
+{
+    auto value = [&](const QString &text) -> std::optional<double> {
+        if (isInfinite(text))
+            return text.trimmed().startsWith('-') ? -std::numeric_limits<double>::infinity()
+                                                  : std::numeric_limits<double>::infinity();
+        const auto q = units::parse(text, dimension, metric);
+        if (!q)
+            return std::nullopt;
+        return q->canonical;
+    };
+    const auto x = value(a), y = value(b);
+    if (!x || !y)
+        return std::nullopt;
+    if (std::abs(*x - *y) <= 1e-9 * std::max({1.0, std::abs(*x), std::abs(*y)}))
+        return 0;
+    return *x < *y ? -1 : 1;
 }
 
 QStringList identifiers(const QString &expression)

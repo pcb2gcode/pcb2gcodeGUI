@@ -46,6 +46,9 @@ public:
 signals:
     void refreshRequested();
 
+protected:
+    bool eventFilter(QObject *object, QEvent *event) override;
+
 private:
     void showImage(int index);
     void fit();
@@ -62,6 +65,7 @@ private:
     QGraphicsScene *m_scene;
     QList<PreviewImage> m_images;
     QRectF m_lastRect;
+    bool m_autoFit = true;
 };
 
 #endif  // PREVIEWPANE_H

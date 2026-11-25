@@ -25,6 +25,9 @@
 #include "units.h"
 
 #include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QHash>
 #include <QSet>
 #include <QTemporaryDir>
@@ -69,6 +72,8 @@ private slots:
     void conditions_data();
     void conditions();
     void bundledSchema();
+    void dumpFormat();
+    void dumpExpressions();
     void layoutMatchesSchema();
     void parseHelp();
     void restrictToHelp();
@@ -234,15 +239,139 @@ void TestCore::bundledSchema()
                      qPrintable(spec.name + " default " + spec.defaultValue));
     }
     for (const OptionSpec &spec : schema.options) {
-        for (const QString &condition : {spec.usedWhen, spec.requiredWhen})
-            for (const QString &id : condition::identifiers(condition))
-                QVERIFY2(names.contains(id), qPrintable(spec.name + " refers to " + id));
+        QVERIFY2(schema.conditions.contains(spec.usedWhen), qPrintable(spec.name + " uses " + spec.usedWhen));
+        if (!spec.requiredWhen.isEmpty())
+            QVERIFY2(schema.conditions.contains(spec.requiredWhen), qPrintable(spec.name));
     }
-    for (const OptionConstraint &c : schema.constraints) {
-        QVERIFY(!c.message.isEmpty());
-        for (const QString &id : condition::identifiers(c.when + ' ' + c.require))
-            QVERIFY2(names.contains(id) || id == "any", qPrintable(c.message + " refers to " + id));
+    for (auto it = schema.conditions.begin(); it != schema.conditions.end(); ++it) {
+        QVERIFY(!it->description.isEmpty());
+        for (const QString &name : condition::options(it->expression))
+            QVERIFY2(names.contains(name), qPrintable(it.key() + " refers to " + name));
     }
+    const QStringList kinds = {"required", "range", "greater", "greater_or_equal", "forbidden"};
+    for (const OptionRule &rule : schema.rules) {
+        QVERIFY2(kinds.contains(rule.kind), qPrintable(rule.kind));
+        QVERIFY(!rule.message.isEmpty());
+        QVERIFY2(schema.conditions.contains(rule.when), qPrintable(rule.message));
+        QVERIFY2(schema.exitCodes.contains(rule.code), qPrintable(rule.message));
+        for (const QString &name : rule.options + condition::options(rule.unless) + condition::options(rule.condition))
+            QVERIFY2(names.contains(name), qPrintable(rule.message + " refers to " + name));
+    }
+    QCOMPARE(schema.exitCodeName(3), QStringLiteral("ERR_NOZSAFE"));
+    QVERIFY(schema.grammar.has_value());
+}
+
+void TestCore::dumpFormat()
+{
+    const QByteArray json = R"({
+      "format_version": 1, "program": "pcb2gcode", "version": "9.9.9", "git_commit": null,
+      "future_key": {"anything": true},
+      "types": {"length": {"units": [{"name": "mm", "aliases": ["millimeter"], "factor": 0.001},
+                                     {"name": "m", "aliases": ["meter", "meters"], "factor": 1},
+                                     {"name": "in", "aliases": ["inch"], "factor": 0.0254}]}},
+      "conditions": {"always": {"description": "always", "expression": true},
+                     "milling": {"description": "front or back is set",
+                                 "expression": {"any": [{"set": "front"}, {"set": "back"}]}}},
+      "groups": [{"id": "milling", "title": "Milling options"}],
+      "options": [
+        {"name": "front", "group": "milling", "description": "front", "type": "string", "default": null,
+         "used_when": "always", "path": "input_file", "file_format": "gerber"},
+        {"name": "mill-diameters", "group": "milling", "description": "d", "type": "length", "default": ["0"],
+         "repeatable": true, "comma_separated": true, "multitoken": true, "used_when": "milling",
+         "required_when": "milling", "example": "0.2mm"},
+        {"name": "pre-milling-gcode", "group": "milling", "description": "g", "type": "string", "default": [],
+         "repeatable": true, "used_when": "milling"},
+        {"name": "mill-feed", "group": "milling", "description": "f", "type": "velocity", "default": null,
+         "range": {"min": "0", "min_exclusive": true}, "used_when": "milling"},
+        {"name": "tolerance", "group": "milling", "description": "t", "type": "double", "default": null,
+         "bare_unit": "in", "metric_bare_unit": "mm", "used_when": "always"},
+        {"name": "drill-front", "group": "milling", "description": "[DEPRECATED]", "type": "bool",
+         "default": null, "implicit": "true", "deprecated": true, "replaced_by": "drill-side",
+         "value_map": {"true": "front", "false": "back"}, "used_when": "always"},
+        {"name": "help", "short": "?", "group": "milling", "description": "h", "type": "none", "default": null,
+         "used_when": "always", "cli_only": true},
+        {"name": "shiny", "group": "milling", "description": "a type from the future", "type": "hologram",
+         "default": "x", "used_when": "always"}
+      ],
+      "rules": [{"kind": "greater", "options": ["mill-feed", "tolerance"], "when": "milling", "code": 7,
+                 "message": "m"}, {"kind": "teleport", "options": ["front"], "when": "always", "code": 1,
+                 "message": "unknown kind"}],
+      "exit_codes": [{"code": 0, "name": "ERR_OK"}, {"code": 7, "name": "ERR_SEVEN"}]
+    })";
+    QString error;
+    const OptionSchema schema = OptionSchema::fromJson(json, &error);
+    QVERIFY2(schema.isValid(), qPrintable(error));
+    QCOMPARE(schema.pcb2gcodeVersion, QStringLiteral("9.9.9"));
+    QCOMPARE(schema.find("front")->path, PathKind::InputGerber);
+    const OptionSpec *diameters = schema.find("mill-diameters");
+    QCOMPARE(diameters->multiplicity, Multiplicity::CommaList);
+    QCOMPARE(diameters->defaultValue, QStringLiteral("0"));
+    QCOMPARE(diameters->requiredWhen, QStringLiteral("milling"));
+    QCOMPARE(schema.find("pre-milling-gcode")->multiplicity, Multiplicity::Repeat);
+    QVERIFY(schema.find("pre-milling-gcode")->hasDefault);
+    QCOMPARE(schema.find("pre-milling-gcode")->defaultValue, QString());
+    QCOMPARE(schema.find("mill-feed")->minimum, QStringLiteral("0"));
+    QVERIFY(schema.find("mill-feed")->minimumExclusive);
+    QVERIFY(schema.find("tolerance")->bareLength);
+    QCOMPARE(schema.find("tolerance")->dimension(), Dimension::Length);
+    QCOMPARE(schema.find("drill-front")->valueMap.value("true"), QStringLiteral("front"));
+    QCOMPARE(schema.find("help")->shortName, QStringLiteral("?"));
+    QCOMPARE(schema.find("shiny")->type, OptionType::String);
+    QCOMPARE(schema.rules.size(), 2);
+    QCOMPARE(schema.exitCodeName(7), QStringLiteral("ERR_SEVEN"));
+
+    // The unit words come from the dump.
+    QVERIFY(schema.grammar.has_value());
+    units::setGrammar(*schema.grammar);
+    QVERIFY(units::parse("2 meters", Dimension::Length, true).has_value());
+    units::setGrammar(units::builtInGrammar());
+    QVERIFY(!units::parse("2 meters", Dimension::Length, true).has_value());
+
+    QByteArray future = json;
+    future.replace("\"format_version\": 1", "\"format_version\": 2");
+    QVERIFY(!OptionSchema::fromJson(future, &error).isValid());
+    QVERIFY(!OptionSchema::fromJson("Error: Unknown option --dump-options", &error).isValid());
+}
+
+void TestCore::dumpExpressions()
+{
+    const QHash<QString, QString> values = {
+        {"front", "board.gbr"}, {"tsp-2opt", "true"}, {"mill-feed-direction", "climb"},
+        {"min-milldrill-hole-diameter", "inf"}, {"zchange-absolute", "false"}, {"drill-side", "auto"}};
+    condition::Context ctx;
+    ctx.isOption = [&](const QString &n) { return values.contains(n); };
+    ctx.value = [&](const QString &n) -> std::optional<QString> {
+        if (!values.contains(n))
+            return std::nullopt;
+        return values.value(n);
+    };
+    ctx.given = [](const QString &n) { return n == "front"; };
+    ctx.kind = [](const QString &n) {
+        return n == "tsp-2opt" || n == "zchange-absolute" ? condition::Kind::Bool : condition::Kind::Text;
+    };
+    auto eval = [&](const char *json, bool unknownValue = true, bool *sawUnknown = nullptr) {
+        return condition::evaluate(QJsonDocument::fromJson(QByteArray("[") + json + "]").array().at(0), ctx,
+                                   unknownValue, sawUnknown);
+    };
+    QVERIFY(eval("true"));
+    QVERIFY(eval(R"({"set": "front"})"));
+    QVERIFY(!eval(R"({"set": "back"})"));
+    QVERIFY(eval(R"({"given": "front"})"));
+    QVERIFY(!eval(R"({"given": "drill-side"})"));
+    QVERIFY(!eval(R"({"finite": "min-milldrill-hole-diameter"})"));
+    QVERIFY(eval(R"({"equal": ["tsp-2opt", "true"]})"));
+    QVERIFY(eval(R"({"equal": ["zchange-absolute", "0"]})"));
+    QVERIFY(eval(R"({"not": {"equal": ["mill-feed-direction", "any"]}})"));
+    QVERIFY(eval(R"({"all": [{"set": "front"}, {"any": [{"set": "back"}, {"equal": ["tsp-2opt", "true"]}]}]})"));
+    bool unknown = false;
+    QVERIFY(eval(R"({"teleport": "front"})", true, &unknown));
+    QVERIFY(unknown);
+    unknown = false;
+    QVERIFY(!eval(R"({"not": {"teleport": "front"}})", false, &unknown));
+    QVERIFY(unknown);
+    QCOMPARE(condition::options(QJsonDocument::fromJson(
+                                    R"({"all": [{"set": "a"}, {"not": {"equal": ["b", "x"]}}]})").object()),
+             (QStringList{"a", "b"}));
 }
 
 void TestCore::layoutMatchesSchema()
@@ -365,7 +494,6 @@ void TestCore::migrateLegacyConfig()
     QVERIFY(!file.contains("offset"));
     QCOMPARE(file.values("drill-side"), QStringList{"front"});
     QVERIFY(!file.contains("drill-front"));
-    QVERIFY(!file.contains("vectorial"));
 
     QList<ConfigEntry> entries = {{"milldrill", "true"}, {"cut-front", "false"}, {"g64", "0.01"},
                                   {"extra-passes", "2"}, {"mirror-absolute", "true"}};

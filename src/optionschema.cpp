@@ -36,7 +36,6 @@ const QHash<QString, OptionType> &typeNames()
         {"bool", OptionType::Bool},
         {"int", OptionType::Int},
         {"uint", OptionType::UInt},
-        {"size", OptionType::Size},
         {"double", OptionType::Double},
         {"string", OptionType::String},
         {"enum", OptionType::Enum},
@@ -46,22 +45,28 @@ const QHash<QString, OptionType> &typeNames()
         {"time", OptionType::Time},
         {"percent", OptionType::Percent},
         {"length_or_percent", OptionType::LengthOrPercent},
-        {"drill", OptionType::Drill},
+        {"available_drill", OptionType::Drill},
     };
     return names;
 }
 
-PathKind pathKind(const QString &s)
+PathKind pathKind(const QString &path, const QString &format)
 {
-    static const QHash<QString, PathKind> kinds = {
-        {"input-gerber", PathKind::InputGerber},
-        {"input-excellon", PathKind::InputExcellon},
-        {"input-gcode", PathKind::InputGcode},
-        {"input-text", PathKind::InputText},
-        {"output-file", PathKind::OutputFile},
-        {"directory", PathKind::Directory},
-    };
-    return kinds.value(s, PathKind::None);
+    if (path == "directory")
+        return PathKind::Directory;
+    if (path == "output_file")
+        return PathKind::OutputFile;
+    if (path != "input_file")
+        return PathKind::None;
+    if (format == "gerber")
+        return PathKind::InputGerber;
+    if (format == "excellon")
+        return PathKind::InputExcellon;
+    if (format == "gcode")
+        return PathKind::InputGcode;
+    if (format == "text")
+        return PathKind::InputText;
+    return PathKind::InputFile;
 }
 
 // JSON values may be strings, numbers or booleans; the GUI works with pcb2gcode syntax.
@@ -74,6 +79,55 @@ QString valueText(const QJsonValue &v)
     if (v.isDouble())
         return units::formatNumber(v.toDouble(), 10);
     return QString();
+}
+
+void readRange(const QJsonObject &o, QString *min, QString *max, bool *minExclusive, bool *maxExclusive)
+{
+    *min = valueText(o.value("min"));
+    *max = valueText(o.value("max"));
+    *minExclusive = o.value("min_exclusive").toBool();
+    *maxExclusive = o.value("max_exclusive").toBool();
+}
+
+// The unit words of the dump's "types", in the GUI's canonical units (mm, minutes).
+std::optional<units::Grammar> readGrammar(const QJsonObject &types)
+{
+    if (types.isEmpty())
+        return std::nullopt;
+    units::Grammar g = units::builtInGrammar();
+    auto words = [](const QJsonValue &unit) {
+        QStringList w{unit.toObject().value("name").toString()};
+        for (const QJsonValue &a : unit.toObject().value("aliases").toArray())
+            w.append(a.toString());
+        return w;
+    };
+    const QJsonArray lengths = types.value("length").toObject().value("units").toArray();
+    if (!lengths.isEmpty()) {
+        g.lengthMm.clear();
+        for (const QJsonValue &u : lengths)
+            for (const QString &w : words(u))
+                g.lengthMm.insert(w, u.toObject().value("factor").toDouble() * 1000);
+    }
+    const QJsonArray times = types.value("time").toObject().value("units").toArray();
+    if (!times.isEmpty()) {
+        g.timeMinutes.clear();
+        for (const QJsonValue &u : times)
+            for (const QString &w : words(u))
+                g.timeMinutes.insert(w, u.toObject().value("factor").toDouble() / 60);
+    }
+    const QJsonArray revolutions = types.value("revolution").toObject().value("units").toArray();
+    if (!revolutions.isEmpty()) {
+        g.revolutions.clear();
+        for (const QJsonValue &u : revolutions)
+            g.revolutions += words(u);
+    }
+    const QJsonArray rpm = types.value("rpm").toObject().value("units").toArray();
+    if (!rpm.isEmpty()) {
+        g.rpm.clear();
+        for (const QJsonValue &u : rpm)
+            g.rpm += words(u);
+    }
+    return g;
 }
 
 }  // namespace
@@ -109,7 +163,6 @@ bool OptionSpec::isNumeric() const
     switch (type) {
     case OptionType::Int:
     case OptionType::UInt:
-    case OptionType::Size:
     case OptionType::Double:
     case OptionType::Length:
     case OptionType::Velocity:
@@ -151,19 +204,27 @@ OptionSchema OptionSchema::fromJson(const QByteArray &json, QString *error)
         return schema;
     }
     const QJsonObject root = doc.object();
-    if (!root.value("options").isArray()) {
+    if (!root.value("format_version").isDouble() || !root.value("options").isArray()) {
         if (error)
-            *error = QStringLiteral("no \"options\" list");
+            *error = QStringLiteral("not pcb2gcode option metadata");
         return schema;
     }
-    schema.formatVersion = root.value("format_version").toInt(1);
+    schema.formatVersion = root.value("format_version").toInt();
     if (schema.formatVersion != 1) {
         if (error)
             *error = QStringLiteral("unsupported format_version %1").arg(schema.formatVersion);
         return schema;
     }
-    schema.pcb2gcodeVersion = root.value("pcb2gcode_version").toString();
-    schema.pcb2gcodeCommit = root.value("pcb2gcode_commit").toString();
+    schema.pcb2gcodeVersion = root.value("version").toString();
+    schema.gitCommit = root.value("git_commit").toString();
+    schema.sourceCommit = root.value("source_commit").toString();
+    schema.grammar = readGrammar(root.value("types").toObject());
+
+    const QJsonObject conditions = root.value("conditions").toObject();
+    for (auto it = conditions.begin(); it != conditions.end(); ++it) {
+        const QJsonObject c = it.value().toObject();
+        schema.conditions.insert(it.key(), {c.value("description").toString(), c.value("expression")});
+    }
 
     for (const QJsonValue &g : root.value("groups").toArray()) {
         const QJsonObject o = g.toObject();
@@ -176,19 +237,25 @@ OptionSchema OptionSchema::fromJson(const QByteArray &json, QString *error)
         spec.name = o.value("name").toString();
         if (spec.name.isEmpty())
             continue;
-        spec.shortName = o.value("short_name").toString();
+        spec.shortName = o.value("short").toString();
         spec.group = o.value("group").toString();
         spec.description = o.value("description").toString();
+        // Options of types this version doesn't know are edited as text.
         spec.type = typeNames().value(o.value("type").toString(), OptionType::String);
-        const QString multiple = o.value("multiple").toString();
-        if (multiple == "comma")
+        if (o.value("comma_separated").toBool())
             spec.multiplicity = Multiplicity::CommaList;
-        else if (multiple == "repeat")
+        else if (o.value("repeatable").toBool())
             spec.multiplicity = Multiplicity::Repeat;
         const QJsonValue def = o.value("default");
         spec.hasDefault = !def.isUndefined() && !def.isNull();
-        if (spec.hasDefault)
+        if (def.isArray()) {
+            QStringList items;
+            for (const QJsonValue &item : def.toArray())
+                items.append(valueText(item));
+            spec.defaultValue = items.join(spec.multiplicity == Multiplicity::Repeat ? "\n" : ",");
+        } else if (spec.hasDefault) {
             spec.defaultValue = valueText(def);
+        }
         spec.defaultNote = o.value("default_note").toString();
         const QJsonValue implicit = o.value("implicit");
         spec.hasImplicit = !implicit.isUndefined() && !implicit.isNull();
@@ -205,26 +272,39 @@ OptionSchema OptionSchema::fromJson(const QByteArray &json, QString *error)
             }
             spec.choices.append(choice);
         }
-        spec.minimum = valueText(o.value("min"));
-        spec.maximum = valueText(o.value("max"));
-        spec.minimumExclusive = o.value("min_exclusive").toBool();
-        spec.maximumExclusive = o.value("max_exclusive").toBool();
-        spec.usedWhen = o.value("used_when").toString();
+        readRange(o.value("range").toObject(), &spec.minimum, &spec.maximum, &spec.minimumExclusive,
+                  &spec.maximumExclusive);
+        spec.usedWhen = o.value("used_when").toString(QStringLiteral("always"));
         spec.requiredWhen = o.value("required_when").toString();
         spec.example = valueText(o.value("example"));
         spec.deprecated = o.value("deprecated").toBool();
         spec.replacedBy = o.value("replaced_by").toString();
+        const QJsonObject valueMap = o.value("value_map").toObject();
+        for (auto it = valueMap.begin(); it != valueMap.end(); ++it)
+            spec.valueMap.insert(it.key(), valueText(it.value()));
         spec.cliOnly = o.value("cli_only").toBool();
-        spec.path = pathKind(o.value("path").toString());
-        spec.bareLength = o.value("bare_unit").toString() == "length";
+        spec.path = pathKind(o.value("path").toString(), o.value("file_format").toString());
+        spec.bareLength = !o.value("bare_unit").toString().isEmpty();
         schema.options.append(spec);
     }
 
-    for (const QJsonValue &c : root.value("constraints").toArray()) {
-        const QJsonObject o = c.toObject();
-        schema.constraints.append(
-            {o.value("when").toString(), o.value("require").toString(), o.value("message").toString()});
+    for (const QJsonValue &r : root.value("rules").toArray()) {
+        const QJsonObject o = r.toObject();
+        OptionRule rule;
+        rule.kind = o.value("kind").toString();
+        for (const QJsonValue &name : o.value("options").toArray())
+            rule.options.append(name.toString());
+        rule.when = o.value("when").toString(QStringLiteral("always"));
+        rule.code = o.value("code").toInt();
+        rule.message = o.value("message").toString();
+        readRange(o, &rule.minimum, &rule.maximum, &rule.minimumExclusive, &rule.maximumExclusive);
+        rule.unless = o.value("unless");
+        rule.condition = o.value("if");
+        schema.rules.append(rule);
     }
+
+    for (const QJsonValue &c : root.value("exit_codes").toArray())
+        schema.exitCodes.insert(c.toObject().value("code").toInt(), c.toObject().value("name").toString());
 
     if (schema.options.isEmpty() && error)
         *error = QStringLiteral("the option list is empty");
@@ -239,6 +319,21 @@ OptionSchema OptionSchema::bundled()
     OptionSchema schema = fromJson(file.readAll());
     schema.source = Source::Bundled;
     return schema;
+}
+
+bool OptionSchema::holds(const QString &conditionName, const condition::Context &context) const
+{
+    if (conditionName.isEmpty() || conditionName == "always")
+        return true;
+    const auto it = conditions.constFind(conditionName);
+    if (it == conditions.constEnd())
+        return true;
+    return condition::evaluate(it->expression, context, true);
+}
+
+QString OptionSchema::conditionDescription(const QString &conditionName) const
+{
+    return conditions.value(conditionName).description;
 }
 
 QList<HelpOption> OptionSchema::parseHelp(const QString &helpText)

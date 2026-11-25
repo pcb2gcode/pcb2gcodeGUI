@@ -1,13 +1,15 @@
 # End-to-end test: the GUI turns a configuration file into pcb2gcode arguments, pcb2gcode
 # runs with them, and the GUI recognises and loads the preview images it wrote.
 #
-# Variables: GUI, PCB2GCODE, CONFIG, CASE, EXTRA (extra GUI arguments), WORK.
+# Variables: GUI, PCB2GCODE, CONFIG, CASE, WORK, EXTRA (more GUI arguments, space separated),
+# SOURCE (text the GUI must print about where its option list came from).
 
 file(REMOVE_RECURSE ${WORK})
 file(MAKE_DIRECTORY ${WORK})
+separate_arguments(extra UNIX_COMMAND "${EXTRA}")
 
 execute_process(
-  COMMAND ${GUI} --print-command-line ${CONFIG} --pcb2gcode ${PCB2GCODE} ${EXTRA}
+  COMMAND ${GUI} --print-command-line ${CONFIG} --pcb2gcode ${PCB2GCODE} ${extra}
   OUTPUT_VARIABLE args_text
   ERROR_VARIABLE notes
   RESULT_VARIABLE rc)
@@ -15,6 +17,12 @@ if(NOT rc EQUAL 0)
   message(FATAL_ERROR "pcb2gcodeGUI --print-command-line failed (${rc}):\n${notes}")
 endif()
 message(STATUS "GUI notes:\n${notes}")
+if(SOURCE)
+  string(FIND "${notes}" "${SOURCE}" found)
+  if(found EQUAL -1)
+    message(FATAL_ERROR "Expected the GUI to report \"${SOURCE}\"")
+  endif()
+endif()
 
 string(REGEX REPLACE "\n$" "" args_text "${args_text}")
 string(REPLACE ";" "\\;" args_text "${args_text}")
@@ -71,8 +79,18 @@ elseif(CASE STREQUAL "legacy")
   set(outputs front.ngc back.ngc drill.ngc outline.ngc)
 endif()
 
+# With a pcb2gcode that has --manifest, the previews must come from the manifest.
+execute_process(COMMAND ${PCB2GCODE} --help OUTPUT_VARIABLE help ERROR_QUIET)
+string(FIND "${help}" "--manifest" has_manifest)
+set(manifest_args "")
+set(check_args "")
+if(NOT has_manifest EQUAL -1)
+  set(manifest_args --manifest=manifest.json)
+  set(check_args --manifest ${WORK}/manifest.json)
+endif()
+
 execute_process(
-  COMMAND ${PCB2GCODE} ${args} --output-dir=${WORK}
+  COMMAND ${PCB2GCODE} ${args} --output-dir=${WORK} ${manifest_args}
   WORKING_DIRECTORY ${WORK}
   OUTPUT_VARIABLE out
   ERROR_VARIABLE err
@@ -88,11 +106,17 @@ foreach(f IN LISTS outputs)
 endforeach()
 
 execute_process(
-  COMMAND ${GUI} --check-previews ${WORK}
+  COMMAND ${GUI} --check-previews ${WORK} ${check_args}
   OUTPUT_VARIABLE previews
   ERROR_VARIABLE previews_err
   RESULT_VARIABLE rc)
 message(STATUS "Previews:\n${previews}")
 if(NOT rc EQUAL 0)
   message(FATAL_ERROR "The GUI couldn't load the previews:\n${previews}\n${previews_err}")
+endif()
+if(manifest_args)
+  string(FIND "${previews}" "found in the manifest" from_manifest)
+  if(from_manifest EQUAL -1)
+    message(FATAL_ERROR "The previews didn't come from the manifest")
+  endif()
 endif()

@@ -50,7 +50,12 @@ public:
 
     // The options to pass to pcb2gcode, as --name=value, in the order they are shown.
     QStringList arguments() const;
-    // Problems pcb2gcode would reject: invalid fields and broken constraints.
+    struct Problem {
+        QString message;
+        QStringList options;
+    };
+    // What pcb2gcode would reject: fields that don't parse and failing rules of the schema.
+    QList<Problem> findProblems() const;
     QStringList problems() const;
 
     ConfigFile toConfig() const;

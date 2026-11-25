@@ -211,12 +211,17 @@ QList<PreviewImage> previewsFromFileNames(const QString &directory)
     return images;
 }
 
-QList<PreviewImage> collectPreviews(const QString &directory, const QString &manifestPath)
+QList<PreviewImage> collectPreviews(const QString &directory, const QString &manifestPath, bool *fromManifest)
 {
+    if (fromManifest)
+        *fromManifest = false;
     if (!manifestPath.isEmpty() && QFileInfo::exists(manifestPath)) {
-        const QList<PreviewImage> fromManifest = previewsFromManifest(manifestPath);
-        if (!fromManifest.isEmpty())
-            return fromManifest;
+        const QList<PreviewImage> listed = previewsFromManifest(manifestPath);
+        if (!listed.isEmpty()) {
+            if (fromManifest)
+                *fromManifest = true;
+            return listed;
+        }
     }
     return previewsFromFileNames(directory);
 }

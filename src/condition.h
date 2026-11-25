@@ -22,6 +22,7 @@
 
 #include "units.h"
 
+#include <QJsonValue>
 #include <QString>
 #include <QStringList>
 #include <functional>
@@ -42,6 +43,8 @@ struct Context {
     std::function<bool(const QString &name)> isOption;
     // The effective value (explicit or default) in pcb2gcode syntax, or nullopt if unset.
     std::function<std::optional<QString>(const QString &name)> value;
+    // Whether the option is passed to pcb2gcode, as opposed to left at its default.
+    std::function<bool(const QString &name)> given;
     std::function<Kind(const QString &name)> kind;
     std::function<units::Dimension(const QString &name)> dimension;
     bool metric = false;
@@ -54,6 +57,19 @@ bool evaluate(const QString &expression, const Context &context, bool fallback =
 
 // The words in `expression` that could be option names.
 QStringList identifiers(const QString &expression);
+
+// Evaluates an expression of pcb2gcode's option dump: true, {"set": o}, {"given": o},
+// {"equal": [o, literal]}, {"finite": o}, {"not": e}, {"any": [...]}, {"all": [...]}.
+// Nodes this version doesn't know count as `unknownValue` and set `*sawUnknown`.
+bool evaluate(const QJsonValue &expression, const Context &context, bool unknownValue,
+              bool *sawUnknown = nullptr);
+
+// The options an expression of the option dump refers to.
+QStringList options(const QJsonValue &expression);
+
+// Compares two values of an option's dimension; nullopt when one doesn't parse.
+std::optional<int> compareQuantities(const QString &a, const QString &b, units::Dimension dimension,
+                                     bool metric);
 
 }  // namespace condition
 

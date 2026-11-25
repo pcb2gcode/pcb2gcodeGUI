@@ -125,10 +125,14 @@ bool ConfigFile::contains(const QString &key) const
 
 namespace {
 
-bool isTrue(const QString &value)
+std::optional<bool> boolValue(const QString &value)
 {
     const QString v = value.trimmed().toLower();
-    return v.isEmpty() || v == "1" || v == "true" || v == "yes" || v == "on";
+    if (v.isEmpty() || v == "1" || v == "true" || v == "yes" || v == "on")
+        return true;
+    if (v == "0" || v == "false" || v == "no" || v == "off")
+        return false;
+    return std::nullopt;
 }
 
 // Doubles a length while keeping its unit: "0.1mm" -> "0.2mm", "0.004" -> "0.008".
@@ -137,13 +141,7 @@ QString doubledLength(const QString &value)
     const auto q = units::parse(value, units::Dimension::Length, true);
     if (!q)
         return QString();
-    return units::formatNumber(q->value * 2, 8) + q->unit.simplified().remove(' ');
-}
-
-bool isLegacy(const QString &key, const OptionSchema &schema)
-{
-    const OptionSpec *spec = schema.find(key);
-    return !spec || spec->deprecated || spec->unsupported;
+    return units::formatNumber(q->value * 2, 8) + QString(q->unit).remove(' ');
 }
 
 }  // namespace
@@ -160,60 +158,47 @@ QStringList migrateLegacyEntries(QList<ConfigEntry> &entries, const OptionSchema
 
     QList<ConfigEntry> out;
     for (const ConfigEntry &e : entries) {
-        ConfigEntry entry = e;
-        if ((e.key == "drill-front" || e.key == "cut-front") && isLegacy(e.key, schema)) {
-            const QString side = e.key == "drill-front" ? "drill-side" : "cut-side";
-            if (!has(side)) {
-                entry.key = side;
-                entry.value = isTrue(e.value) ? "front" : "back";
-                out.append(entry);
-                notes << QObject::tr("%1=%2 became %3=%4").arg(e.key, e.value, side, entry.value);
+        const OptionSpec *spec = schema.find(e.key);
+        if (spec && spec->deprecated) {
+            const OptionSpec *target = schema.find(spec->replacedBy);
+            if (!target) {
+                if (!spec->hasDefault || e.value.trimmed() != spec->defaultValue)
+                    notes << QObject::tr("%1=%2 was dropped: the option is deprecated").arg(e.key, e.value);
+                continue;
             }
+            if (has(target->name)) {
+                notes << QObject::tr("%1 was dropped: %2 is set").arg(e.key, target->name);
+                continue;
+            }
+            ConfigEntry replaced = e;
+            replaced.key = target->name;
+            if (!spec->valueMap.isEmpty()) {
+                QString key = e.value.trimmed().toLower();
+                if (spec->type == OptionType::Bool && boolValue(e.value))
+                    key = *boolValue(e.value) ? QStringLiteral("true") : QStringLiteral("false");
+                if (!spec->valueMap.contains(key))
+                    continue;  // this value needs no replacement
+                replaced.value = spec->valueMap.value(key);
+            } else if (spec->type != target->type || spec->bareLength != target->bareLength) {
+                notes << QObject::tr("%1=%2 was dropped: use %3 instead").arg(e.key, e.value, target->name);
+                continue;
+            }
+            notes << QObject::tr("%1=%2 became %3=%4").arg(e.key, e.value, replaced.key, replaced.value);
+            out.append(replaced);
             continue;
         }
-        if (e.key == "milldrill" && isLegacy(e.key, schema)) {
-            if (isTrue(e.value) && !has("min-milldrill-hole-diameter")) {
-                entry.key = "min-milldrill-hole-diameter";
-                entry.value = "0";
-                out.append(entry);
-                notes << QObject::tr("milldrill=true became min-milldrill-hole-diameter=0");
-            }
-            continue;
-        }
-        if (e.key == "g64" && isLegacy(e.key, schema)) {
-            if (!has("tolerance")) {
-                entry.key = "tolerance";
-                out.append(entry);
-                notes << QObject::tr("g64 became tolerance");
-            }
-            continue;
-        }
-        if (e.key == "offset" && !has("mill-diameters") && !e.disabled) {
+        if (e.key == "offset" && !e.disabled && !has("mill-diameters")) {
             // pcb2gcode reads --offset as the tool radius when --mill-diameters isn't given.
             const QString diameter = doubledLength(e.value);
             if (!diameter.isEmpty()) {
                 if (units::parse(e.value, units::Dimension::Length, true)->value != 0) {
-                    entry.key = "mill-diameters";
-                    entry.value = diameter;
-                    out.append(entry);
-                    notes << QObject::tr("offset=%1 (the tool radius) became mill-diameters=%2")
-                                 .arg(e.value, diameter);
+                    out.append({QStringLiteral("mill-diameters"), diameter, false, e.section});
+                    notes << QObject::tr("offset=%1 (the tool radius) became mill-diameters=%2").arg(e.value, diameter);
                 }
                 continue;
             }
         }
-        if ((e.key == "mirror-absolute" || e.key == "svg" || e.key == "vectorial") &&
-            (isLegacy(e.key, schema) || e.key == "vectorial")) {
-            if (e.key == "vectorial" && !isTrue(e.value))
-                notes << QObject::tr("vectorial=false was removed: pcb2gcode always uses the vectorial engine");
-            continue;
-        }
-        if (e.key == "extra-passes" && isLegacy(e.key, schema)) {
-            notes << QObject::tr("extra-passes=%1 was removed: use the minimum isolation width instead")
-                         .arg(e.value);
-            continue;
-        }
-        out.append(entry);
+        out.append(e);
     }
     entries = out;
     return notes;

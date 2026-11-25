@@ -22,6 +22,7 @@
 #include "graphics_view_zoom.h"
 
 #include <QComboBox>
+#include <QEvent>
 #include <QGraphicsScene>
 #include <QGraphicsSvgItem>
 #include <QGraphicsView>
@@ -30,6 +31,7 @@
 #include <QMessageBox>
 #include <QMovie>
 #include <QStyle>
+#include <QTimer>
 #include <QToolButton>
 #include <QVBoxLayout>
 
@@ -84,6 +86,7 @@ PreviewPane::PreviewPane(QWidget *parent) : QWidget(parent)
     m_view->setDragMode(QGraphicsView::ScrollHandDrag);
     m_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_view->setBackgroundBrush(QColor(0xf4, 0xf4, 0xf4));
+    m_view->viewport()->installEventFilter(this);
     new Graphics_view_zoom(m_view);
 
     auto *layout = new QVBoxLayout(this);
@@ -156,6 +159,17 @@ void PreviewPane::showImage(int index)
 
 void PreviewPane::fit()
 {
+    m_autoFit = true;
     if (!m_scene->items().isEmpty())
         m_view->fitInView(m_scene->sceneRect(), Qt::KeepAspectRatio);
+}
+
+bool PreviewPane::eventFilter(QObject *object, QEvent *event)
+{
+    // The board stays fitted to the view until the user zooms.
+    if (event->type() == QEvent::Wheel)
+        m_autoFit = false;
+    else if (event->type() == QEvent::Resize && m_autoFit && !m_scene->items().isEmpty())
+        QTimer::singleShot(0, this, [this] { m_view->fitInView(m_scene->sceneRect(), Qt::KeepAspectRatio); });
+    return QWidget::eventFilter(object, event);
 }

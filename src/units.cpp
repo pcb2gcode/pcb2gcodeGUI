@@ -19,7 +19,6 @@
 
 #include "units.h"
 
-#include <QHash>
 #include <cmath>
 
 namespace units {
@@ -85,41 +84,31 @@ private:
     const QString text;
 };
 
+Grammar &activeGrammar()
+{
+    static Grammar grammar = builtInGrammar();
+    return grammar;
+}
+
 std::optional<double> lengthUnit(const QString &w)
 {
-    static const QHash<QString, double> mm = {
-        {"mm", 1}, {"millimeter", 1}, {"millimeters", 1},
-        {"m", 1000}, {"meter", 1000},
-        {"in", kMmPerInch}, {"inch", kMmPerInch}, {"inches", kMmPerInch},
-        {"thou", kMmPerInch / 1000}, {"thous", kMmPerInch / 1000},
-        {"mil", kMmPerInch / 1000}, {"mils", kMmPerInch / 1000},
-    };
-    const auto it = mm.find(w);
-    if (it == mm.end())
+    const auto it = activeGrammar().lengthMm.constFind(w);
+    if (it == activeGrammar().lengthMm.constEnd())
         return std::nullopt;
     return *it;
 }
 
-// In minutes.
 std::optional<double> timeUnit(const QString &w)
 {
-    static const QHash<QString, double> minutes = {
-        {"s", 1.0 / 60}, {"second", 1.0 / 60}, {"seconds", 1.0 / 60},
-        {"ms", 1.0 / 60000}, {"millisecond", 1.0 / 60000}, {"milliseconds", 1.0 / 60000},
-        {"millis", 1.0 / 60000},
-        {"min", 1}, {"mins", 1}, {"minute", 1}, {"minutes", 1},
-    };
-    const auto it = minutes.find(w);
-    if (it == minutes.end())
+    const auto it = activeGrammar().timeMinutes.constFind(w);
+    if (it == activeGrammar().timeMinutes.constEnd())
         return std::nullopt;
     return *it;
 }
 
 bool isRevolution(const QString &w)
 {
-    static const QStringList words = {"rotation", "rotations", "revolutions", "revolution",
-                                      "rev", "revs", "cycle", "cycles"};
-    return words.contains(w);
+    return activeGrammar().revolutions.contains(w);
 }
 
 bool division(Lexer &lex)
@@ -128,6 +117,32 @@ bool division(Lexer &lex)
 }
 
 }  // namespace
+
+Grammar builtInGrammar()
+{
+    Grammar g;
+    g.lengthMm = {
+        {"mm", 1}, {"millimeter", 1}, {"millimeters", 1},
+        {"m", 1000}, {"meter", 1000},
+        {"in", kMmPerInch}, {"inch", kMmPerInch}, {"inches", kMmPerInch},
+        {"thou", kMmPerInch / 1000}, {"thous", kMmPerInch / 1000},
+        {"mil", kMmPerInch / 1000}, {"mils", kMmPerInch / 1000},
+    };
+    g.timeMinutes = {
+        {"s", 1.0 / 60}, {"second", 1.0 / 60}, {"seconds", 1.0 / 60},
+        {"ms", 1.0 / 60000}, {"millisecond", 1.0 / 60000}, {"milliseconds", 1.0 / 60000},
+        {"millis", 1.0 / 60000},
+        {"min", 1}, {"mins", 1}, {"minute", 1}, {"minutes", 1},
+    };
+    g.revolutions = {"rotation", "rotations", "revolutions", "revolution", "rev", "revs", "cycle", "cycles"};
+    g.rpm = {"rpm", "RPM"};
+    return g;
+}
+
+void setGrammar(const Grammar &grammar)
+{
+    activeGrammar() = grammar;
+}
 
 std::optional<Quantity> parse(const QString &text, Dimension dimension, bool metric, QString *error)
 {
@@ -200,7 +215,7 @@ std::optional<Quantity> parse(const QString &text, Dimension dimension, bool met
     case Dimension::Rpm: {
         const int before = lex.pos;
         const QString w = lex.word();
-        if (w == "rpm" || w == "RPM") {
+        if (activeGrammar().rpm.contains(w)) {
             q.canonical = value;
             break;
         }

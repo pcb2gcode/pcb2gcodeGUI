@@ -43,7 +43,8 @@ QList<PreviewImage> previewsFromManifest(const QString &manifestPath, QString *e
 // Recognises pcb2gcode's SVG file names in `directory`.
 QList<PreviewImage> previewsFromFileNames(const QString &directory);
 // The manifest if it exists, the file names otherwise; sorted for display.
-QList<PreviewImage> collectPreviews(const QString &directory, const QString &manifestPath = QString());
+QList<PreviewImage> collectPreviews(const QString &directory, const QString &manifestPath = QString(),
+                                    bool *fromManifest = nullptr);
 
 void sortPreviews(QList<PreviewImage> &images);
 

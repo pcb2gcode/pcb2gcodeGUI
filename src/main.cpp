@@ -61,7 +61,8 @@ int printCommandLine(const QString &configPath, const QString &pcb2gcodePath, bo
 int checkPreviews(const QString &directory, const QString &manifest)
 {
     QTextStream out(stdout);
-    const QList<PreviewImage> images = collectPreviews(directory, manifest);
+    bool fromManifest = false;
+    const QList<PreviewImage> images = collectPreviews(directory, manifest, &fromManifest);
     int bad = 0;
     for (const PreviewImage &image : images) {
         const bool ok = QSvgRenderer(image.path).isValid();
@@ -69,7 +70,8 @@ int checkPreviews(const QString &directory, const QString &manifest)
         out << (ok ? "ok    " : "BROKEN") << "  " << image.label() << "  " << QFileInfo(image.path).fileName()
             << '\n';
     }
-    out << images.size() << " preview images, " << bad << " broken\n";
+    out << images.size() << " preview images, " << bad << " broken, found "
+        << (fromManifest ? "in the manifest" : "by file name") << '\n';
     return images.isEmpty() || bad > 0 ? 1 : 0;
 }
 

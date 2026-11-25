@@ -385,7 +385,10 @@ void MainWindow::previewFinished(int exitCode, QProcess::ExitStatus status)
     for (const QString &line : output.split('\n'))
         if (line.startsWith(QStringLiteral("Error")))
             errors << line.trimmed();
-    m_preview->setMessage(errors.isEmpty() ? tr("pcb2gcode couldn't make a preview (exit code %1).").arg(exitCode)
+    QString code = QString::number(exitCode);
+    if (exitCode != 1 && m_probe.schema.exitCodes.contains(exitCode))
+        code += QStringLiteral(", ") + m_probe.schema.exitCodeName(exitCode);
+    m_preview->setMessage(errors.isEmpty() ? tr("pcb2gcode couldn't make a preview (exit code %1).").arg(code)
                                            : errors.join('\n'),
                           true, output);
 }
@@ -420,6 +423,7 @@ void MainWindow::generate()
         m_output = new OutputWindow(this);
         connect(m_output, &OutputWindow::finished, this, &MainWindow::generationFinished);
     }
+    m_output->setExitCodeNames(m_probe.schema.exitCodes);
     m_output->open();
     m_output->start(m_probe.program, args, m_runOutputDir);
 }

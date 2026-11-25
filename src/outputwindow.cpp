@@ -108,6 +108,8 @@ void OutputWindow::processFinished(int exitCode, QProcess::ExitStatus status)
         m_status->setText(tr("pcb2gcode crashed"));
     else if (ok)
         m_status->setText(tr("Done"));
+    else if (exitCode != 1 && m_exitCodeNames.contains(exitCode))
+        m_status->setText(tr("pcb2gcode failed with exit code %1 (%2)").arg(exitCode).arg(m_exitCodeNames.value(exitCode)));
     else
         m_status->setText(tr("pcb2gcode failed with exit code %1").arg(exitCode));
     m_status->setStyleSheet(ok ? QString() : QStringLiteral("color: #b02020;"));

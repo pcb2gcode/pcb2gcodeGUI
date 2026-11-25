@@ -30,8 +30,8 @@ jobs:
           if [ "${{ github.event_name }}" = schedule ] || [ "${{ github.event_name }}" = workflow_dispatch ]; then
             ref=$(git ls-remote https://github.com/pcb2gcode/pcb2gcode.git refs/heads/master | cut -f1)
           else
-            # The version the built-in option list was made from.
-            ref=$(python3 -c "import json; print(json.load(open('resources/pcb2gcode-options.json'))['pcb2gcode_commit'])")
+            # The version the built-in option list was made from: its commit, or else its release tag.
+            ref=$(python3 -c "import json; d = json.load(open('resources/pcb2gcode-options.json')); print(d.get('source_commit') or 'v' + d['version'])")
           fi
           echo "ref=$ref" >> "$GITHUB_OUTPUT"
 

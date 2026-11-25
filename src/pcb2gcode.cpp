@@ -145,13 +145,15 @@ Probe probe(const QString &program, bool forceBundled)
                 dumped.source = OptionSchema::Source::Dump;
                 if (dumped.pcb2gcodeVersion.isEmpty())
                     dumped.pcb2gcodeVersion = p.version;
-                if (dumped.constraints.isEmpty()) {
-                    for (const OptionConstraint &c : bundled.constraints) {
+                if (dumped.rules.isEmpty()) {
+                    for (const OptionRule &rule : bundled.rules) {
+                        QStringList names = rule.options;
+                        names += condition::options(rule.unless) + condition::options(rule.condition);
                         bool applies = true;
-                        for (const QString &id : condition::identifiers(c.when + ' ' + c.require))
-                            applies = applies && (!bundled.find(id) || dumped.find(id));
+                        for (const QString &name : names)
+                            applies = applies && dumped.find(name);
                         if (applies)
-                            dumped.constraints.append(c);
+                            dumped.rules.append(rule);
                     }
                 }
                 p.schema = dumped;

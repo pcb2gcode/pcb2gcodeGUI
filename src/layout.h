@@ -35,6 +35,7 @@ struct OptionHint {
     QString preset;     // starting value instead of pcb2gcode's default, in pcb2gcode syntax
     QString enabledIf;  // condition
     QString placeholder;
+    QString minimum;  // lowest value the field offers, where pcb2gcode sets no limit
     QMap<QString, QString> choiceLabels;  // shown text per value (enums, or bools as a combo)
     bool perSecond = false;  // show velocities per second
     bool fine = false;       // small spin box steps

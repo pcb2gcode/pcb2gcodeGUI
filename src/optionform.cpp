@@ -144,6 +144,7 @@ void OptionForm::build(const OptionSchema &schema, const Layout &layout)
     m_tabTitleOf.clear();
     m_schema = schema;
     m_layout = layout;
+    units::setGrammar(schema.grammar.value_or(units::builtInGrammar()));
 
     QSet<QString> placed;
     for (const LayoutTab &lt : layout.tabs) {
@@ -256,6 +257,10 @@ condition::Context OptionForm::conditionContext() const
             return spec->defaultValue;
         return std::nullopt;
     };
+    ctx.given = [this](const QString &name) {
+        const OptionEditor *e = m_editors.value(name);
+        return e && e->ruleEnabled() && !e->isDefault();
+    };
     ctx.kind = [this](const QString &name) {
         const OptionSpec *spec = m_schema.find(name);
         if (!spec)
@@ -276,7 +281,7 @@ condition::Context OptionForm::conditionContext() const
 
 bool OptionForm::isUsed(const OptionEditor *editor) const
 {
-    return condition::evaluate(editor->spec().usedWhen, conditionContext());
+    return m_schema.holds(editor->spec().usedWhen, conditionContext());
 }
 
 QStringList OptionForm::arguments() const
@@ -284,7 +289,7 @@ QStringList OptionForm::arguments() const
     const condition::Context ctx = conditionContext();
     QStringList args;
     for (const OptionEditor *e : m_order) {
-        if (!e->ruleEnabled() || e->isDefault() || !condition::evaluate(e->spec().usedWhen, ctx))
+        if (!e->ruleEnabled() || e->isDefault() || !m_schema.holds(e->spec().usedWhen, ctx))
             continue;
         for (const QString &v : e->values())
             args.append(QStringLiteral("--%1=%2").arg(e->name(), v));
@@ -292,28 +297,71 @@ QStringList OptionForm::arguments() const
     return args;
 }
 
-QStringList OptionForm::problems() const
+QList<OptionForm::Problem> OptionForm::findProblems() const
 {
     const condition::Context ctx = conditionContext();
-    QStringList out;
+    QList<Problem> out;
     for (const OptionEditor *e : m_order) {
-        if (!e->ruleEnabled() || !condition::evaluate(e->spec().usedWhen, ctx))
+        if (!e->ruleEnabled() || !m_schema.holds(e->spec().usedWhen, ctx))
             continue;
         const QString p = e->problem();
         if (!p.isEmpty())
-            out.append(QStringLiteral("%1: %2").arg(e->label()->text().isEmpty() ? e->name()
-                                                                                  : e->label()->text(),
-                                                   p));
+            out.append({QStringLiteral("--%1: %2").arg(e->name(), p), {e->name()}});
     }
-    for (const OptionConstraint &c : m_schema.constraints) {
-        bool known = true;
-        for (const QString &id : condition::identifiers(c.when + ' ' + c.require))
-            if (m_schema.find(id) && m_schema.find(id)->unsupported)
-                known = false;
-        if (known && condition::evaluate(c.when, ctx, false) && !condition::evaluate(c.require, ctx, true))
-            out.append(c.message);
+    // The checks pcb2gcode makes, with its own messages.
+    auto value = [&](const QString &name) -> std::optional<QString> {
+        const OptionEditor *e = m_editors.value(name);
+        if (e && !e->ruleEnabled())
+            return std::nullopt;
+        return ctx.value(name);
+    };
+    for (const OptionRule &rule : m_schema.rules) {
+        if (rule.options.isEmpty() || !m_schema.holds(rule.when, ctx))
+            continue;
+        bool unknown = false;
+        bool failed = false;
+        const QString first = rule.options.first();
+        const OptionSpec *spec = m_schema.find(first);
+        const units::Dimension dim = spec ? spec->dimension() : units::Dimension::None;
+        if (rule.kind == "required") {
+            const auto v = value(first);
+            failed = m_editors.contains(first) && (!v || v->isEmpty());
+        } else if (rule.kind == "range") {
+            const auto v = value(first);
+            if (v && !v->isEmpty() && spec && spec->multiplicity == Multiplicity::Single) {
+                if (!rule.minimum.isEmpty()) {
+                    const auto c = condition::compareQuantities(*v, rule.minimum, dim, ctx.metric);
+                    failed = failed || (c && (*c < 0 || (*c == 0 && rule.minimumExclusive)));
+                }
+                if (!rule.maximum.isEmpty()) {
+                    const auto c = condition::compareQuantities(*v, rule.maximum, dim, ctx.metric);
+                    failed = failed || (c && (*c > 0 || (*c == 0 && rule.maximumExclusive)));
+                }
+            }
+        } else if ((rule.kind == "greater" || rule.kind == "greater_or_equal") && rule.options.size() == 2) {
+            const auto a = value(first), b = value(rule.options.at(1));
+            if (a && b && !(rule.unless.isObject() && condition::evaluate(rule.unless, ctx, true, &unknown))) {
+                const auto c = condition::compareQuantities(*a, *b, dim, ctx.metric);
+                failed = c && (rule.kind == "greater" ? *c <= 0 : *c < 0);
+            }
+        } else if (rule.kind == "forbidden") {
+            failed = condition::evaluate(rule.condition, ctx, false, &unknown);
+        } else {
+            continue;  // a kind of rule this version doesn't know
+        }
+        if (failed && !unknown)
+            out.append({rule.message, rule.options});
     }
     return out;
+}
+
+QStringList OptionForm::problems() const
+{
+    QStringList messages;
+    for (const Problem &p : findProblems())
+        if (!messages.contains(p.message))
+            messages.append(p.message);
+    return messages;
 }
 
 ConfigFile OptionForm::toConfig() const
@@ -363,8 +411,8 @@ QStringList OptionForm::applyConfig(const ConfigFile &config, const QString &bas
                 notes << tr("%1 isn't a pcb2gcode option; ignored").arg(key);
             else if (spec->unsupported)
                 notes << tr("%1 isn't supported by this pcb2gcode; ignored").arg(key);
-            else if (!m_layout.hidden.contains(key) || spec->cliOnly)
-                notes << tr("%1 is ignored").arg(key);
+            else if (!spec->hasDefault || active.value(key).value(0) != spec->defaultValue)
+                notes << tr("%1=%2 is ignored").arg(key, active.value(key).value(0));
             continue;
         }
         QStringList values = active.contains(key) ? active.value(key) : inactive.value(key);
@@ -439,22 +487,38 @@ void OptionForm::onEditorChanged(OptionEditor *editor)
 void OptionForm::refresh()
 {
     const condition::Context ctx = conditionContext();
+    QSet<QString> flagged;
+    QHash<QString, QString> why;
+    for (const Problem &p : findProblems()) {
+        for (const QString &o : p.options) {
+            flagged.insert(o);
+            why[o] += (why.value(o).isEmpty() ? QString() : QStringLiteral("\n")) + p.message;
+        }
+    }
     for (OptionEditor *e : m_order) {
-        e->setUsed(condition::evaluate(e->spec().usedWhen, ctx), QString());
+        e->setUsed(m_schema.holds(e->spec().usedWhen, ctx), m_schema.conditionDescription(e->spec().usedWhen));
         e->setRuleEnabled(condition::evaluate(e->hint().enabledIf, ctx));
         e->setHighlighted(!e->isDefault());
-        const QString p = e->ruleEnabled() && e->isUsed() ? e->problem() : QString();
+        const bool bad = flagged.contains(e->name()) && e->ruleEnabled() && e->isUsed();
         QPalette pal = e->label()->palette();
-        pal.setColor(QPalette::WindowText, p.isEmpty() ? palette().color(QPalette::WindowText)
-                                                       : QColor(0xc0, 0x20, 0x20));
+        pal.setColor(QPalette::WindowText, bad ? QColor(0xc0, 0x20, 0x20) : palette().color(QPalette::WindowText));
         e->label()->setPalette(pal);
-        e->label()->setStatusTip(p);
+        e->label()->setStatusTip(bad ? why.value(e->name()) : QString());
     }
     for (Tab &tab : m_tabList) {
         for (Section &s : tab.sections) {
+            const OptionEditor *unused = nullptr;
             bool anyUsed = false;
-            for (OptionEditor *e : s.editors)
+            for (OptionEditor *e : s.editors) {
                 anyUsed = anyUsed || e->isUsed();
+                if (!e->isUsed() && !unused)
+                    unused = e;
+            }
+            if (!anyUsed && unused) {
+                const QString description = m_schema.conditionDescription(unused->spec().usedWhen);
+                s.note->setText(description.isEmpty() ? tr("Not used with the current input files and settings.")
+                                                      : tr("Only used when %1.").arg(description));
+            }
             s.note->setVisible(!anyUsed);
         }
     }

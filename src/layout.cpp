@@ -74,6 +74,7 @@ Layout Layout::fromJson(const QByteArray &json, QString *error)
         hint.preset = o.value("preset").toString();
         hint.enabledIf = o.value("enabled_if").toString();
         hint.placeholder = o.value("placeholder").toString();
+        hint.minimum = o.value("min").toString();
         hint.perSecond = o.value("per_second").toBool();
         hint.fine = o.value("fine").toBool();
         const QJsonObject labels = o.value("choice_labels").toObject();
