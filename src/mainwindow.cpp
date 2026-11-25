@@ -306,8 +306,13 @@ void MainWindow::updateTitle()
 void MainWindow::updateStatus()
 {
     QStringList parts;
-    if (!m_probe.program.isEmpty())
-        parts << tr("pcb2gcode %1 (%2)").arg(m_probe.version, QDir::toNativeSeparators(m_probe.program));
+    if (!m_probe.program.isEmpty()) {
+        // A build between releases says which commit it is.
+        const bool release = m_probe.gitCommit.isEmpty() || m_probe.gitCommit == "v" + m_probe.version;
+        parts << tr("pcb2gcode %1 (%2)")
+                     .arg(release ? m_probe.version : m_probe.version + ", " + m_probe.gitCommit,
+                          QDir::toNativeSeparators(m_probe.program));
+    }
     parts << m_probe.schemaNote;
     if (m_probe.olderThanSchema)
         parts << tr("This pcb2gcode is older than the built-in list, so some defaults may differ");

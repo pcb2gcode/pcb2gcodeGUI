@@ -1,28 +1,18 @@
 #!/bin/sh
-# Regenerates resources/pcb2gcode-options.json, the option list the GUI uses when the
-# installed pcb2gcode can't describe its own options.
+# Regenerates resources/pcb2gcode-options.json, the option list the GUI uses with a pcb2gcode
+# that can't describe its own options. It describes pcb2gcode 3.2.0, the last release without
+# --dump-options: pcb2gcode from then on prints its own list, which the GUI reads instead, so
+# newer versions need no update here.
 #
-#   tools/update-option-snapshot.sh PCB2GCODE [PCB2GCODE_SOURCE_DIR]
-#
-# With a pcb2gcode that has --dump-options, its output is the snapshot. Older versions
-# need their source tree, whose src/options.cpp is parsed instead.
-# Afterwards, place new options in resources/gui-layout.json (tst_core checks this).
+#   tools/update-option-snapshot.sh PCB2GCODE_SOURCE_DIR
 set -eu
 
 root=$(cd "$(dirname "$0")/.." && pwd)
-out="$root/resources/pcb2gcode-options.json"
-pcb2gcode=${1:?usage: $0 PCB2GCODE [PCB2GCODE_SOURCE_DIR]}
+src=${1:?usage: $0 PCB2GCODE_SOURCE_DIR}
 
-if "$pcb2gcode" --dump-options --noconfigfile > "$out.tmp" 2>/dev/null; then
-  mv "$out.tmp" "$out"
-  echo "Wrote $out from $pcb2gcode --dump-options"
-  exit 0
-fi
-rm -f "$out.tmp"
-
-src=${2:-}
-if [ -z "$src" ]; then
-  echo "$pcb2gcode has no --dump-options; pass the pcb2gcode source directory as well." >&2
+if grep -q '"dump-options"' "$src/src/options.cpp"; then
+  echo "$src has --dump-options, so the GUI reads that pcb2gcode's options from it." >&2
+  echo "The built-in list should keep describing the last release without it." >&2
   exit 1
 fi
-python3 "$root/tools/snapshot_from_options_cpp.py" "$src" "$out"
+python3 "$root/tools/snapshot_from_options_cpp.py" "$src" "$root/resources/pcb2gcode-options.json"

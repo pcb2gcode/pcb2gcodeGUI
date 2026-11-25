@@ -265,6 +265,7 @@ void TestCore::bundledSchema()
             QVERIFY2(names.contains(name), qPrintable(rule.message + " refers to " + name));
     }
     QCOMPARE(schema.exitCodeName(3), QStringLiteral("ERR_NOZSAFE"));
+    QCOMPARE(schema.conditionClause("milling"), QStringLiteral("a front or back gerber file is given"));
     QVERIFY(schema.grammar.has_value());
 }
 
@@ -440,7 +441,7 @@ void TestCore::parseHelp()
     const QString help = readFile(testData("pcb2gcode-3.2.0-help.txt"));
     QVERIFY(!help.isEmpty());
     const QList<HelpOption> options = OptionSchema::parseHelp(help);
-    QCOMPARE(options.size(), 107);
+    QCOMPARE(options.size(), 108);
     QHash<QString, HelpOption> byName;
     for (const HelpOption &o : options)
         byName.insert(o.name, o);
@@ -460,6 +461,7 @@ void TestCore::parseHelp()
     QVERIFY(!byName.value("zsafe").deprecated);
     QCOMPARE(byName.value("zsafe").group, QStringLiteral("CNC options, common to all the milling, drilling, and cutting"));
     QVERIFY(byName.value("mcp").description.contains("Model Context Protocol"));
+    QVERIFY(byName.value("manifest").takesValue);
 }
 
 void TestCore::restrictToHelp()

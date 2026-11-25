@@ -2,8 +2,8 @@
   "format_version": 1,
   "program": "pcb2gcode",
   "version": "3.2.0",
-  "git_commit": "v3.1.0-27-gee9980b",
-  "source_commit": "ee9980be830095e54364867b516d9cb5b276999c",
+  "git_commit": "v3.2.0",
+  "source_commit": "654a6048cc6900d8ec5ea070b9a9b4d1d91c5f7b",
   "note": "Made from src/options.cpp by tools/snapshot_from_options_cpp.py, in the format of pcb2gcode --dump-options. Used when the installed pcb2gcode cannot describe its options.",
   "types": {
     "bool": {
@@ -138,11 +138,11 @@
   },
   "conditions": {
     "always": {
-      "description": "always",
+      "description": "Always.",
       "expression": true
     },
     "milling": {
-      "description": "front or back is set",
+      "description": "A front or back gerber file is given.",
       "expression": {
         "any": [
           {
@@ -155,13 +155,13 @@
       }
     },
     "drilling": {
-      "description": "drill is set",
+      "description": "A drill file is given.",
       "expression": {
         "set": "drill"
       }
     },
     "milldrilling": {
-      "description": "drill is set and min-milldrill-hole-diameter is finite",
+      "description": "A drill file is given and --min-milldrill-hole-diameter isn't inf, so holes at least that wide are milled.",
       "expression": {
         "all": [
           {
@@ -174,7 +174,7 @@
       }
     },
     "cutting": {
-      "description": "outline is set, or milldrilling",
+      "description": "An outline is given, or holes are milldrilled.",
       "expression": {
         "any": [
           {
@@ -194,7 +194,7 @@
       }
     },
     "autolevelling": {
-      "description": "al-front is true or al-back is true",
+      "description": "The autoleveller is on for a side.",
       "expression": {
         "any": [
           {
@@ -1347,6 +1347,17 @@
       "type": "string",
       "default": null,
       "used_when": "always"
+    },
+    {
+      "name": "manifest",
+      "group": "generic",
+      "description": "output file for a JSON list of all the files written, for GUIs and scripts",
+      "type": "string",
+      "default": null,
+      "used_when": "always",
+      "path": "output_file",
+      "file_format": "json",
+      "relative_to": "output-dir"
     },
     {
       "name": "preamble-text",

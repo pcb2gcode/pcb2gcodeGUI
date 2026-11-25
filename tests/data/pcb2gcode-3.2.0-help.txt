@@ -22,6 +22,8 @@ Generic options (CLI and config files):
   --nog64 [=arg(=1)] (=0)               do not set an explicit g64
   --output-dir arg                      output directory
   --basename arg                        prefix for default output file names
+  --manifest arg                        output file for a JSON list of all the 
+                                        files written, for GUIs and scripts
   --preamble-text arg                   preamble text file, inserted at the 
                                         very beginning as a comment.
   --preamble arg                        gcode preamble file, inserted at the 

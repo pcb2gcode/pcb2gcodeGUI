@@ -222,16 +222,18 @@ CHOICES = {
 }
 
 MILLDRILL_EXPR = {'all': [{'set': 'drill'}, {'finite': 'min-milldrill-hole-diameter'}]}
+# Worded like pcb2gcode's --dump-options.
 CONDITIONS = {
-    'always': {'description': 'always', 'expression': True},
-    'milling': {'description': 'front or back is set',
+    'always': {'description': 'Always.', 'expression': True},
+    'milling': {'description': 'A front or back gerber file is given.',
                 'expression': {'any': [{'set': 'front'}, {'set': 'back'}]}},
-    'drilling': {'description': 'drill is set', 'expression': {'set': 'drill'}},
-    'milldrilling': {'description': 'drill is set and min-milldrill-hole-diameter is finite',
+    'drilling': {'description': 'A drill file is given.', 'expression': {'set': 'drill'}},
+    'milldrilling': {'description': "A drill file is given and --min-milldrill-hole-diameter isn't inf, "
+                                    'so holes at least that wide are milled.',
                      'expression': MILLDRILL_EXPR},
-    'cutting': {'description': 'outline is set, or milldrilling',
+    'cutting': {'description': 'An outline is given, or holes are milldrilled.',
                 'expression': {'any': [{'set': 'outline'}, MILLDRILL_EXPR]}},
-    'autolevelling': {'description': 'al-front is true or al-back is true',
+    'autolevelling': {'description': 'The autoleveller is on for a side.',
                       'expression': {'any': [{'equal': ['al-front', 'true']},
                                              {'equal': ['al-back', 'true']}]}},
 }
@@ -261,6 +263,7 @@ EXTRA = {
     'g64': {'bare_unit': 'in', 'metric_bare_unit': 'mm'},
     'config': {'path': 'input_file', 'file_format': 'millproject'},
     'output-dir': {'path': 'directory', 'default_note': 'empty: the working directory'},
+    'manifest': {'path': 'output_file', 'file_format': 'json', 'relative_to': 'output-dir'},
         'preamble-text': {'path': 'input_file', 'file_format': 'text'},
     'preamble': {'path': 'input_file', 'file_format': 'gcode'},
     'postamble': {'path': 'input_file', 'file_format': 'gcode'},

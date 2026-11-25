@@ -160,6 +160,11 @@ Probe probe(const QString &program, bool forceBundled)
             p.versionText = QString::fromLocal8Bit(out).trimmed();
             const auto m = QRegularExpression(QStringLiteral(R"(\d+\.\d+\.\d+)")).match(p.versionText);
             p.version = m.hasMatch() ? m.captured() : p.versionText.section('\n', 0, 0);
+            const auto g = QRegularExpression(QStringLiteral(R"(^Git commit:\s*(\S+))"),
+                                              QRegularExpression::MultilineOption)
+                               .match(p.versionText);
+            if (g.hasMatch())
+                p.gitCommit = g.captured(1);
         } else {
             p.program.clear();
         }

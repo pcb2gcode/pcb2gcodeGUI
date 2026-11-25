@@ -17,15 +17,18 @@
  * along with pcb2gcodeGUI.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Checks that the bundled option list (resources/pcb2gcode-options.json) still describes
-// the pcb2gcode in $PCB2GCODE. When this fails, regenerate the list with
-// tools/update-option-snapshot.sh and place any new option in resources/gui-layout.json.
+// The pcb2gcode in $PCB2GCODE either describes its own options (--dump-options), which must
+// then be readable by this GUI, or the GUI uses its bundled list
+// (resources/pcb2gcode-options.json, pcb2gcode 3.2.0), which must then match that pcb2gcode.
 
 #include "optionschema.h"
 #include "pcb2gcode.h"
 #include "units.h"
 
 #include <QHash>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QRegularExpression>
 #include <QSet>
 #include <QtTest>
@@ -121,11 +124,12 @@ class TestSync : public QObject
 private slots:
     void initTestCase();
     void snapshotMatchesHelp();
-    void snapshotMatchesDump();
+    void dumpIsReadable();
 
 private:
     QString program;
     QString version;
+    QByteArray dump;  // empty when this pcb2gcode can't describe its options
 };
 
 void TestSync::initTestCase()
@@ -138,10 +142,16 @@ void TestSync::initTestCase()
     QVERIFY2(pcb2gcode::run(program, {"--version"}, 10000, &out, &code) && code == 0, qPrintable(program));
     version = QString::fromLocal8Bit(out).section('\n', 0, 0).trimmed();
     qInfo("pcb2gcode %s at %s", qPrintable(version), qPrintable(program));
+    if (pcb2gcode::run(program, {QString::fromLatin1(pcb2gcode::kDumpOptionsFlag), "--noconfigfile"}, 10000, &out,
+                       &code) &&
+        code == 0)
+        dump = out;
 }
 
 void TestSync::snapshotMatchesHelp()
 {
+    if (!dump.isEmpty())
+        QSKIP("This pcb2gcode describes its own options, so the GUI doesn't use the bundled list with it");
     QByteArray out;
     int code = -1;
     QVERIFY(pcb2gcode::run(program, {"--help"}, 10000, &out, &code) && code == 0);
@@ -187,40 +197,63 @@ void TestSync::snapshotMatchesHelp()
             problems << QStringLiteral("the bundled list has --%1, pcb2gcode %2 doesn't").arg(spec.name, version);
 
     QVERIFY2(problems.isEmpty(),
-             qPrintable("The bundled option list is out of date (run tools/update-option-snapshot.sh):\n  " +
+             qPrintable("The bundled option list, which describes the pcb2gcode 3.2.0 release, doesn't match "
+                        "this pcb2gcode (regenerate it with tools/update-option-snapshot.sh only if 3.2.0 "
+                        "itself differs):\n  " +
                         problems.join("\n  ")));
 }
 
-void TestSync::snapshotMatchesDump()
+void TestSync::dumpIsReadable()
 {
-    QByteArray out;
-    int code = -1;
-    if (!pcb2gcode::run(program, {QString::fromLatin1(pcb2gcode::kDumpOptionsFlag), "--noconfigfile"}, 10000, &out,
-                        &code) ||
-        code != 0)
+    if (dump.isEmpty())
         QSKIP("This pcb2gcode has no option dump");
     QString error;
-    const OptionSchema dumped = OptionSchema::fromJson(out, &error);
-    QVERIFY2(dumped.isValid(), qPrintable(error));
-    const OptionSchema bundled = OptionSchema::bundled();
+    const OptionSchema schema = OptionSchema::fromJson(dump, &error);
+    QVERIFY2(schema.isValid(), qPrintable(error));
+
+    // Everything this GUI would have to guess about.
     QStringList problems;
-    for (const OptionSpec &d : dumped.options) {
-        const OptionSpec *b = bundled.find(d.name);
-        if (!b) {
-            problems << QStringLiteral("dump has --%1").arg(d.name);
-            continue;
-        }
-        if (b->type != d.type)
-            problems << QStringLiteral("--%1: type %2 vs %3").arg(d.name, optionTypeName(b->type), optionTypeName(d.type));
-        if (b->hasDefault != d.hasDefault || b->defaultValue != d.defaultValue)
-            problems << QStringLiteral("--%1: default %2 vs %3").arg(d.name, b->defaultValue, d.defaultValue);
+    condition::Context nothing;
+    nothing.value = [](const QString &) { return std::optional<QString>(); };
+    nothing.given = [](const QString &) { return false; };
+    auto readable = [&](const QJsonValue &expression, const QString &where) {
+        bool unknown = false;
+        condition::evaluate(expression, nothing, true, &unknown);
+        if (unknown)
+            problems << QStringLiteral("%1 has an expression this GUI doesn't know").arg(where);
+        for (const QString &name : condition::options(expression))
+            if (!schema.find(name))
+                problems << QStringLiteral("%1 refers to unknown option --%2").arg(where, name);
+    };
+    for (auto it = schema.conditions.begin(); it != schema.conditions.end(); ++it)
+        readable(it->expression, "condition " + it.key());
+
+    for (const QJsonValue &v : QJsonDocument::fromJson(dump).object().value("options").toArray()) {
+        const QJsonObject o = v.toObject();
+        const QString name = o.value("name").toString();
+        const OptionSpec *spec = schema.find(name);
+        if (optionTypeName(spec->type) != o.value("type").toString())
+            problems << QStringLiteral("--%1 has type %2, which this GUI edits as text")
+                            .arg(name, o.value("type").toString());
+        for (const QString &when : {spec->usedWhen, spec->requiredWhen})
+            if (!when.isEmpty() && when != "always" && !schema.conditions.contains(when))
+                problems << QStringLiteral("--%1 uses unknown condition %2").arg(name, when);
     }
-    for (const OptionSpec &b : bundled.options)
-        if (!dumped.find(b.name))
-            problems << QStringLiteral("dump lacks --%1").arg(b.name);
-    QVERIFY2(problems.isEmpty(),
-             qPrintable("The bundled option list differs from the dump (run tools/update-option-snapshot.sh):\n  " +
-                        problems.join("\n  ")));
+    const QStringList kinds = {"required", "range", "greater", "greater_or_equal", "forbidden"};
+    for (const OptionRule &rule : schema.rules) {
+        if (!kinds.contains(rule.kind))
+            problems << QStringLiteral("rule \"%1\" has unknown kind %2").arg(rule.message, rule.kind);
+        if (rule.when != "always" && !schema.conditions.contains(rule.when))
+            problems << QStringLiteral("rule \"%1\" uses unknown condition %2").arg(rule.message, rule.when);
+        for (const QJsonValue &e : {rule.unless, rule.condition})
+            if (!e.isUndefined() && !e.isNull())
+                readable(e, "rule \"" + rule.message + "\"");
+        for (const QString &name : rule.options)
+            if (!schema.find(name))
+                problems << QStringLiteral("rule \"%1\" names unknown option --%2").arg(rule.message, name);
+    }
+    QVERIFY2(problems.isEmpty(), qPrintable("pcb2gcode's option dump has parts this GUI can't read:\n  " +
+                                            problems.join("\n  ")));
 }
 
 QTEST_GUILESS_MAIN(TestSync)

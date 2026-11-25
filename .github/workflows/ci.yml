@@ -3,15 +3,21 @@ name: CI
 on:
   push:
   pull_request:
-  # Weekly check of the built-in option list against pcb2gcode master.
+  # Weekly, to catch changes on pcb2gcode master.
   schedule:
     - cron: "0 6 * * 1"
   workflow_dispatch:
 
 jobs:
   linux:
-    name: Linux, with pcb2gcode
+    # release: the pcb2gcode the built-in option list describes (no --dump-options).
+    # master: pcb2gcode describes its own options and lists its output files.
+    name: Linux, pcb2gcode ${{ matrix.pcb2gcode }}
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        pcb2gcode: [release, master]
     steps:
       - uses: actions/checkout@v7
 
@@ -27,10 +33,9 @@ jobs:
       - name: Choose pcb2gcode
         id: pcb2gcode
         run: |
-          if [ "${{ github.event_name }}" = schedule ] || [ "${{ github.event_name }}" = workflow_dispatch ]; then
+          if [ "${{ matrix.pcb2gcode }}" = master ]; then
             ref=$(git ls-remote https://github.com/pcb2gcode/pcb2gcode.git refs/heads/master | cut -f1)
           else
-            # The version the built-in option list was made from: its commit, or else its release tag.
             ref=$(python3 -c "import json; d = json.load(open('resources/pcb2gcode-options.json')); print(d.get('source_commit') or 'v' + d['version'])")
           fi
           echo "ref=$ref" >> "$GITHUB_OUTPUT"
@@ -64,9 +69,11 @@ jobs:
         run: ctest --test-dir build --output-on-failure
 
       - name: Package
+        if: matrix.pcb2gcode == 'release'
         run: cd build && cpack -G TGZ
 
       - uses: actions/upload-artifact@v7
+        if: matrix.pcb2gcode == 'release'
         with:
           name: pcb2gcodeGUI-linux
           path: build/pcb2gcodeGUI-*.tar.gz

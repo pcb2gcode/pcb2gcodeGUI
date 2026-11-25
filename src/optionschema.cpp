@@ -339,6 +339,17 @@ QString OptionSchema::conditionDescription(const QString &conditionName) const
     return conditions.value(conditionName).description;
 }
 
+QString OptionSchema::conditionClause(const QString &conditionName) const
+{
+    QString clause = conditionDescription(conditionName).trimmed();
+    while (clause.endsWith('.'))
+        clause.chop(1);
+    // Keep acronyms and names like "LinuxCNC" as they are.
+    if (clause.size() > 1 && clause.at(0).isUpper() && !clause.at(1).isUpper())
+        clause[0] = clause.at(0).toLower();
+    return clause;
+}
+
 QList<HelpOption> OptionSchema::parseHelp(const QString &helpText)
 {
     // Boost.Program_options layout:

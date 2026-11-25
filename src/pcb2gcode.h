@@ -61,6 +61,7 @@ QString locate(const QString &configuredPath = QString());
 struct Probe {
     QString program;      // absolute path, empty if pcb2gcode wasn't found
     QString version;      // e.g. "3.2.0"
+    QString gitCommit;    // git describe of the build, e.g. "v3.2.0-9-gfe6b769", if --version says
     QString versionText;  // everything --version printed
     OptionSchema schema;
     QString schemaNote;   // where the option list came from, for the status bar

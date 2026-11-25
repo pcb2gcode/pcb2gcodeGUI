@@ -9,12 +9,14 @@ G-code.
 The option form isn't drawn by hand. It is generated from a description of pcb2gcode's options:
 type, default, units, range, choices, group and help text.
 
-1. If the installed pcb2gcode can describe its own options (`pcb2gcode --dump-options`), the GUI
-   uses that, so it always matches the pcb2gcode you run.
+1. If the installed pcb2gcode can describe its own options (`pcb2gcode --dump-options`, in
+   pcb2gcode master after 3.2.0), the GUI uses that, so it always matches the pcb2gcode you run.
+   New options, units and checks in later versions need no change here.
 2. Otherwise it uses its built-in copy of that description,
-   [`resources/pcb2gcode-options.json`](resources/pcb2gcode-options.json) (currently pcb2gcode 3.2.0),
-   and checks it against `pcb2gcode --help`: options the installed pcb2gcode doesn't have are hidden,
-   and options the GUI doesn't know yet are added as plain fields on an "Other" tab.
+   [`resources/pcb2gcode-options.json`](resources/pcb2gcode-options.json), which describes
+   pcb2gcode 3.2.0, the last release without `--dump-options`. It checks it against
+   `pcb2gcode --help`: options the installed pcb2gcode doesn't have are hidden, and options the GUI
+   doesn't know are added as plain fields on an "Other" tab.
 3. Without pcb2gcode, the GUI still opens, so configurations can be edited; it asks where pcb2gcode is.
 
 [`resources/gui-layout.json`](resources/gui-layout.json) only arranges the options into tabs and
@@ -91,13 +93,18 @@ Or install Qt with the [Qt online installer](https://www.qt.io/download-qt-insta
     cmake --build build
     ctest --test-dir build --output-on-failure
 
-With a pcb2gcode, the tests also check that the built-in option list matches it and run complete
-jobs on the boards in `tests/data`, checking the command line, the G-code files and the previews.
+With a pcb2gcode, the tests also run complete jobs on the boards in `tests/data`, checking the
+command line, the G-code files and the previews. They check that the GUI can read that pcb2gcode's
+`--dump-options`, or, for a pcb2gcode without it, that the built-in option list matches its
+`--help`.
 
-## Updating the built-in option list
+## The built-in option list
 
-When pcb2gcode gains or changes options:
+`resources/pcb2gcode-options.json` is only used with pcb2gcode that can't describe its own options,
+so it stays a description of pcb2gcode 3.2.0 and doesn't follow newer versions. It was made from
+pcb2gcode's source with:
 
-    tools/update-option-snapshot.sh /path/to/pcb2gcode [/path/to/pcb2gcode-source]
+    tools/update-option-snapshot.sh /path/to/pcb2gcode-3.2.0-source
 
-then give any new option a place in `resources/gui-layout.json` (a test lists the ones without one).
+An option added to pcb2gcode shows up in the tab of its group; give it a place and a label in
+`resources/gui-layout.json` if it deserves one.

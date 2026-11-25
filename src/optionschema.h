@@ -158,6 +158,8 @@ public:
     // set *sawUnknown: options stay in use, and rules that depend on them are skipped.
     bool holds(const QString &conditionName, const condition::Context &context, bool *sawUnknown = nullptr) const;
     QString conditionDescription(const QString &conditionName) const;
+    // The description as a clause for "Only used when ...": "A drill file is given." -> "a drill file is given".
+    QString conditionClause(const QString &conditionName) const;
     QString exitCodeName(int code) const { return exitCodes.value(code); }
 
     Source source = Source::None;

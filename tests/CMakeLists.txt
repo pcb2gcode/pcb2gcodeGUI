@@ -59,7 +59,7 @@ e2e_case(milldrill milldrill/milldrill.millproject)
 e2e_case(legacy legacy/old_gui.millproject)
 e2e_case(invalid invalid/zsafe_below_zwork.millproject)
 
-# A pcb2gcode that describes its own options, until pcb2gcode releases --dump-options.
+# The dump path with pcb2gcode 3.2.0, which has no --dump-options: a stand-in answers it.
 if(UNIX)
   set(SNAPSHOT ${PROJECT_SOURCE_DIR}/resources/pcb2gcode-options.json)
   set(PCB2GCODE ${pcb2gcode_for_tests})

@@ -543,7 +543,7 @@ void OptionForm::refresh()
         }
     }
     for (OptionEditor *e : m_order) {
-        e->setUsed(m_schema.holds(e->spec().usedWhen, ctx), m_schema.conditionDescription(e->spec().usedWhen));
+        e->setUsed(m_schema.holds(e->spec().usedWhen, ctx), m_schema.conditionClause(e->spec().usedWhen));
         e->setRuleEnabled(condition::evaluate(e->hint().enabledIf, ctx));
         e->setHighlighted(!e->isDefault());
         const bool bad = flagged.contains(e->name()) && e->ruleEnabled() && e->isUsed();
@@ -562,9 +562,9 @@ void OptionForm::refresh()
                     unused = e;
             }
             if (!anyUsed && unused) {
-                const QString description = m_schema.conditionDescription(unused->spec().usedWhen);
-                s.note->setText(description.isEmpty() ? tr("Not used with the current input files and settings.")
-                                                      : tr("Only used when %1.").arg(description));
+                const QString clause = m_schema.conditionClause(unused->spec().usedWhen);
+                s.note->setText(clause.isEmpty() ? tr("Not used with the current input files and settings.")
+                                                 : tr("Only used when %1.").arg(clause));
             }
             s.note->setVisible(!anyUsed);
         }

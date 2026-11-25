@@ -279,10 +279,12 @@ void TestForm::unsupportedOptionsAreHidden()
 {
     OptionSchema schema = OptionSchema::bundled();
     schema.find("milldrill-stepover")->unsupported = true;
+    schema.find("manifest")->unsupported = true;
     form->build(schema, Layout::bundled());
     QVERIFY(!form->editor("milldrill-stepover"));
     QVERIFY(!form->supports("milldrill-stepover"));
     QVERIFY(!form->supports("manifest"));
+    QVERIFY(!form->supports("check-options"));
 }
 
 void TestForm::unknownExpressions()
