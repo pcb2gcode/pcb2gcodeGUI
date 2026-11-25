@@ -1,0 +1,47 @@
+# Two-sided board in millimetres, with two mill bits, autolevelling and bridges.
+front=example_board-F.Cu.gbr
+back=example_board-B.Cu.gbr
+outline=example_board-Edge.Cuts.gbr
+drill=example_board-PTH.drl
+
+metric=true
+metricoutput=true
+zsafe=2mm
+zchange=20mm
+spinup-time=1.5s
+tolerance=5e-3
+zero-start=true
+mirror-axis=25mm
+
+zwork=-0.05mm
+mill-diameters=0.2mm, 0.5mm
+milling-overlap=25%
+mill-feed=300mm/min
+mill-vertfeed=100mm/min
+mill-speed=12000rpm
+tsp-2opt=false
+mill-feed-direction=climb
+pre-milling-gcode=M7
+pre-milling-gcode=(coolant on)
+
+zdrill=-1.8mm
+drill-feed=150mm/min
+drill-speed=12000rpm
+drill-side=front
+
+cutter-diameter=2mm
+zcut=-1.7mm
+cut-infeed=0.6mm
+cut-feed=400mm/min
+cut-speed=12000rpm
+bridges=2mm
+bridgesnum=4
+zbridges=-1mm
+
+al-front=true
+software=linuxcnc
+al-x=10mm
+al-y=10mm
+al-probefeed=60mm/min
+
+backtrack=2in/s

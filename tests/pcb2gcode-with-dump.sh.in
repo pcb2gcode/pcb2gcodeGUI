@@ -1,0 +1,8 @@
+#!/bin/sh
+# Stands in for a pcb2gcode that has --dump-options: answers it with the bundled option
+# list and passes everything else to the real pcb2gcode.
+if [ "$1" = "--dump-options" ]; then
+  cat "@SNAPSHOT@"
+  exit 0
+fi
+exec "@PCB2GCODE@" "$@"

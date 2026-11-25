@@ -1,0 +1,235 @@
+pcb2gcode 3.2.0
+
+command line only options:
+  --noconfigfile [=arg(=1)] (=0) ignore any configuration file
+  --config arg (=millproject)    list of comma-separated config files
+  -? [ --help ]                  produce help message
+  -V [ --version ]               show the current software version
+  --mcp                          run as a Model Context Protocol (MCP) server 
+                                 over stdio
+Generic options (CLI and config files):
+  --ignore-warnings [=arg(=1)] (=0)     Ignore warnings
+  --svg arg                             [DEPRECATED] use --vectorial, SVGs will
+                                        be generated automatically; this option
+                                        has no effect
+  --metric [=arg(=1)] (=0)              use metric units for parameters. does 
+                                        not affect gcode output
+  --metricoutput [=arg(=1)] (=0)        use metric units for output
+  --g64 arg                             [DEPRECATED, use tolerance instead] 
+                                        maximum deviation from toolpath, 
+                                        overrides internal calculation
+  --tolerance arg                       maximum toolpath tolerance
+  --nog64 [=arg(=1)] (=0)               do not set an explicit g64
+  --output-dir arg                      output directory
+  --basename arg                        prefix for default output file names
+  --manifest arg                        output file for a JSON list of all the 
+                                        files written, for GUIs and scripts
+  --preamble-text arg                   preamble text file, inserted at the 
+                                        very beginning as a comment.
+  --preamble arg                        gcode preamble file, inserted at the 
+                                        very beginning.
+  --postamble arg                       gcode postamble file, inserted before 
+                                        M9 and M2.
+  --no-export [=arg(=1)] (=0)           skip the exporting process
+  --sanity-checks [=arg(=1)] (=0)       run sanity checks
+  --single-thread [=arg(=1)] (=0)       disable multi-threading
+
+Drilling options, for making holes in the PCB:
+  --drill arg                           Excellon drill file
+  --milldrill [=arg(=1)] (=0)           [DEPRECATED] Use min-milldrill-hole-dia
+                                        meter=0 instead
+  --milldrill-diameter arg              diameter of the end mill used for 
+                                        drilling with --milldrill
+  --min-milldrill-hole-diameter arg (=inf)
+                                        minimum hole width for milldrilling.  
+                                        Holes smaller than this are drilled.  
+                                        This implies milldrill
+  --min-milldrill-entry-diameter arg (=150 %)
+                                        minimum initial hole width for 
+                                        milldrilling when multiple steps are 
+                                        used, as a fraction of 
+                                        milldrill-diameter
+  --max-milldrill-entry-diameter arg (=190 %)
+                                        maximum initial hole width for 
+                                        milldrilling in a single step, and the 
+                                        minimum size of the initial hole when 
+                                        multiple steps are used, as a fraction 
+                                        of milldrill-diameter
+  --milldrill-stepover arg (=50 %)      maximum hole radius increase when 
+                                        milldrilling in multiple steps, as a 
+                                        fraction of milldrill-diameter
+  --zdrill arg                          drilling depth
+  --zmilldrill arg                      milldrilling depth
+  --drill-feed arg                      drill feed in [i/m] or [mm/m]
+  --drill-speed arg                     spindle rpm when drilling
+  --drill-front [=arg(=1)]              [DEPRECATED, use drill-side instead] 
+                                        drill through the front side of board
+  --drill-side arg (=auto)              drill side; valid choices are front, 
+                                        back or auto (default)
+  --drills-available arg                list of drills available
+  --onedrill [=arg(=1)] (=0)            use only one drill bit size
+  --drill-output arg (=drill.ngc)       output file for drilling
+  --nog91-1 [=arg(=1)] (=0)             do not explicitly set G91.1 in drill 
+                                        headers
+  --nog81 [=arg(=1)] (=0)               replace G81 with G0+G1
+  --nom6 [=arg(=1)] (=0)                do not emit M6 on tool changes
+  --milldrill-output arg (=milldrill.ngc)
+                                        output file for milldrilling
+
+Milling options, for milling traces into the PCB:
+  --front arg                           front side RS274-X .gbr
+  --back arg                            back side RS274-X .gbr
+  --voronoi [=arg(=1)] (=0)             generate voronoi regions
+  --offset arg (=0)                     Note: Prefer to use --mill-diameters 
+                                        and --milling-overlap if you just 
+                                        that's what you mean.  An optional 
+                                        offset to add to all traces, useful if 
+                                        the bit has a little slop that you want
+                                        to keep out of the trace.
+  --mill-diameters arg (=0)             Diameters of mill bits, used in the 
+                                        order that they are provided.
+  --milling-overlap arg (=50 %)         How much to overlap milling passes, 
+                                        from 0% to 100% or an absolute length
+  --isolation-width arg (=0)            Minimum isolation width between copper 
+                                        surfaces
+  --extra-passes arg (=0)               [DEPRECATED] use --isolation-width 
+                                        instead. Specify the the number of 
+                                        extra isolation passes, increasing the 
+                                        isolation width half the tool diameter 
+                                        with each pass
+  --pre-milling-gcode arg               custom gcode inserted before the start 
+                                        of milling each trace (used to activate
+                                        pump or fan or laser connected to fan)
+  --post-milling-gcode arg              custom gcode inserted after the end of 
+                                        milling each trace (used to deactivate 
+                                        pump or fan or laser connected to fan)
+  --zwork arg                           milling depth in inches (Z-coordinate 
+                                        while engraving)
+  --mill-feed arg                       feed while isolating in [i/m] or [mm/m]
+  --mill-vertfeed arg                   vertical feed while isolating in [i/m] 
+                                        or [mm/m]
+  --mill-infeed arg                     maximum milling depth; PCB may be cut 
+                                        in multiple passes
+  --mill-speed arg                      spindle rpm when milling
+  --mill-feed-direction arg (=0)        In which direction should all milling 
+                                        occur
+  --invert-gerbers [=arg(=1)] (=0)      Invert polarity of front and back 
+                                        gerbers, causing the milling to occur 
+                                        inside the shapes
+  --draw-gerber-lines [=arg(=1)] (=0)   Draw lines in the gerber file as just 
+                                        lines and not as filled in shapes
+  --preserve-thermal-reliefs [=arg(=1)] (=1)
+                                        generate mill paths for thermal reliefs
+                                        in voronoi mode
+  --front-output arg (=front.ngc)       output file for front layer
+  --back-output arg (=back.ngc)         output file for back layer
+
+Outline options, for cutting the PCB out of the FR4:
+  --outline arg                         pcb outline polygon RS274-X .gbr
+  --fill-outline [=arg(=1)] (=1)        accept a contour instead of a polygon 
+                                        as outline (enabled by default)
+  --cutter-diameter arg                 diameter of the end mill used for 
+                                        cutting out the PCB
+  --zcut arg                            PCB cutting depth in inches
+  --cut-feed arg                        PCB cutting feed in [i/m] or [mm/m]
+  --cut-vertfeed arg                    PCB vertical cutting feed in [i/m] or 
+                                        [mm/m]
+  --cut-speed arg                       spindle rpm when cutting
+  --cut-infeed arg                      maximum cutting depth; PCB may be cut 
+                                        in multiple passes
+  --cut-front [=arg(=1)]                [DEPRECATED, use cut-side instead] cut 
+                                        from front side. 
+  --cut-side arg (=auto)                cut side; valid choices are front, back
+                                        or auto (default)
+  --bridges arg (=0)                    add bridges with the given width to the
+                                        outline cut
+  --bridgesnum arg (=2)                 specify how many bridges should be 
+                                        created
+  --zbridges arg                        bridges height (Z-coordinates while 
+                                        engraving bridges, default to zsafe) 
+  --outline-output arg (=outline.ngc)   output file for outline
+
+Optimization options, for faster PCB creation, smaller output files, and different algorithms.:
+  --optimise [=arg(=2.54e-06 m)] (=2.54e-06 m)
+                                        Reduce output file size by up to 40% 
+                                        while accepting a little loss of 
+                                        precision.  Larger values reduce file 
+                                        sizes and processing time even further.
+                                          Set to 0 to disable.
+  --eulerian-paths [=arg(=1)] (=1)      Don't mill the same path twice if 
+                                        milling loops overlap.  This can save 
+                                        up to 50% of milling time.  Enabled by 
+                                        default.
+  --vectorial [=arg(=1)] (=1)           enable or disable the vectorial 
+                                        rendering engine
+  --tsp-2opt [=arg(=1)] (=1)            use TSP 2OPT to find a faster toolpath 
+                                        (but slows down gcode generation)
+  --path-finding-limit arg (=1)         Use path finding for up to this many 
+                                        steps in the search (more is slower but
+                                        makes a faster gcode path)
+  --g0-vertical-speed arg (=0.0211667 m s^-1)
+                                        speed of vertical G0 movements, for use
+                                        in path-finding
+  --g0-horizontal-speed arg (=0.0423333 m s^-1)
+                                        speed of horizontal G0 movements, for 
+                                        use in path-finding
+  --backtrack arg (=inf)                allow retracing a milled path if it's 
+                                        faster than retract-move-lower.  For 
+                                        example, set to 5in/s if you are 
+                                        willing to remill 5 inches of trace in 
+                                        order to save 1 second of milling time.
+
+Autolevelling options, for generating gcode to automatically probe the board and adjust milling depth to the actual board height:
+  --al-front [=arg(=1)] (=0)            enable the z autoleveller for the front
+                                        layer
+  --al-back [=arg(=1)] (=0)             enable the z autoleveller for the back 
+                                        layer
+  --software arg                        choose the destination software (useful
+                                        only with the autoleveller). Supported 
+                                        programs are linuxcnc, mach3, mach4 and
+                                        custom
+  --al-x arg                            max x distance between probes
+  --al-y arg                            max y distance bewteen probes
+  --al-probefeed arg                    speed during the probing
+  --al-probe-on arg (=(MSG, Attach the probe tool)@M0 ( Temporary machine stop. ))
+                                        execute this commands to enable the 
+                                        probe tool (default is M0)
+  --al-probe-off arg (=(MSG, Detach the probe tool)@M0 ( Temporary machine stop. ))
+                                        execute this commands to disable the 
+                                        probe tool (default is M0)
+  --al-probecode arg (=G31)             custom probe code (default is G31)
+  --al-probevar arg (=2002)             number of the variable where the result
+                                        of the probing is saved (default is 
+                                        2002)
+  --al-setzzero arg (=G92 Z0)           gcode for setting the actual position 
+                                        as zero (default is G92 Z0)
+
+Alignment options, useful for aligning the milling on opposite sides of the PCB:
+  --x-offset arg (=0)                   offset the origin in the x-axis by this
+                                        length
+  --y-offset arg (=0)                   offset the origin in the y-axis by this
+                                        length
+  --zero-start [=arg(=1)] (=0)          set the starting point of the project 
+                                        at (0,0)
+  --mirror-absolute [=arg(=1)] (=1)     [DEPRECATED, must always be true] 
+                                        mirror back side along absolute zero 
+                                        instead of board center
+  --mirror-axis arg (=0)                For two-sided boards, the PCB needs to 
+                                        be flipped along the axis x=VALUE
+  --mirror-yaxis arg (=0)               For two-sided boards, the PCB needs to 
+                                        be flipped along the y axis instead
+
+CNC options, common to all the milling, drilling, and cutting:
+  --zsafe arg                           safety height (Z-coordinate during 
+                                        rapid moves)
+  --spinup-time arg (=0.001 s)          time required to the spindle to reach 
+                                        the correct speed
+  --spindown-time arg                   time required to the spindle to return 
+                                        to 0 rpm
+  --zchange arg                         tool changing height
+  --zchange-absolute [=arg(=1)] (=0)    use zchange as a machine coordinates 
+                                        height (G53)
+  --tile-x arg (=1)                     number of tiling columns. Default value
+                                        is 1
+  --tile-y arg (=1)                     number of tiling rows. Default value is
+                                        1

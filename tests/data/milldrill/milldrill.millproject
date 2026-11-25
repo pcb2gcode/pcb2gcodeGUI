@@ -1,0 +1,23 @@
+# Drill-only job: holes from 1.6 mm up are milled with a 1 mm end mill, in several steps.
+drill=milldrill_multi_step.drl
+
+metric=true
+metricoutput=true
+zsafe=1.5mm
+zchange=10mm
+zdrill=-1.75mm
+drill-feed=100mm/min
+drill-speed=10000rpm
+
+min-milldrill-hole-diameter=1.6mm
+milldrill-diameter=1mm
+zmilldrill=-1.7mm
+min-milldrill-entry-diameter=140%
+max-milldrill-entry-diameter=180%
+milldrill-stepover=40%
+
+cutter-diameter=2mm
+zcut=-1.65mm
+cut-feed=600mm/min
+cut-infeed=0.3mm
+cut-speed=2000rpm

@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pcb2gcode-options.json</file>
+        <file>gui-layout.json</file>
+        <file alias="images/loading.gif">loading.gif</file>
+        <file alias="icons/pcb2gcodeGUI.svg">pcb2gcodeGUI.svg</file>
+    </qresource>
+</RCC>

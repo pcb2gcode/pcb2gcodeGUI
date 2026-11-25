@@ -1,0 +1,9 @@
+# The safe height is below the milling depth: pcb2gcode refuses this.
+front=../example_board/example_board-F.Cu.gbr
+metric=true
+metricoutput=true
+zsafe=-1mm
+zchange=10mm
+zwork=-0.05mm
+mill-feed=300mm/min
+mill-speed=12000rpm

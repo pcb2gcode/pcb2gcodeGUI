@@ -1,0 +1,199 @@
+{
+  "format_version": 1,
+  "hidden": ["help", "version", "mcp", "config", "noconfigfile", "dump-options", "check-options", "vectorial", "manifest"],
+  "group_tabs": {
+    "generic": "advanced",
+    "drilling": "drilling",
+    "milling": "milling",
+    "outline": "outline",
+    "optimization": "optimisation",
+    "autolevelling": "autoleveller",
+    "alignment": "machine",
+    "cnc": "machine"
+  },
+  "tabs": [
+    {
+      "id": "files",
+      "title": "Files",
+      "wiki": "Options:-Generic",
+      "sections": [
+        {"title": "Input files", "options": ["front", "back", "outline", "drill"]},
+        {"title": "Output", "options": ["output-dir", "basename", "no-export"]},
+        {"title": "Preamble and postamble", "options": ["preamble", "preamble-text", "postamble"]},
+        {"title": "Output file names", "options": ["front-output", "back-output", "drill-output", "milldrill-output", "outline-output"]}
+      ]
+    },
+    {
+      "id": "machine",
+      "title": "Machine",
+      "wiki": "Options:-Common",
+      "sections": [
+        {"title": "Controller", "options": ["software", "metric", "metricoutput"]},
+        {"title": "Heights", "options": ["zsafe", "zchange", "zchange-absolute"]},
+        {"title": "Spindle", "options": ["spinup-time", "spindown-time"]},
+        {"title": "Path accuracy", "options": ["tolerance", "nog64"]},
+        {"title": "Alignment", "options": ["zero-start", "x-offset", "y-offset", "mirror-axis", "mirror-yaxis"]},
+        {"title": "Tiling", "options": ["tile-x", "tile-y"]}
+      ]
+    },
+    {
+      "id": "milling",
+      "title": "Milling",
+      "wiki": "Options:-Milling",
+      "sections": [
+        {"title": "Cutting", "options": ["zwork", "mill-infeed", "mill-feed", "mill-vertfeed", "mill-speed"]},
+        {"title": "Isolation", "options": ["mill-diameters", "milling-overlap", "isolation-width", "voronoi", "preserve-thermal-reliefs", "offset"]},
+        {"title": "Toolpath", "options": ["mill-feed-direction", "invert-gerbers", "draw-gerber-lines"]},
+        {"title": "Custom G-code", "options": ["pre-milling-gcode", "post-milling-gcode"]}
+      ]
+    },
+    {
+      "id": "drilling",
+      "title": "Drilling",
+      "wiki": "Options:-Drilling",
+      "sections": [
+        {"title": "Drilling", "options": ["zdrill", "drill-feed", "drill-speed", "drill-side"]},
+        {"title": "Drill bits", "options": ["onedrill", "drills-available", "nom6", "nog81", "nog91-1"]},
+        {"title": "Milldrilling", "options": ["min-milldrill-hole-diameter", "milldrill-diameter", "zmilldrill", "min-milldrill-entry-diameter", "max-milldrill-entry-diameter", "milldrill-stepover"]}
+      ]
+    },
+    {
+      "id": "outline",
+      "title": "Outline",
+      "wiki": "Options:-Outline",
+      "sections": [
+        {"title": "Cutting", "options": ["cutter-diameter", "zcut", "cut-infeed", "cut-feed", "cut-vertfeed", "cut-speed", "cut-side", "fill-outline"]},
+        {"title": "Bridges", "options": ["bridges", "bridgesnum", "zbridges"]}
+      ]
+    },
+    {
+      "id": "autoleveller",
+      "title": "Autoleveller",
+      "sections": [
+        {"title": "Probing", "options": ["al-front", "al-back", "al-x", "al-y", "al-probefeed"]},
+        {"title": "Probe tool", "options": ["al-probe-on", "al-probe-off"]},
+        {"title": "Custom software", "options": ["al-probecode", "al-probevar", "al-setzzero"]}
+      ]
+    },
+    {
+      "id": "optimisation",
+      "title": "Optimisation",
+      "wiki": "Options:-Optimizations",
+      "sections": [
+        {"title": "Output size", "options": ["optimise"]},
+        {"title": "Path planning", "options": ["eulerian-paths", "tsp-2opt", "path-finding-limit", "g0-vertical-speed", "g0-horizontal-speed", "backtrack"]}
+      ]
+    },
+    {
+      "id": "advanced",
+      "title": "Advanced",
+      "sections": [
+        {"title": "Diagnostics", "options": ["ignore-warnings", "sanity-checks", "single-thread"]}
+      ]
+    }
+  ],
+  "options": {
+    "front": {"label": "Front copper"},
+    "back": {"label": "Back copper"},
+    "outline": {"label": "Board outline"},
+    "drill": {"label": "Drill file"},
+    "output-dir": {"label": "Output folder", "placeholder": "asked for when you generate G-code"},
+    "basename": {"label": "File name prefix"},
+    "no-export": {"label": "Skip writing G-code"},
+    "preamble": {"label": "G-code preamble file"},
+    "preamble-text": {"label": "Preamble comment file"},
+    "postamble": {"label": "G-code postamble file"},
+    "front-output": {"label": "Front", "enabled_if": "!basename"},
+    "back-output": {"label": "Back", "enabled_if": "!basename"},
+    "drill-output": {"label": "Drill", "enabled_if": "!basename"},
+    "milldrill-output": {"label": "Milldrill", "enabled_if": "!basename"},
+    "outline-output": {"label": "Outline", "enabled_if": "!basename"},
+
+    "metric": {"label": "Input units", "preset": "true", "choice_labels": {"true": "Millimetres", "false": "Inches"}},
+    "metricoutput": {"label": "G-code units", "preset": "true", "choice_labels": {"true": "Millimetres (G21)", "false": "Inches (G20)"}},
+    "zsafe": {"label": "Safe height"},
+    "zchange": {"label": "Tool change height"},
+    "zchange-absolute": {"label": "Tool change height is a machine coordinate (G53)"},
+    "spinup-time": {"label": "Spin-up time"},
+    "spindown-time": {"label": "Spin-down time", "preset": "1s"},
+    "tolerance": {"label": "Path tolerance", "fine": true, "preset": "0.01mm"},
+    "nog64": {"label": "Don't emit G64"},
+    "zero-start": {"label": "Start at (0, 0)", "preset": "true"},
+    "x-offset": {"label": "X offset"},
+    "y-offset": {"label": "Y offset"},
+    "mirror-axis": {"label": "Mirror axis (x =)"},
+    "mirror-yaxis": {"label": "Mirror along the Y axis instead"},
+    "tile-x": {"label": "Tiles in X"},
+    "tile-y": {"label": "Tiles in Y"},
+
+    "zwork": {"label": "Milling depth", "fine": true},
+    "mill-infeed": {"label": "Depth per pass", "fine": true, "preset": "0.05mm"},
+    "mill-feed": {"label": "Feed rate"},
+    "mill-vertfeed": {"label": "Plunge rate", "preset": "100mm/min"},
+    "mill-speed": {"label": "Spindle speed"},
+    "mill-diameters": {"label": "Mill diameters", "preset": "0.2mm", "placeholder": "e.g. 0.2mm, 0.5mm"},
+    "milling-overlap": {"label": "Pass overlap"},
+    "isolation-width": {"label": "Minimum isolation width", "fine": true, "min": "0", "enabled_if": "!voronoi"},
+    "voronoi": {"label": "Voronoi regions"},
+    "preserve-thermal-reliefs": {"label": "Preserve thermal reliefs", "enabled_if": "voronoi"},
+    "offset": {"label": "Extra trace offset", "fine": true, "enabled_if": "!voronoi"},
+    "mill-feed-direction": {"label": "Milling direction", "enabled_if": "!tsp-2opt",
+                            "choice_labels": {"any": "Any", "climb": "Climb", "conventional": "Conventional"}},
+    "invert-gerbers": {"label": "Invert Gerber polarity"},
+    "draw-gerber-lines": {"label": "Draw Gerber lines as thin lines"},
+    "pre-milling-gcode": {"label": "Before each trace"},
+    "post-milling-gcode": {"label": "After each trace"},
+
+    "zdrill": {"label": "Drilling depth"},
+    "drill-feed": {"label": "Feed rate"},
+    "drill-speed": {"label": "Spindle speed"},
+    "drill-side": {"label": "Drill from", "choice_labels": {"auto": "Automatic", "front": "Front", "back": "Back"}},
+    "onedrill": {"label": "Use a single drill bit"},
+    "drills-available": {"label": "Available drill bits", "enabled_if": "!onedrill", "placeholder": "e.g. 0.8mm, 1mm:-0.1mm:+0.2mm"},
+    "nom6": {"label": "Don't emit M6 tool changes"},
+    "nog81": {"label": "Replace G81 with G0/G1"},
+    "nog91-1": {"label": "Don't emit G91.1"},
+    "min-milldrill-hole-diameter": {"label": "Milldrill holes from", "preset": "1mm", "min": "0"},
+    "milldrill-diameter": {"label": "End mill diameter", "preset": "1mm", "min": "0", "enabled_if": "min-milldrill-hole-diameter < inf"},
+    "zmilldrill": {"label": "Milldrill depth", "preset": "-1.8mm", "enabled_if": "min-milldrill-hole-diameter < inf"},
+    "min-milldrill-entry-diameter": {"label": "Smallest entry hole", "enabled_if": "min-milldrill-hole-diameter < inf"},
+    "max-milldrill-entry-diameter": {"label": "Largest single-step hole", "enabled_if": "min-milldrill-hole-diameter < inf"},
+    "milldrill-stepover": {"label": "Stepover", "enabled_if": "min-milldrill-hole-diameter < inf"},
+
+    "cutter-diameter": {"label": "End mill diameter", "min": "0"},
+    "zcut": {"label": "Cutting depth"},
+    "cut-infeed": {"label": "Depth per pass"},
+    "cut-feed": {"label": "Feed rate"},
+    "cut-vertfeed": {"label": "Plunge rate", "preset": "100mm/min"},
+    "cut-speed": {"label": "Spindle speed"},
+    "cut-side": {"label": "Cut from", "choice_labels": {"auto": "Automatic", "front": "Front", "back": "Back"}},
+    "fill-outline": {"label": "Outline is a contour (fill it)"},
+    "bridges": {"label": "Bridge width"},
+    "bridgesnum": {"label": "Number of bridges", "enabled_if": "bridges"},
+    "zbridges": {"label": "Bridge height", "preset": "-0.6mm", "enabled_if": "bridges"},
+
+    "al-front": {"label": "Autolevel the front side"},
+    "al-back": {"label": "Autolevel the back side"},
+    "software": {"label": "Machine software", "choice_labels": {"linuxcnc": "LinuxCNC", "mach3": "Mach3", "mach4": "Mach4", "custom": "Custom"}},
+    "al-x": {"label": "Probe spacing in X", "enabled_if": "al-front || al-back"},
+    "al-y": {"label": "Probe spacing in Y", "enabled_if": "al-front || al-back"},
+    "al-probefeed": {"label": "Probe feed rate", "enabled_if": "al-front || al-back"},
+    "al-probe-on": {"label": "Attach probe G-code", "enabled_if": "al-front || al-back"},
+    "al-probe-off": {"label": "Detach probe G-code", "enabled_if": "al-front || al-back"},
+    "al-probecode": {"label": "Probe G-code", "enabled_if": "(al-front || al-back) && software == 'custom'"},
+    "al-probevar": {"label": "Probe result variable", "enabled_if": "(al-front || al-back) && software == 'custom'"},
+    "al-setzzero": {"label": "Set Z zero G-code", "enabled_if": "(al-front || al-back) && software == 'custom'"},
+
+    "optimise": {"label": "Path simplification", "fine": true, "min": "0"},
+    "eulerian-paths": {"label": "Eulerian paths (don't mill a path twice)"},
+    "tsp-2opt": {"label": "TSP 2-opt path ordering"},
+    "path-finding-limit": {"label": "Path finding limit"},
+    "g0-vertical-speed": {"label": "Rapid vertical speed"},
+    "g0-horizontal-speed": {"label": "Rapid horizontal speed"},
+    "backtrack": {"label": "Backtrack limit", "per_second": true, "preset": "5in/s"},
+
+    "ignore-warnings": {"label": "Treat option errors as warnings"},
+    "sanity-checks": {"label": "Run sanity checks"},
+    "single-thread": {"label": "Single thread"}
+  }
+}

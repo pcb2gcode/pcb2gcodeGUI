@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=pcb2gcodeGUI
+GenericName=PCB isolation milling
+Comment=Make G-code for milling and drilling printed circuit boards with pcb2gcode
+Exec=pcb2gcodeGUI %f
+Icon=pcb2gcodeGUI
+Terminal=false
+Categories=Development;Electronics;Engineering;
+Keywords=PCB;CNC;G-code;Gerber;Excellon;milling;
