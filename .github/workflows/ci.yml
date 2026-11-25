@@ -1,0 +1,117 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  # Weekly check of the built-in option list against pcb2gcode master.
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  linux:
+    name: Linux, with pcb2gcode
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build qt6-base-dev qt6-svg-dev libgl1-mesa-dev \
+            libboost-program-options-dev libgtkmm-2.4-dev gerbv librsvg2-dev libgeos++-dev libgeos-dev \
+            nlohmann-json3-dev
+          # Ubuntu 24.04's libgerbv.pc has an empty Version field.
+          sudo sed -i 's/^Version:[[:space:]]*$/Version: 2.10.0/' /usr/lib/x86_64-linux-gnu/pkgconfig/libgerbv.pc
+
+      - name: Choose pcb2gcode
+        id: pcb2gcode
+        run: |
+          if [ "${{ github.event_name }}" = schedule ] || [ "${{ github.event_name }}" = workflow_dispatch ]; then
+            ref=$(git ls-remote https://github.com/pcb2gcode/pcb2gcode.git refs/heads/master | cut -f1)
+          else
+            # The version the built-in option list was made from.
+            ref=$(python3 -c "import json; print(json.load(open('resources/pcb2gcode-options.json'))['pcb2gcode_commit'])")
+          fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
+      - name: Cache pcb2gcode
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: pcb2gcode-bin
+          key: pcb2gcode-${{ steps.pcb2gcode.outputs.ref }}-ubuntu-24.04
+
+      - name: Build pcb2gcode
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          git init pcb2gcode-src
+          git -C pcb2gcode-src fetch --depth 1 https://github.com/pcb2gcode/pcb2gcode.git ${{ steps.pcb2gcode.outputs.ref }}
+          git -C pcb2gcode-src checkout FETCH_HEAD
+          cmake -S pcb2gcode-src -B pcb2gcode-build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_TESTING=OFF -DPCB2GCODE_COMPILE_WARNING_AS_ERROR=OFF
+          cmake --build pcb2gcode-build
+          mkdir -p pcb2gcode-bin
+          cp pcb2gcode-build/pcb2gcode pcb2gcode-bin/
+
+      - name: Build
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DPCB2GCODE_EXECUTABLE=$PWD/pcb2gcode-bin/pcb2gcode
+          cmake --build build
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Package
+        run: cd build && cpack -G TGZ
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pcb2gcodeGUI-linux
+          path: build/pcb2gcodeGUI-*.tar.gz
+
+  macos:
+    name: macOS
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: brew install ninja qt
+      - name: Build
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$(brew --prefix qt)"
+          cmake --build build
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+      - name: Package
+        run: cd build && cpack -G DragNDrop
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pcb2gcodeGUI-macos
+          path: build/pcb2gcodeGUI-*.dmg
+
+  windows:
+    name: Windows (MSYS2)
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-qt6-base
+            mingw-w64-ucrt-x86_64-qt6-svg
+      - name: Build
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
