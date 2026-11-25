@@ -22,13 +22,35 @@
 
 #include "optionschema.h"
 
+#include <QByteArray>
+#include <QList>
 #include <QString>
 #include <QStringList>
+#include <optional>
 
 namespace pcb2gcode {
 
 // The option that makes pcb2gcode print its option metadata as JSON.
 extern const char *const kDumpOptionsFlag;
+// The option that makes pcb2gcode check the other options and print the problems as JSON.
+extern const char *const kCheckOptionsFlag;
+
+struct CheckIssue {
+    QStringList options;
+    QString rule;  // empty for warnings
+    QString message;
+    int code = 0;
+};
+
+struct CheckResult {
+    QList<CheckIssue> errors;
+    QList<CheckIssue> warnings;
+};
+
+// Reads the output of `pcb2gcode --check-options`; nullopt if it isn't that format.
+std::optional<CheckResult> parseCheckOutput(const QByteArray &output);
+// Runs `program --check-options <arguments>` and waits for it.
+std::optional<CheckResult> checkOptions(const QString &program, const QStringList &arguments, int timeoutMs = 10000);
 
 QString executableName();
 

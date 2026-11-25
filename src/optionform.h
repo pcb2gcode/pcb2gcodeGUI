@@ -25,9 +25,11 @@
 #include "layout.h"
 #include "optioneditors.h"
 #include "optionschema.h"
+#include "pcb2gcode.h"
 
 #include <QHash>
 #include <QWidget>
+#include <optional>
 
 class QGroupBox;
 class QLabel;
@@ -53,10 +55,19 @@ public:
     struct Problem {
         QString message;
         QStringList options;
+        bool warning = false;
     };
-    // What pcb2gcode would reject: fields that don't parse and failing rules of the schema.
+    // What pcb2gcode would reject: fields that don't parse, and either the problems pcb2gcode
+    // reported (setReportedProblems) or the schema's rules evaluated here.
     QList<Problem> findProblems() const;
-    QStringList problems() const;
+    QStringList problems() const;  // errors only
+    QStringList warnings() const;
+    // Problems from `pcb2gcode --check-options` for the current options. They replace the
+    // form's own evaluation of the rules until cleared.
+    void setReportedProblems(const QList<Problem> &problems);
+    void setReportedProblems(const pcb2gcode::CheckResult &result);
+    void clearReportedProblems();
+    bool hasReportedProblems() const { return m_reported.has_value(); }
 
     ConfigFile toConfig() const;
     // Loads a configuration file on top of pcb2gcode's defaults. Relative input paths are
@@ -105,6 +116,7 @@ private:
     QHash<const OptionEditor *, QString> m_tabTitleOf;
     QList<OptionEditor *> m_order;
     QHash<int, QString> m_directories;
+    std::optional<QList<Problem>> m_reported;
     bool m_building = false;
 };
 

@@ -21,6 +21,7 @@
 #include "configfile.h"
 #include "layout.h"
 #include "optionschema.h"
+#include "pcb2gcode.h"
 #include "previews.h"
 #include "units.h"
 
@@ -74,6 +75,7 @@ private slots:
     void bundledSchema();
     void dumpFormat();
     void dumpExpressions();
+    void checkOutput();
     void layoutMatchesSchema();
     void parseHelp();
     void restrictToHelp();
@@ -377,6 +379,33 @@ void TestCore::dumpExpressions()
     QCOMPARE(condition::options(QJsonDocument::fromJson(
                                     R"({"all": [{"set": "a"}, {"not": {"equal": ["b", "x"]}}]})").object()),
              (QStringList{"a", "b"}));
+}
+
+void TestCore::checkOutput()
+{
+    const auto result = pcb2gcode::parseCheckOutput(R"({
+      "format_version": 1,
+      "errors": [
+        {"options": ["mill-feed"], "rule": "required:mill-feed",
+         "message": "Missing --mill-feed, the milling feed rate. For example: --mill-feed=600mm/min", "code": 13},
+        {"options": ["zsafe", "zwork"], "rule": "greater:zsafe,zwork",
+         "message": "--zsafe must be higher than --zwork.", "code": 15, "future": 1},
+        {"options": [], "rule": "something_new", "message": "A new kind of problem", "code": 100}
+      ],
+      "warnings": [{"options": ["zwork"], "message": "Warning: Engraving depth (--zwork) is greater than zero!"}]
+    })");
+    QVERIFY(result.has_value());
+    QCOMPARE(result->errors.size(), 3);
+    QCOMPARE(result->errors.at(1).options, (QStringList{"zsafe", "zwork"}));
+    QCOMPARE(result->errors.at(1).rule, QStringLiteral("greater:zsafe,zwork"));
+    QCOMPARE(result->errors.at(1).code, 15);
+    QCOMPARE(result->errors.at(2).message, QStringLiteral("A new kind of problem"));
+    QCOMPARE(result->warnings.size(), 1);
+    QCOMPARE(result->warnings.first().options, QStringList{"zwork"});
+
+    QVERIFY(!pcb2gcode::parseCheckOutput("").has_value());
+    QVERIFY(!pcb2gcode::parseCheckOutput("Error: Unknown option --check-options").has_value());
+    QVERIFY(!pcb2gcode::parseCheckOutput(R"({"format_version": 2, "errors": []})").has_value());
 }
 
 void TestCore::layoutMatchesSchema()

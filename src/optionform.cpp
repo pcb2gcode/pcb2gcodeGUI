@@ -144,6 +144,7 @@ void OptionForm::build(const OptionSchema &schema, const Layout &layout)
     m_tabTitleOf.clear();
     m_schema = schema;
     m_layout = layout;
+    m_reported.reset();
     units::setGrammar(schema.grammar.value_or(units::builtInGrammar()));
 
     QSet<QString> placed;
@@ -301,13 +302,20 @@ QList<OptionForm::Problem> OptionForm::findProblems() const
 {
     const condition::Context ctx = conditionContext();
     QList<Problem> out;
+    QSet<QString> reportedOptions;
+    if (m_reported)
+        for (const Problem &p : *m_reported)
+            for (const QString &o : p.options)
+                reportedOptions.insert(o);
     for (const OptionEditor *e : m_order) {
-        if (!e->ruleEnabled() || !m_schema.holds(e->spec().usedWhen, ctx))
+        if (!e->ruleEnabled() || !m_schema.holds(e->spec().usedWhen, ctx) || reportedOptions.contains(e->name()))
             continue;
         const QString p = e->problem();
         if (!p.isEmpty())
             out.append({QStringLiteral("--%1: %2").arg(e->name(), p), {e->name()}});
     }
+    if (m_reported)
+        return out + *m_reported;
     // The checks pcb2gcode makes, with its own messages.
     auto value = [&](const QString &name) -> std::optional<QString> {
         const OptionEditor *e = m_editors.value(name);
@@ -361,9 +369,44 @@ QStringList OptionForm::problems() const
 {
     QStringList messages;
     for (const Problem &p : findProblems())
-        if (!messages.contains(p.message))
+        if (!p.warning && !messages.contains(p.message))
             messages.append(p.message);
     return messages;
+}
+
+QStringList OptionForm::warnings() const
+{
+    QStringList messages;
+    for (const Problem &p : findProblems())
+        if (p.warning && !messages.contains(p.message))
+            messages.append(p.message);
+    return messages;
+}
+
+void OptionForm::setReportedProblems(const QList<Problem> &problems)
+{
+    m_reported = problems;
+    refresh();
+}
+
+void OptionForm::setReportedProblems(const pcb2gcode::CheckResult &result)
+{
+    QList<Problem> problems;
+    for (const pcb2gcode::CheckIssue &e : result.errors)
+        problems.append({e.message, e.options, false});
+    for (const pcb2gcode::CheckIssue &w : result.warnings) {
+        const bool prefixed = w.message.startsWith(QStringLiteral("Warning"), Qt::CaseInsensitive);
+        problems.append({prefixed ? w.message : tr("Warning: %1").arg(w.message), w.options, true});
+    }
+    setReportedProblems(problems);
+}
+
+void OptionForm::clearReportedProblems()
+{
+    if (!m_reported)
+        return;
+    m_reported.reset();
+    refresh();
 }
 
 ConfigFile OptionForm::toConfig() const
@@ -492,6 +535,8 @@ void OptionForm::refresh()
     QSet<QString> flagged;
     QHash<QString, QString> why;
     for (const Problem &p : findProblems()) {
+        if (p.warning)
+            continue;
         for (const QString &o : p.options) {
             flagged.insert(o);
             why[o] += (why.value(o).isEmpty() ? QString() : QStringLiteral("\n")) + p.message;

@@ -21,9 +21,11 @@
 #include "layout.h"
 #include "optionform.h"
 #include "optionschema.h"
+#include "pcb2gcode.h"
 #include "previewpane.h"
 
 #include <QGraphicsView>
+#include <QLabel>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QTabWidget>
@@ -67,6 +69,7 @@ private slots:
     void unsupportedOptionsAreHidden();
     void previewZoomSticks();
     void unknownExpressions();
+    void reportedProblems();
 
 private:
     OptionForm *form = nullptr;
@@ -311,6 +314,31 @@ void TestForm::unknownExpressions()
     QVERIFY(!problems.contains("unreadable rule"));
     QVERIFY(!problems.contains("unreadable if"));
     QVERIFY(form->isUsed(form->editor("x-offset")));
+}
+
+void TestForm::reportedProblems()
+{
+    QVERIFY(form->setOptionValues("front", {testData("example_board/example_board-F.Cu.gbr")}));
+    QVERIFY(form->setOptionValues("zsafe", {"-1mm"}));
+    QVERIFY(form->problems().contains("--zsafe must be higher than --zwork."));
+    QVERIFY(!form->hasReportedProblems());
+
+    // When pcb2gcode checks the options, its answer replaces the form's own rules.
+    pcb2gcode::CheckResult result;
+    form->setReportedProblems(result);
+    QVERIFY(form->hasReportedProblems());
+    QVERIFY(form->problems().isEmpty());
+
+    result.errors.append({{"mill-feed"}, "range:mill-feed", "--mill-feed must be greater than 0.", 16});
+    result.warnings.append({{"tolerance"}, QString(), "high tolerance value", 0});
+    form->setReportedProblems(result);
+    QCOMPARE(form->problems(), QStringList{"--mill-feed must be greater than 0."});
+    QCOMPARE(form->warnings(), QStringList{"Warning: high tolerance value"});
+    QCOMPARE(form->editor("mill-feed")->label()->palette().color(QPalette::WindowText), QColor(0xc0, 0x20, 0x20));
+
+    form->clearReportedProblems();
+    QVERIFY(form->problems().contains("--zsafe must be higher than --zwork."));
+    QVERIFY(form->warnings().isEmpty());
 }
 
 void TestForm::previewZoomSticks()

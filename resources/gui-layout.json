@@ -1,6 +1,6 @@
 {
   "format_version": 1,
-  "hidden": ["help", "version", "mcp", "config", "noconfigfile", "vectorial", "manifest"],
+  "hidden": ["help", "version", "mcp", "config", "noconfigfile", "dump-options", "check-options", "vectorial", "manifest"],
   "group_tabs": {
     "generic": "advanced",
     "drilling": "drilling",

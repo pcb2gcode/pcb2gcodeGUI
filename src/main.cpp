@@ -50,8 +50,19 @@ int printCommandLine(const QString &configPath, const QString &pcb2gcodePath, bo
     form.build(probe.schema, Layout::bundled());
     for (const QString &note : form.applyConfig(config, QFileInfo(configPath).absolutePath()))
         err << "note: " << note << '\n';
+    std::optional<pcb2gcode::CheckResult> check;
+    if (!probe.program.isEmpty() && form.supports(QStringLiteral("check-options")))
+        check = pcb2gcode::checkOptions(probe.program, QStringList{QStringLiteral("--noconfigfile")} + form.arguments());
+    if (check) {
+        form.setReportedProblems(*check);
+        err << "Options checked by pcb2gcode " << pcb2gcode::kCheckOptionsFlag << '\n';
+    } else {
+        err << "Options checked by the GUI's copy of pcb2gcode's rules\n";
+    }
     for (const QString &problem : form.problems())
         err << "problem: " << problem << '\n';
+    for (const QString &warning : form.warnings())
+        err << "warning: " << warning << '\n';
     out << "--noconfigfile\n";
     for (const QString &arg : form.arguments())
         out << arg << '\n';

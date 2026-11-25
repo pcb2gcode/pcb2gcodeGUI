@@ -24,6 +24,9 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QObject>
 #include <QProcess>
 #include <QRegularExpression>
@@ -34,6 +37,41 @@
 namespace pcb2gcode {
 
 const char *const kDumpOptionsFlag = "--dump-options";
+const char *const kCheckOptionsFlag = "--check-options";
+
+std::optional<CheckResult> parseCheckOutput(const QByteArray &output)
+{
+    const QJsonDocument doc = QJsonDocument::fromJson(output);
+    const QJsonObject root = doc.object();
+    if (!doc.isObject() || root.value("format_version").toInt() != 1)
+        return std::nullopt;
+    auto read = [](const QJsonValue &list) {
+        QList<CheckIssue> issues;
+        for (const QJsonValue &v : list.toArray()) {
+            const QJsonObject o = v.toObject();
+            CheckIssue issue;
+            for (const QJsonValue &name : o.value("options").toArray())
+                issue.options.append(name.toString());
+            issue.rule = o.value("rule").toString();
+            issue.message = o.value("message").toString();
+            issue.code = o.value("code").toInt();
+            issues.append(issue);
+        }
+        return issues;
+    };
+    CheckResult result;
+    result.errors = read(root.value("errors"));
+    result.warnings = read(root.value("warnings"));
+    return result;
+}
+
+std::optional<CheckResult> checkOptions(const QString &program, const QStringList &arguments, int timeoutMs)
+{
+    QByteArray out;
+    if (!run(program, QStringList{QString::fromLatin1(kCheckOptionsFlag)} + arguments, timeoutMs, &out))
+        return std::nullopt;
+    return parseCheckOutput(out);
+}
 
 QString executableName()
 {

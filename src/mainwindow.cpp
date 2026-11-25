@@ -105,6 +105,18 @@ MainWindow::MainWindow(const QString &pcb2gcodePath, bool bundledOptions, QWidge
     m_previewTimer.setInterval(700);
     connect(&m_previewTimer, &QTimer::timeout, this, &MainWindow::startPreview);
 
+    // Problems come from pcb2gcode itself when it can check options without running.
+    connect(&m_checkProcess, &QProcess::finished, this, &MainWindow::checkFinished);
+    connect(&m_checkProcess, &QProcess::errorOccurred, this, [this](QProcess::ProcessError e) {
+        if (e == QProcess::FailedToStart) {
+            m_form->clearReportedProblems();
+            updateProblems();
+        }
+    });
+    m_checkTimer.setSingleShot(true);
+    m_checkTimer.setInterval(250);
+    connect(&m_checkTimer, &QTimer::timeout, this, &MainWindow::startCheck);
+
     loadSettings();
     if (m_pcb2gcodePath.isEmpty())
         m_pcb2gcodePath = m_settings->value(QStringLiteral("pcb2gcodePath")).toString();
@@ -252,6 +264,9 @@ void MainWindow::setPcb2gcode(const QString &path)
 {
     m_previewProcess.kill();
     m_previewProcess.waitForFinished(1000);
+    m_checkTimer.stop();
+    m_checkProcess.kill();
+    m_checkProcess.waitForFinished(1000);
     QApplication::setOverrideCursor(Qt::WaitCursor);
     m_probe = pcb2gcode::probe(pcb2gcode::locate(path), m_bundledOptions);
     QApplication::restoreOverrideCursor();
@@ -290,15 +305,17 @@ void MainWindow::updateTitle()
 
 void MainWindow::updateStatus()
 {
-    QString text;
+    QStringList parts;
     if (!m_probe.program.isEmpty())
-        text = tr("pcb2gcode %1 (%2). ").arg(m_probe.version, QDir::toNativeSeparators(m_probe.program));
-    text += m_probe.schemaNote;
+        parts << tr("pcb2gcode %1 (%2)").arg(m_probe.version, QDir::toNativeSeparators(m_probe.program));
+    parts << m_probe.schemaNote;
     if (m_probe.olderThanSchema)
-        text += tr(". This pcb2gcode is older than the built-in list; some defaults may differ.");
+        parts << tr("This pcb2gcode is older than the built-in list, so some defaults may differ");
     if (!m_probe.schema.addedFromHelp.isEmpty())
-        text += tr(" New options found: %1.").arg(m_probe.schema.addedFromHelp.join(", "));
-    m_status->setText(text);
+        parts << tr("New options found: %1").arg(m_probe.schema.addedFromHelp.join(", "));
+    if (canCheckOptions())
+        parts << tr("pcb2gcode checks the options");
+    m_status->setText(parts.join(QStringLiteral(". ")) + QStringLiteral("."));
 }
 
 bool MainWindow::hasInputFiles() const
@@ -313,15 +330,65 @@ bool MainWindow::hasInputFiles() const
 
 void MainWindow::formChanged()
 {
-    const QStringList problems = m_form->problems();
-    m_problems->setVisible(!problems.isEmpty());
-    if (!problems.isEmpty()) {
-        QStringList shown = problems.mid(0, 4);
-        if (problems.size() > 4)
-            shown << tr("…and %n more", nullptr, int(problems.size() - 4));
-        m_problems->setText(QStringLiteral("• ") + shown.join(QStringLiteral("\n• ")));
-    }
+    updateProblems();
+    if (canCheckOptions())
+        m_checkTimer.start();
     schedulePreview();
+}
+
+void MainWindow::updateProblems()
+{
+    const QStringList errors = m_form->problems();
+    const QStringList warnings = m_form->warnings();
+    m_problems->setVisible(!errors.isEmpty() || !warnings.isEmpty());
+    QStringList lines;
+    for (const QString &e : errors)
+        lines << QStringLiteral("<span style=\"color:#b02020\">• %1</span>").arg(e.toHtmlEscaped());
+    for (const QString &w : warnings)
+        lines << QStringLiteral("<span style=\"color:#9a5b00\">• %1</span>").arg(w.toHtmlEscaped());
+    if (lines.size() > 5) {
+        const int more = int(lines.size() - 4);
+        lines = lines.mid(0, 4);
+        lines << tr("…and %n more", nullptr, more);
+    }
+    m_problems->setText(lines.join(QStringLiteral("<br>")));
+}
+
+bool MainWindow::canCheckOptions() const
+{
+    return !m_probe.program.isEmpty() && m_form->supports(QStringLiteral("check-options"));
+}
+
+void MainWindow::startCheck()
+{
+    if (!canCheckOptions())
+        return;
+    if (m_checkProcess.state() != QProcess::NotRunning) {
+        m_checkAgain = true;
+        m_checkProcess.kill();
+        return;
+    }
+    m_checkArguments = commandArguments();
+    if (m_tempDir.isValid())
+        m_checkProcess.setWorkingDirectory(m_tempDir.path());
+    m_checkProcess.start(m_probe.program,
+                         QStringList{QString::fromLatin1(pcb2gcode::kCheckOptionsFlag)} + m_checkArguments,
+                         QIODevice::ReadOnly);
+}
+
+void MainWindow::checkFinished()
+{
+    const QByteArray output = m_checkProcess.readAllStandardOutput();
+    if (m_checkAgain || m_checkArguments != commandArguments()) {
+        m_checkAgain = false;
+        startCheck();
+        return;
+    }
+    if (const auto result = pcb2gcode::parseCheckOutput(output))
+        m_form->setReportedProblems(*result);
+    else
+        m_form->clearReportedProblems();
+    updateProblems();
 }
 
 QStringList MainWindow::commandArguments() const
@@ -617,6 +684,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     m_previewProcess.kill();
     m_previewProcess.waitForFinished(1000);
+    m_checkProcess.kill();
+    m_checkProcess.waitForFinished(1000);
     saveSettings();
     event->accept();
 }

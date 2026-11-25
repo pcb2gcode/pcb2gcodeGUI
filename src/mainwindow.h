@@ -68,6 +68,10 @@ private:
     bool hasInputFiles() const;
     void schedulePreview();
     void previewFinished(int exitCode, QProcess::ExitStatus status);
+    bool canCheckOptions() const;
+    void startCheck();
+    void checkFinished();
+    void updateProblems();
     void generate();
     void generationFinished(bool success);
     void showCommandLine();
@@ -106,6 +110,10 @@ private:
     QTemporaryDir m_tempDir;
     QTimer m_previewTimer;
     bool m_previewAgain = false;
+    QProcess m_checkProcess;
+    QTimer m_checkTimer;
+    QStringList m_checkArguments;
+    bool m_checkAgain = false;
     OutputWindow *m_output = nullptr;
     QString m_runOutputDir;
     QString m_configPath;
