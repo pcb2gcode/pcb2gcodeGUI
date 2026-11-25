@@ -324,7 +324,7 @@
       "type": "bool",
       "default": "false",
       "implicit": "true",
-      "used_when": "always",
+      "used_when": "drilling",
       "deprecated": true,
       "replaced_by": "min-milldrill-hole-diameter",
       "value_map": {
@@ -338,7 +338,7 @@
       "type": "length",
       "default": null,
       "used_when": "milldrilling",
-      "default_note": "same as --cutter-diameter"
+      "default_note": "--cutter-diameter"
     },
     {
       "name": "min-milldrill-hole-diameter",
@@ -347,7 +347,7 @@
       "type": "length",
       "default": "inf",
       "used_when": "drilling",
-      "default_note": "inf: no milldrilling"
+      "default_note": "inf: no hole is milldrilled"
     },
     {
       "name": "min-milldrill-entry-diameter",
@@ -376,7 +376,7 @@
       "type": "percent",
       "default": "50%",
       "range": {
-        "min": "0%",
+        "min": "0",
         "min_exclusive": true,
         "max": "100%"
       },
@@ -399,7 +399,7 @@
       "type": "length",
       "default": null,
       "used_when": "milldrilling",
-      "default_note": "same as --zdrill"
+      "default_note": "--zdrill"
     },
     {
       "name": "drill-feed",
@@ -460,7 +460,8 @@
           "value": "back"
         }
       ],
-      "used_when": "drilling"
+      "used_when": "drilling",
+      "default_note": "auto: the front, unless only --back is given"
     },
     {
       "name": "drills-available",
@@ -491,7 +492,8 @@
       "used_when": "drilling",
       "path": "output_file",
       "file_format": "gcode",
-      "relative_to": "output-dir"
+      "relative_to": "output-dir",
+      "default_note": "with --basename: <basename>_drill.ngc"
     },
     {
       "name": "nog91-1",
@@ -518,7 +520,7 @@
       "type": "bool",
       "default": "false",
       "implicit": "true",
-      "used_when": "drilling"
+      "used_when": "always"
     },
     {
       "name": "milldrill-output",
@@ -529,7 +531,8 @@
       "used_when": "milldrilling",
       "path": "output_file",
       "file_format": "gcode",
-      "relative_to": "output-dir"
+      "relative_to": "output-dir",
+      "default_note": "with --basename: <basename>_milldrill.ngc"
     },
     {
       "name": "front",
@@ -674,7 +677,7 @@
         "min_exclusive": true
       },
       "used_when": "milling",
-      "default_note": "the whole depth in one pass"
+      "default_note": "the whole --zwork depth in one pass"
     },
     {
       "name": "mill-speed",
@@ -731,7 +734,7 @@
       "type": "bool",
       "default": "false",
       "implicit": "true",
-      "used_when": "always"
+      "used_when": "milling"
     },
     {
       "name": "preserve-thermal-reliefs",
@@ -751,7 +754,8 @@
       "used_when": "milling",
       "path": "output_file",
       "file_format": "gcode",
-      "relative_to": "output-dir"
+      "relative_to": "output-dir",
+      "default_note": "with --basename: <basename>_front.ngc"
     },
     {
       "name": "back-output",
@@ -762,7 +766,8 @@
       "used_when": "milling",
       "path": "output_file",
       "file_format": "gcode",
-      "relative_to": "output-dir"
+      "relative_to": "output-dir",
+      "default_note": "with --basename: <basename>_back.ngc"
     },
     {
       "name": "outline",
@@ -891,7 +896,8 @@
           "value": "back"
         }
       ],
-      "used_when": "cutting"
+      "used_when": "cutting",
+      "default_note": "auto: the front, unless only --back is given"
     },
     {
       "name": "bridges",
@@ -910,7 +916,8 @@
       "description": "specify how many bridges should be created",
       "type": "uint",
       "default": "2",
-      "used_when": "cutting"
+      "used_when": "cutting",
+      "default_note": "no bridges unless --bridges is more than 0"
     },
     {
       "name": "zbridges",
@@ -919,7 +926,7 @@
       "type": "length",
       "default": null,
       "used_when": "cutting",
-      "default_note": "same as --zsafe"
+      "default_note": "--zsafe"
     },
     {
       "name": "outline-output",
@@ -930,7 +937,8 @@
       "used_when": "cutting",
       "path": "output_file",
       "file_format": "gcode",
-      "relative_to": "output-dir"
+      "relative_to": "output-dir",
+      "default_note": "with --basename: <basename>_outline.ngc"
     },
     {
       "name": "optimise",
@@ -999,7 +1007,7 @@
       "type": "velocity",
       "default": "inf",
       "used_when": "always",
-      "default_note": "inf: retrace whenever it is faster"
+      "default_note": "inf: retrace a milled path whenever that's faster"
     },
     {
       "name": "al-front",
@@ -1041,7 +1049,8 @@
       ],
       "example": "linuxcnc",
       "required_when": "autolevelling",
-      "used_when": "autolevelling"
+      "used_when": "always",
+      "default_note": "custom, for tiling"
     },
     {
       "name": "al-x",
@@ -1207,7 +1216,7 @@
         "min": "0"
       },
       "used_when": "always",
-      "default_note": "same as --spinup-time"
+      "default_note": "--spinup-time"
     },
     {
       "name": "zchange",
@@ -1310,7 +1319,7 @@
       "used_when": "always",
       "bare_unit": "in",
       "metric_bare_unit": "mm",
-      "default_note": "0.0004in"
+      "default_note": "0.0004 inches"
     },
     {
       "name": "nog64",
@@ -1329,7 +1338,7 @@
       "default": "",
       "used_when": "always",
       "path": "directory",
-      "default_note": "current directory"
+      "default_note": "empty: the working directory"
     },
     {
       "name": "basename",
@@ -1337,8 +1346,7 @@
       "description": "prefix for default output file names",
       "type": "string",
       "default": null,
-      "used_when": "always",
-      "default_note": "no prefix"
+      "used_when": "always"
     },
     {
       "name": "preamble-text",
@@ -1814,7 +1822,7 @@
       "when": "milldrilling",
       "code": 57,
       "message": "--milldrill-stepover must be greater than 0% and at most 100%.",
-      "min": "0%",
+      "min": "0",
       "min_exclusive": true,
       "max": "100%"
     },
@@ -1892,10 +1900,12 @@
       ],
       "when": "always",
       "if": {
-        "equal": [
-          "mirror-absolute",
-          "false"
-        ]
+        "not": {
+          "equal": [
+            "mirror-absolute",
+            "true"
+          ]
+        }
       },
       "code": 54,
       "message": "--mirror-absolute=false isn't supported anymore. Remove it, and use --mirror-axis to choose where the back side is mirrored."
@@ -1935,10 +1945,12 @@
       ],
       "when": "milling",
       "if": {
-        "equal": [
-          "vectorial",
-          "false"
-        ]
+        "not": {
+          "equal": [
+            "vectorial",
+            "true"
+          ]
+        }
       },
       "code": 100,
       "message": "--vectorial=false isn't supported anymore. Remove it."

@@ -321,14 +321,17 @@ OptionSchema OptionSchema::bundled()
     return schema;
 }
 
-bool OptionSchema::holds(const QString &conditionName, const condition::Context &context) const
+bool OptionSchema::holds(const QString &conditionName, const condition::Context &context, bool *sawUnknown) const
 {
     if (conditionName.isEmpty() || conditionName == "always")
         return true;
     const auto it = conditions.constFind(conditionName);
-    if (it == conditions.constEnd())
+    if (it == conditions.constEnd()) {
+        if (sawUnknown)
+            *sawUnknown = true;
         return true;
-    return condition::evaluate(it->expression, context, true);
+    }
+    return condition::evaluate(it->expression, context, true, sawUnknown);
 }
 
 QString OptionSchema::conditionDescription(const QString &conditionName) const

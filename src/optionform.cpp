@@ -316,9 +316,10 @@ QList<OptionForm::Problem> OptionForm::findProblems() const
         return ctx.value(name);
     };
     for (const OptionRule &rule : m_schema.rules) {
-        if (rule.options.isEmpty() || !m_schema.holds(rule.when, ctx))
-            continue;
+        // A rule whose condition this version can't fully read is skipped.
         bool unknown = false;
+        if (rule.options.isEmpty() || !m_schema.holds(rule.when, ctx, &unknown) || unknown)
+            continue;
         bool failed = false;
         const QString first = rule.options.first();
         const OptionSpec *spec = m_schema.find(first);
@@ -340,7 +341,8 @@ QList<OptionForm::Problem> OptionForm::findProblems() const
             }
         } else if ((rule.kind == "greater" || rule.kind == "greater_or_equal") && rule.options.size() == 2) {
             const auto a = value(first), b = value(rule.options.at(1));
-            if (a && b && !(rule.unless.isObject() && condition::evaluate(rule.unless, ctx, true, &unknown))) {
+            const bool hasUnless = !rule.unless.isUndefined() && !rule.unless.isNull();
+            if (a && b && !(hasUnless && condition::evaluate(rule.unless, ctx, true, &unknown))) {
                 const auto c = condition::compareQuantities(*a, *b, dim, ctx.metric);
                 failed = c && (rule.kind == "greater" ? *c <= 0 : *c < 0);
             }

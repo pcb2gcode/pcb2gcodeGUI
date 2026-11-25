@@ -28,7 +28,7 @@
       "title": "Machine",
       "wiki": "Options:-Common",
       "sections": [
-        {"title": "Units", "options": ["metric", "metricoutput"]},
+        {"title": "Controller", "options": ["software", "metric", "metricoutput"]},
         {"title": "Heights", "options": ["zsafe", "zchange", "zchange-absolute"]},
         {"title": "Spindle", "options": ["spinup-time", "spindown-time"]},
         {"title": "Path accuracy", "options": ["tolerance", "nog64"]},
@@ -70,7 +70,7 @@
       "id": "autoleveller",
       "title": "Autoleveller",
       "sections": [
-        {"title": "Probing", "options": ["al-front", "al-back", "software", "al-x", "al-y", "al-probefeed"]},
+        {"title": "Probing", "options": ["al-front", "al-back", "al-x", "al-y", "al-probefeed"]},
         {"title": "Probe tool", "options": ["al-probe-on", "al-probe-off"]},
         {"title": "Custom software", "options": ["al-probecode", "al-probevar", "al-setzzero"]}
       ]
@@ -174,7 +174,7 @@
 
     "al-front": {"label": "Autolevel the front side"},
     "al-back": {"label": "Autolevel the back side"},
-    "software": {"label": "Machine software", "enabled_if": "al-front || al-back", "choice_labels": {"linuxcnc": "LinuxCNC", "mach3": "Mach3", "mach4": "Mach4", "custom": "Custom"}},
+    "software": {"label": "Machine software", "choice_labels": {"linuxcnc": "LinuxCNC", "mach3": "Mach3", "mach4": "Mach4", "custom": "Custom"}},
     "al-x": {"label": "Probe spacing in X", "enabled_if": "al-front || al-back"},
     "al-y": {"label": "Probe spacing in Y", "enabled_if": "al-front || al-back"},
     "al-probefeed": {"label": "Probe feed rate", "enabled_if": "al-front || al-back"},

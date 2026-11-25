@@ -248,7 +248,7 @@ public:
         : OptionEditor(spec, hint, ctx, parent)
     {
         m_combo = new FormComboBox;
-        if (!spec.hasDefault && spec.requiredWhen.isEmpty())
+        if (!spec.hasDefault && !spec.requiredWheneverUsed())
             m_combo->addItem(tr("(not set)"), QString());
         for (const OptionChoice &c : spec.choices)
             m_combo->addItem(hint.choiceLabels.value(c.value, c.value), c.value);
@@ -927,7 +927,7 @@ OptionEditor::OptionEditor(const OptionSpec &spec, const OptionHint &hint, Edito
 
     const bool numeric = spec.isNumeric() || spec.type == OptionType::LengthOrPercent;
     if (numeric && spec.multiplicity == Multiplicity::Single &&
-        (!spec.hasDefault || spec.defaultIsInfinite()) && spec.requiredWhen.isEmpty()) {
+        (!spec.hasDefault || spec.defaultIsInfinite()) && !spec.requiredWheneverUsed()) {
         m_override = new QCheckBox;
         m_override->setToolTip(tr("Tick to set a value; otherwise pcb2gcode decides"));
         connect(m_override, &QCheckBox::toggled, this, [this] {
@@ -1086,7 +1086,8 @@ QString OptionEditor::startValue(bool usePreset) const
         return m_hint.preset;
     if (m_spec.hasDefault && !m_spec.defaultIsInfinite())
         return m_spec.defaultValue;
-    if (!m_spec.example.isEmpty())
+    // An option that may be left unset starts unset, unless an override box guards it.
+    if (!m_spec.example.isEmpty() && (m_spec.requiredWheneverUsed() || m_override))
         return m_spec.example;
     if (!m_hint.preset.isEmpty())
         return m_hint.preset;

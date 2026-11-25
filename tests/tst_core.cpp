@@ -505,6 +505,20 @@ void TestCore::migrateLegacyConfig()
     QCOMPARE(entries.at(1).value, QStringLiteral("back"));
     QCOMPARE(entries.at(2).key, QStringLiteral("tolerance"));
 
+    // n extra passes of a tool of diameter d overlapping by o isolate d + n × (d − o).
+    QList<ConfigEntry> passes = {{"extra-passes", "2"}, {"mill-diameters", "0.2mm,0.5mm"}};
+    migrateLegacyEntries(passes, schema);
+    QCOMPARE(passes.size(), 2);
+    QCOMPARE(passes.at(1).key, QStringLiteral("isolation-width"));
+    QCOMPARE(passes.at(1).value, QStringLiteral("0.4mm"));
+    QList<ConfigEntry> overlapped = {{"metric", "true"}, {"mill-diameters", "0.2"}, {"milling-overlap", "25%"},
+                                     {"extra-passes", "2"}};
+    migrateLegacyEntries(overlapped, schema);
+    QCOMPARE(overlapped.last().value, QStringLiteral("0.5mm"));
+    QList<ConfigEntry> noTool = {{"extra-passes", "3"}};
+    QVERIFY(!migrateLegacyEntries(noTool, schema).isEmpty());
+    QVERIFY(noTool.isEmpty());
+
     // With mill-diameters given, --offset is an extra offset and stays.
     QList<ConfigEntry> both = {{"offset", "0.05mm"}, {"mill-diameters", "0.2mm"}};
     migrateLegacyEntries(both, schema);

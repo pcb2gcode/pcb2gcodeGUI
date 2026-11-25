@@ -25,6 +25,7 @@
 #include <QFile>
 #include <QSaveFile>
 #include <QTextStream>
+#include <optional>
 
 ConfigFile ConfigFile::parse(const QString &text)
 {
@@ -144,6 +145,46 @@ QString doubledLength(const QString &value)
     return units::formatNumber(q->value * 2, 8) + QString(q->unit).remove(' ');
 }
 
+QString firstValue(const QList<ConfigEntry> &entries, const QString &key)
+{
+    for (const ConfigEntry &e : entries)
+        if (e.key == key && !e.disabled)
+            return e.value;
+    return QString();
+}
+
+// n extra passes of a tool of diameter d, overlapping by o, isolate d + n × (d − o).
+void convertExtraPasses(const ConfigEntry &entry, QList<ConfigEntry> &entries, QStringList &notes)
+{
+    bool ok = false;
+    const int passes = entry.value.trimmed().toInt(&ok);
+    if (!ok || passes <= 0)
+        return;
+    if (!firstValue(entries, QStringLiteral("isolation-width")).isEmpty()) {
+        notes << QObject::tr("extra-passes=%1 was dropped: isolation-width is set").arg(entry.value);
+        return;
+    }
+    const QString metricText = firstValue(entries, QStringLiteral("metric"));
+    const bool metric = !metricText.isEmpty() && boolValue(metricText).value_or(false);
+    const QString tool = firstValue(entries, QStringLiteral("mill-diameters")).section(',', 0, 0).trimmed();
+    const auto d = units::parse(tool, units::Dimension::Length, metric);
+    if (tool.isEmpty() || !d || d->canonical <= 0) {
+        notes << QObject::tr("extra-passes=%1 was dropped: no mill diameter to convert it with").arg(entry.value);
+        return;
+    }
+    QString overlapText = firstValue(entries, QStringLiteral("milling-overlap"));
+    if (overlapText.isEmpty())
+        overlapText = QStringLiteral("50%");
+    double overlap = d->canonical / 2;
+    if (const auto l = units::parse(overlapText, units::Dimension::Length, metric))
+        overlap = l->canonical;
+    else if (const auto p = units::parse(overlapText, units::Dimension::Percent, metric))
+        overlap = d->canonical * p->canonical / 100;
+    const QString width = units::formatNumber(d->canonical + passes * (d->canonical - overlap)) + "mm";
+    entries.append({QStringLiteral("isolation-width"), width, false, entry.section});
+    notes << QObject::tr("extra-passes=%1 became isolation-width=%2 (for the %3 tool)").arg(entry.value, width, tool);
+}
+
 }  // namespace
 
 QStringList migrateLegacyEntries(QList<ConfigEntry> &entries, const OptionSchema &schema)
@@ -157,8 +198,13 @@ QStringList migrateLegacyEntries(QList<ConfigEntry> &entries, const OptionSchema
     };
 
     QList<ConfigEntry> out;
+    std::optional<ConfigEntry> extraPasses;
     for (const ConfigEntry &e : entries) {
         const OptionSpec *spec = schema.find(e.key);
+        if (e.key == "extra-passes" && spec && spec->deprecated && !e.disabled) {
+            extraPasses = e;
+            continue;
+        }
         if (spec && spec->deprecated) {
             const OptionSpec *target = schema.find(spec->replacedBy);
             if (!target) {
@@ -200,6 +246,8 @@ QStringList migrateLegacyEntries(QList<ConfigEntry> &entries, const OptionSchema
         }
         out.append(e);
     }
+    if (extraPasses)
+        convertExtraPasses(*extraPasses, out, notes);
     entries = out;
     return notes;
 }

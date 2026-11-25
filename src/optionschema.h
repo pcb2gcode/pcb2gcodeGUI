@@ -94,6 +94,8 @@ struct OptionSpec {
 
     units::Dimension dimension() const;
     bool isNumeric() const;
+    // Required whenever pcb2gcode uses it, so "not set" is never a valid choice.
+    bool requiredWheneverUsed() const { return !requiredWhen.isEmpty() && (requiredWhen == usedWhen || requiredWhen == "always"); }
     bool defaultIsInfinite() const;
     // The canonical choice for a value or alias, or an empty string.
     QString canonicalChoice(const QString &value) const;
@@ -152,8 +154,9 @@ public:
     OptionSpec *find(const QString &name);
     bool isValid() const { return !options.isEmpty(); }
 
-    // Whether a named condition holds; unknown names and expressions count as true.
-    bool holds(const QString &conditionName, const condition::Context &context) const;
+    // Whether a named condition holds. Unknown names and expression nodes count as true and
+    // set *sawUnknown: options stay in use, and rules that depend on them are skipped.
+    bool holds(const QString &conditionName, const condition::Context &context, bool *sawUnknown = nullptr) const;
     QString conditionDescription(const QString &conditionName) const;
     QString exitCodeName(int code) const { return exitCodes.value(code); }
 

@@ -24,6 +24,8 @@
 #include "previewpane.h"
 
 #include <QGraphicsView>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QTabWidget>
 #include <QWheelEvent>
 #include <QtTest>
@@ -64,6 +66,7 @@ private slots:
     void unknownOptionsAreShown();
     void unsupportedOptionsAreHidden();
     void previewZoomSticks();
+    void unknownExpressions();
 
 private:
     OptionForm *form = nullptr;
@@ -175,12 +178,17 @@ void TestForm::rules()
     QVERIFY(form->setOptionValues("tsp-2opt", {"false"}));
     QVERIFY(form->editor("mill-feed-direction")->ruleEnabled());
 
-    QVERIFY(!form->editor("software")->ruleEnabled());
+    // --software is used for tiling too but only required for autolevelling: it starts unset.
+    QVERIFY(form->editor("software")->values().isEmpty());
+    QVERIFY(form->setOptionValues("back", {testData("example_board/example_board-B.Cu.gbr")}));
     QVERIFY(form->setOptionValues("al-back", {"true"}));
-    QVERIFY(form->editor("software")->ruleEnabled());
+    QVERIFY(form->problems().contains("Missing --software, the autoleveller's target software: linuxcnc, mach3, "
+                                      "mach4 or custom. For example: --software=linuxcnc"));
     QVERIFY(!form->editor("al-probecode")->ruleEnabled());
     QVERIFY(form->setOptionValues("software", {"Custom"}));
     QVERIFY(form->editor("al-probecode")->ruleEnabled());
+    QVERIFY(form->arguments().contains("--software=custom"));
+    QVERIFY(form->setOptionValues("back", {}));
 
     QVERIFY(!form->editor("milldrill-stepover")->ruleEnabled());
     form->editor("min-milldrill-hole-diameter")->setOverridden(true);
@@ -272,6 +280,37 @@ void TestForm::unsupportedOptionsAreHidden()
     QVERIFY(!form->editor("milldrill-stepover"));
     QVERIFY(!form->supports("milldrill-stepover"));
     QVERIFY(!form->supports("manifest"));
+}
+
+void TestForm::unknownExpressions()
+{
+    OptionSchema schema = OptionSchema::bundled();
+    schema.conditions.insert("future", {"something new", QJsonDocument::fromJson(R"({"teleport": "front"})").object()});
+    OptionRule rule;
+    rule.kind = "forbidden";
+    rule.options = {"zsafe"};
+    rule.when = "future";
+    rule.condition = true;
+    rule.message = "unreadable rule";
+    schema.rules.append(rule);
+    OptionRule unreadableIf = rule;
+    unreadableIf.when = "always";
+    unreadableIf.condition = QJsonDocument::fromJson(R"({"teleport": "zsafe"})").object();
+    unreadableIf.message = "unreadable if";
+    schema.rules.append(unreadableIf);
+    OptionRule readable = rule;
+    readable.when = "always";
+    readable.message = "readable rule";
+    schema.rules.append(readable);
+    schema.find("x-offset")->usedWhen = "future";
+
+    form->build(schema, Layout::bundled());
+    form->resetAll(true);
+    const QStringList problems = form->problems();
+    QVERIFY(problems.contains("readable rule"));
+    QVERIFY(!problems.contains("unreadable rule"));
+    QVERIFY(!problems.contains("unreadable if"));
+    QVERIFY(form->isUsed(form->editor("x-offset")));
 }
 
 void TestForm::previewZoomSticks()
