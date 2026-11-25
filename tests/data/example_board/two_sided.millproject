@@ -9,6 +9,7 @@ metricoutput=true
 zsafe=2mm
 zchange=20mm
 spinup-time=1.5s
+tolerance=5e-3
 zero-start=true
 mirror-axis=25mm
 

@@ -107,6 +107,10 @@ void TestCore::parseUnits_data()
     QTest::newRow("bare time is ms") << "1000" << int(Dimension::Time) << true << 1.0;
     QTest::newRow("percent") << "50%" << int(Dimension::Percent) << true << 50.0;
     QTest::newRow("bare percent is a fraction") << "0.5" << int(Dimension::Percent) << true << 50.0;
+    QTest::newRow("exponent") << "4e-4" << int(Dimension::Length) << false << 0.01016;
+    QTest::newRow("exponent with unit") << "4e-4mm" << int(Dimension::Length) << false << 0.0004;
+    QTest::newRow("capital exponent") << "1.5E+2 mm/min" << int(Dimension::Velocity) << false << 150.0;
+    QTest::newRow("plain exponent") << "2.5e3" << int(Dimension::None) << true << 2500.0;
 }
 
 void TestCore::parseUnits()
@@ -130,7 +134,8 @@ void TestCore::rejectBadUnits_data()
     QTest::newRow("unknown unit") << "5 km" << int(Dimension::Length);
     QTest::newRow("pcb2gcode doesn't know meters") << "5 meters" << int(Dimension::Length);
     QTest::newRow("trailing text") << "5mm extra" << int(Dimension::Length);
-    QTest::newRow("exponent") << "1e3mm" << int(Dimension::Length);
+    QTest::newRow("exponent without digits") << "2e" << int(Dimension::Length);
+    QTest::newRow("unit starting with e") << "2em" << int(Dimension::Length);
     QTest::newRow("speed without time") << "5mm" << int(Dimension::Velocity);
     QTest::newRow("percent sign missing") << "5 pct" << int(Dimension::Percent);
     QTest::newRow("inf can't be typed") << "inf" << int(Dimension::Length);

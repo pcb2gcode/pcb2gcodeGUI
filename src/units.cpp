@@ -47,6 +47,8 @@ public:
         return text.mid(start, pos - start);
     }
 
+    // A decimal number with an optional exponent ("4e-4"). pcb2gcode 3.2.0 rejects exponents
+    // in values with units but accepts them in plain numbers such as --tolerance.
     QString number()
     {
         skipSpace();
@@ -56,6 +58,16 @@ public:
             if (!c.isDigit() && c != '-' && c != '+' && c != '.')
                 break;
             pos++;
+        }
+        if (pos < text.size() && (text.at(pos) == 'e' || text.at(pos) == 'E')) {
+            int p = pos + 1;
+            if (p < text.size() && (text.at(p) == '+' || text.at(p) == '-'))
+                p++;
+            if (p < text.size() && text.at(p).isDigit()) {
+                while (p < text.size() && text.at(p).isDigit())
+                    p++;
+                pos = p;
+            }
         }
         return text.mid(start, pos - start);
     }
