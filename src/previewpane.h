@@ -42,6 +42,7 @@ public:
     void setMessage(const QString &text, bool error = false, const QString &details = QString());
     const QList<PreviewImage> &images() const { return m_images; }
     QString currentLabel() const;
+    QGraphicsView *view() const { return m_view; }
 
 signals:
     void refreshRequested();

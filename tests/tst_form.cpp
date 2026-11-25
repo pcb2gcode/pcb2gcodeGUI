@@ -21,8 +21,11 @@
 #include "layout.h"
 #include "optionform.h"
 #include "optionschema.h"
+#include "previewpane.h"
 
+#include <QGraphicsView>
 #include <QTabWidget>
+#include <QWheelEvent>
 #include <QtTest>
 
 namespace {
@@ -60,6 +63,7 @@ private slots:
     void legacyConfig();
     void unknownOptionsAreShown();
     void unsupportedOptionsAreHidden();
+    void previewZoomSticks();
 
 private:
     OptionForm *form = nullptr;
@@ -268,6 +272,34 @@ void TestForm::unsupportedOptionsAreHidden()
     QVERIFY(!form->editor("milldrill-stepover"));
     QVERIFY(!form->supports("milldrill-stepover"));
     QVERIFY(!form->supports("manifest"));
+}
+
+void TestForm::previewZoomSticks()
+{
+    PreviewPane pane;
+    pane.resize(600, 400);
+    pane.show();
+    QVERIFY(QTest::qWaitForWindowExposed(&pane));
+    PreviewImage image;
+    image.path = ":/icons/pcb2gcodeGUI.svg";
+    image.layer = "front";
+    image.stage = "original";
+    pane.setImages({image}, QString());
+    QTest::qWait(20);
+    const double fitted = pane.view()->transform().m11();
+    QVERIFY(fitted > 0);
+
+    // Zooming adds scroll bars, which resizes the viewport; that must not fit the board again.
+    QWidget *viewport = pane.view()->viewport();
+    const QPointF pos(viewport->width() / 2.0, viewport->height() / 2.0);
+    for (int i = 0; i < 5; i++) {
+        QWheelEvent wheel(pos, viewport->mapToGlobal(pos), QPoint(), QPoint(0, 120), Qt::NoButton, Qt::NoModifier,
+                          Qt::NoScrollPhase, false);
+        QCoreApplication::sendEvent(viewport, &wheel);
+    }
+    QTest::qWait(50);
+    QVERIFY2(pane.view()->transform().m11() > fitted * 2,
+             qPrintable(QString::number(pane.view()->transform().m11() / fitted)));
 }
 
 QTEST_MAIN(TestForm)

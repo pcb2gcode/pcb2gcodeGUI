@@ -86,8 +86,9 @@ PreviewPane::PreviewPane(QWidget *parent) : QWidget(parent)
     m_view->setDragMode(QGraphicsView::ScrollHandDrag);
     m_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_view->setBackgroundBrush(QColor(0xf4, 0xf4, 0xf4));
-    m_view->viewport()->installEventFilter(this);
     new Graphics_view_zoom(m_view);
+    // Installed after the zoom helper so that it sees wheel events first.
+    m_view->viewport()->installEventFilter(this);
 
     auto *layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);

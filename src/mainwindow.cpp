@@ -397,6 +397,11 @@ void MainWindow::generate()
 {
     if (m_probe.program.isEmpty())
         return;
+    if (!hasInputFiles()) {
+        QMessageBox::information(this, tr("Generate G-code"),
+                                 tr("Choose a front, back, outline or drill file first."));
+        return;
+    }
     OptionEditor *outputDir = m_form->editor(QStringLiteral("output-dir"));
     if (outputDir && outputDir->values().isEmpty()) {
         const QString dir = QFileDialog::getExistingDirectory(this, tr("Choose the output folder"),
